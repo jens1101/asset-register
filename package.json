@@ -1,0 +1,27 @@
+{
+  "name": "@jens1101/asset-register",
+  "author": "Jens Tschirpig",
+  "description": "",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "workspaces/*/*"
+  ],
+  "scripts": {
+    "format": "lerna run format",
+    "build": "lerna run build",
+    "start": "lerna run start"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@tsconfig/node-lts": "^20.1.3",
+    "@tsconfig/strictest": "^2.0.5",
+    "cross-env": "^7.0.3",
+    "lerna": "^8.1.8",
+    "plop": "^4.0.1",
+    "prettier": "^3.3.3",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.5.4"
+  }
+}

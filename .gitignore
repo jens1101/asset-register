@@ -1,0 +1,46 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Output of 'npm pack'
+*.tgz
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# Build output
+dist/
+
+# GQL schema used by WebStorm plugin
+schema.graphql
+
+# Alwys keep ".keep" files. This is used to preserve directory structures.
+!.keep
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Lerna
+lerna-debug.log
+.nx/
