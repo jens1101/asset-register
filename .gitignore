@@ -31,9 +31,6 @@ yarn-error.log
 # Build output
 dist/
 
-# GQL schema used by WebStorm plugin
-schema.graphql
-
 # Alwys keep ".keep" files. This is used to preserve directory structures.
 !.keep
 
