@@ -1,0 +1,25 @@
+{
+  "name": "@jens1101/asset-register-web",
+  "author": "Jens Tschirpig",
+  "description": "",
+  "private": true,
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch --preserveWatchOutput",
+    "prebuild": "npm run clean",
+    "clean": "rimraf ./dist",
+    "format": "prettier --write ./",
+    "start": "node dist/index.js",
+    "start:dev": "node --inspect-brk=0.0.0.0 --watch dist/index.js",
+    "start:dotenv": "node --env-file=.env dist/index.js",
+    "start:dotenv:dev": "node --inspect-brk=0.0.0.0 --watch --env-file=.env dist/index.js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
