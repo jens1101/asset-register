@@ -1,0 +1,6 @@
+query Examples($filter: ExampleFilter) {
+  examples(filter: $filter) {
+    id
+    name
+  }
+}

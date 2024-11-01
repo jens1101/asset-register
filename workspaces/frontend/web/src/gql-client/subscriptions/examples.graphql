@@ -1,0 +1,6 @@
+subscription StreamExamples($filter: ExampleFilter) {
+  examples(filter: $filter) {
+    id
+    name
+  }
+}

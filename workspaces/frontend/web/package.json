@@ -18,8 +18,15 @@
     "start": "node dist/index.js",
     "start:dev": "node --inspect-brk=0.0.0.0 --watch dist/index.js",
     "start:dotenv": "node --env-file=.env dist/index.js",
-    "start:dotenv:dev": "node --inspect-brk=0.0.0.0 --watch --env-file=.env dist/index.js"
+    "start:dotenv:dev": "node --inspect-brk=0.0.0.0 --watch --env-file=.env dist/index.js",
+    "codegen": "graphql-codegen && npm run format"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.3"
+  },
+  "dependencies": {
+    "@urql/core": "^5.0.8",
+    "graphql": "^16.9.0",
+    "graphql-ws": "^5.16.0"
+  }
 }
