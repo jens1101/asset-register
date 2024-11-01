@@ -1,0 +1,43 @@
+"""
+A generic error interface.
+"""
+interface Error {
+  message: String!
+}
+
+"""
+An example type
+"""
+type Example {
+  id: ID!
+  name: String!
+}
+
+"""
+An example input
+"""
+input ExampleFilter {
+  id: ID
+  name: String
+}
+
+type Mutation {
+  """
+  An example mutation
+  """
+  createExample(name: String!): Example!
+}
+
+type Query {
+  """
+  An example query
+  """
+  examples(filter: ExampleFilter): Example!
+}
+
+type Subscription {
+  """
+  An example subscription
+  """
+  examples(filter: ExampleFilter): Example!
+}

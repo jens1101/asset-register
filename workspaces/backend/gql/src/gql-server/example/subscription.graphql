@@ -1,0 +1,4 @@
+extend type Subscription {
+  "An example subscription"
+  examples(filter: ExampleFilter): Example!
+}

@@ -1,0 +1,4 @@
+extend type Query {
+  "An example query"
+  examples(filter: ExampleFilter): Example!
+}

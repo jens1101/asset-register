@@ -1,0 +1,5 @@
+"An example input"
+input ExampleFilter {
+  id: ID
+  name: String
+}

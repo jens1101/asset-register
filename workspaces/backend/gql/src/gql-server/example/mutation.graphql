@@ -1,0 +1,4 @@
+extend type Mutation {
+  "An example mutation"
+  createExample(name: String!): Example!
+}

@@ -1,0 +1,5 @@
+"An example type"
+type Example {
+  id: ID!
+  name: String!
+}
