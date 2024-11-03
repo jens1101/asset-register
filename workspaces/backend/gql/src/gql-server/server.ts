@@ -1,13 +1,13 @@
+import { resolvers } from "./resolvers.generated.js";
+import { typeDefs } from "./typeDefs.generated.js";
 import { useServer } from "graphql-ws/lib/use/ws";
 import {
   createSchema,
   createYoga,
   useExecutionCancellation,
 } from "graphql-yoga";
-import { createServer, type RequestListener } from "node:http";
+import { type RequestListener, createServer } from "node:http";
 import { WebSocketServer } from "ws";
-import { resolvers } from "./resolvers.generated.js";
-import { typeDefs } from "./typeDefs.generated.js";
 
 const GQL_SERVER_PORT = 5000;
 

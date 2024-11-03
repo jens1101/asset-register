@@ -1,6 +1,6 @@
 import { Client, fetchExchange, subscriptionExchange } from "@urql/core";
 import type { FetchBody } from "@urql/core/internal";
-import { createClient, type SubscribePayload } from "graphql-ws";
+import { type SubscribePayload, createClient } from "graphql-ws";
 
 const UPSTREAM_GQL_URL = "http://example.com/graphql";
 const ACCESS_TOKEN = "TODO";

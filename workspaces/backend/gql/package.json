@@ -1,34 +1,34 @@
 {
   "name": "@jens1101/asset-register-gql",
-  "author": "Jens Tschirpig",
-  "description": "",
-  "private": true,
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "private": true,
+  "description": "",
+  "author": "Jens Tschirpig",
   "type": "module",
+  "main": "dist/index.js",
   "files": [
     "dist"
   ],
   "scripts": {
+    "prebuild": "npm run clean",
     "build": "tsc",
     "build:watch": "tsc --watch --preserveWatchOutput",
-    "prebuild": "npm run clean",
     "clean": "rimraf ./dist",
+    "codegen": "graphql-codegen && npm run format",
     "format": "prettier --write ./",
     "start": "node dist/index.js",
     "start:dev": "node --inspect-brk=0.0.0.0 --watch dist/index.js",
     "start:dotenv": "node --env-file=.env dist/index.js",
-    "start:dotenv:dev": "node --inspect-brk=0.0.0.0 --watch --env-file=.env dist/index.js",
-    "codegen": "graphql-codegen && npm run format"
-  },
-  "devDependencies": {
-    "@eddeee888/gcg-typescript-resolver-files": "^0.11.0",
-    "@graphql-codegen/cli": "^5.0.3"
+    "start:dotenv:dev": "node --inspect-brk=0.0.0.0 --watch --env-file=.env dist/index.js"
   },
   "dependencies": {
     "graphql": "^16.9.0",
     "graphql-ws": "^5.16.0",
     "graphql-yoga": "^5.8.0",
     "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@eddeee888/gcg-typescript-resolver-files": "^0.11.0",
+    "@graphql-codegen/cli": "^5.0.3"
   }
 }

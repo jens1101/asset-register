@@ -1,4 +1,5 @@
 import type { DocumentNode } from "graphql";
+
 export const typeDefs = {
   kind: "Document",
   definitions: [
