@@ -1,6 +1,6 @@
-import { createSignal } from "solid-js";
+import { type Component, createSignal } from "solid-js";
 
-export default function Home() {
+export const Home: Component = () => {
   const [count, setCount] = createSignal(0);
 
   return (
@@ -27,4 +27,4 @@ export default function Home() {
       </div>
     </section>
   );
-}
+};

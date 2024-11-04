@@ -1,5 +1,5 @@
-import type { RouteDataFunc } from "@solidjs/router";
-import { Resource, createResource } from "solid-js";
+import type { RoutePreloadFunc } from "@solidjs/router";
+import { type Resource, createResource } from "solid-js";
 
 function wait<T>(ms: number, data: T): Promise<T> {
   return new Promise((resolve) => setTimeout(resolve, ms, data));
@@ -13,11 +13,10 @@ function fetchName(): Promise<string> {
   return wait(random(500, 1000), "Solid");
 }
 
-const AboutData: RouteDataFunc<never, Resource<string>> = () => {
+export type AboutData = Resource<string>;
+
+export const loadAbout: RoutePreloadFunc<AboutData> = () => {
   const [data] = createResource(fetchName);
 
   return data;
 };
-
-export default AboutData;
-export type AboutDataType = typeof AboutData;

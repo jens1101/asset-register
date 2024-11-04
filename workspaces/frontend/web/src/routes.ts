@@ -1,20 +1,24 @@
-import AboutData from "./pages/about.data";
-import Home from "./pages/home";
+import { type AboutData, loadAbout } from "./pages/about.data.js";
+import { Home } from "./pages/home.js";
 import type { RouteDefinition } from "@solidjs/router";
 import { lazy } from "solid-js";
 
-export const routes: RouteDefinition[] = [
+export const routes: RouteDefinition<string | string[], any>[] = [
   {
     path: "/",
     component: Home,
   },
   {
     path: "/about",
-    component: lazy(() => import("./pages/about")),
-    data: AboutData,
-  },
+    component: lazy(async () => ({
+      default: (await import("./pages/about.js")).About,
+    })),
+    preload: loadAbout,
+  } satisfies RouteDefinition<string, AboutData>,
   {
     path: "**",
-    component: lazy(() => import("./errors/404")),
+    component: lazy(async () => ({
+      default: (await import("./errors/404.js")).NotFound,
+    })),
   },
 ];
