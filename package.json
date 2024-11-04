@@ -9,10 +9,10 @@
   ],
   "scripts": {
     "build": "lerna run build",
-    "format": "prettier --write . && lerna run format",
-    "start": "lerna run start"
+    "format": "npx prettier . '!workspaces/**/*' --write && lerna run format",
+    "start": "lerna run start",
+    "test": "lerna run test"
   },
-  "dependencies": {},
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@tsconfig/node-lts": "^20.1.3",
