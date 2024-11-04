@@ -21,7 +21,7 @@
     "start:dev": "node --inspect-brk=0.0.0.0 --watch dist/index.js",
     "start:dotenv": "node --env-file=.env dist/index.js",
     "start:dotenv:dev": "node --inspect-brk=0.0.0.0 --watch --env-file=.env dist/index.js",
-    "test": "npm run lint"
+    "test": "tsc --noEmit && npm run lint"
   },
   "dependencies": {
     "graphql": "^16.9.0",

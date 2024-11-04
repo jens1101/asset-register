@@ -12,7 +12,7 @@
     "lint": "eslint --max-warnings 0 && prettier --check .",
     "serve": "vite preview",
     "start": "vite",
-    "test": "npm run lint"
+    "test": "tsc --noEmit && npm run lint"
   },
   "dependencies": {
     "@solidjs/router": "^0.8.2",
