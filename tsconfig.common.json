@@ -5,6 +5,7 @@
   ],
   "compilerOptions": {
     "sourceMap": true,
-    "declaration": true
+    "declaration": true,
+    "verbatimModuleSyntax": true
   }
 }
