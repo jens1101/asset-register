@@ -4,6 +4,7 @@ const config = {
     "prettier-plugin-packagejson",
     "@trivago/prettier-plugin-sort-imports",
   ],
+  importOrderParserPlugins: ["typescript", "jsx", "decorators-legacy"],
 };
 
 export default config;
