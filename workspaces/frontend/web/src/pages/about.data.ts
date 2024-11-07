@@ -1,22 +1,27 @@
+import { client } from "../gql-client/client.js";
+import {
+  ExamplesDocument,
+  type ExamplesQuery,
+  type ExamplesQueryVariables,
+} from "../gql-client/types/graphql.js";
 import type { RoutePreloadFunc } from "@solidjs/router";
 import { type Resource, createResource } from "solid-js";
-
-function wait<T>(ms: number, data: T): Promise<T> {
-  return new Promise((resolve) => setTimeout(resolve, ms, data));
-}
-
-function random(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function fetchName(): Promise<string> {
-  return wait(random(500, 1000), "Solid");
-}
 
 export type AboutData = Resource<string>;
 
 export const loadAbout: RoutePreloadFunc<AboutData> = () => {
-  const [data] = createResource(fetchName);
+  const [data] = createResource(async () => {
+    const { data } = await client.query<ExamplesQuery, ExamplesQueryVariables>(
+      ExamplesDocument,
+      {
+        filter: {
+          name: "example",
+        },
+      },
+    );
+
+    return data?.examples.name ?? "default";
+  });
 
   return data;
 };
