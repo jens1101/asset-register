@@ -2,3 +2,15 @@ services:
   web:
     build:
       dockerfile: Dockerfile
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - ${DB_PUBLISHED_PORT}:${DB_PORT}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+volumes:
+  db_data:
