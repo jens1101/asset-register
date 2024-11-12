@@ -1,5 +1,5 @@
 {
-  "extends": "../../../tsconfig.common.json",
+  "extends": "@app/tsconfig/common",
   "compilerOptions": {
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
