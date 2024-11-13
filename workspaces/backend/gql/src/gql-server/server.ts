@@ -9,8 +9,6 @@ import {
 import { type RequestListener, createServer } from "node:http";
 import { WebSocketServer } from "ws";
 
-const GQL_SERVER_PORT = 5000;
-
 const yoga = createYoga({
   graphiql: {
     subscriptionsProtocol: "WS",
@@ -44,7 +42,7 @@ useServer(
       const request = new Request(
         new URL(
           initialRequest.url as string,
-          `http://localhost:${GQL_SERVER_PORT}`,
+          `http://localhost:${process.env.GQL_SERVER_PORT}`,
         ),
         {
           headers: headers,
@@ -77,4 +75,4 @@ useServer(
   webSocketServer,
 );
 
-server.listen(GQL_SERVER_PORT);
+server.listen(process.env.GQL_SERVER_PORT);

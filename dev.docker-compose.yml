@@ -1,0 +1,14 @@
+services:
+  base:
+    build:
+      dockerfile: dev.Dockerfile
+      tags:
+        - "asset_register_base:dev"
+
+  gql:
+    build:
+      dockerfile: dev.Dockerfile
+    ports:
+      - "${GQL_DEBUG_PUBLISHED_PORT}:9229"
+    volumes:
+      - "./:/app"

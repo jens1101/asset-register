@@ -1,19 +1,21 @@
 services:
   base:
+    pull_policy: build
     build:
+      dockerfile: Dockerfile
       tags:
         - "asset_register_base:prod"
-    pull_policy: build
-    image: "asset_register_base:prod"
 
   gql:
+    pull_policy: build
     build:
+      dockerfile: Dockerfile
       context: "./workspaces/backend/gql"
     environment:
       GQL_SERVER_PORT: ${GQL_SERVER_PORT}
       DATABASE_HOST: db
       DATABASE_PORT: ${DB_PORT}
-      DATABASE_DATABASE: ${DB_DATABASE}
+      DATABASE_NAME: ${DB_NAME}
       DATABASE_USER: ${DB_USER}
       DATABASE_PASSWORD: ${DB_PASSWORD}
       ENABLE_DB_LOGGING: ${ENABLE_DB_LOGGING}
@@ -26,7 +28,7 @@ services:
   db:
     image: postgres:17
     environment:
-      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:

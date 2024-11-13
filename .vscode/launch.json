@@ -1,0 +1,11 @@
+{
+  "configurations": [
+    {
+      "name": "Debug GQL",
+      "port": 9229,
+      "remoteRoot": "/app",
+      "request": "attach",
+      "type": "node"
+    }
+  ]
+}
