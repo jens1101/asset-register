@@ -12,3 +12,19 @@ services:
       - "${GQL_DEBUG_PUBLISHED_PORT}:9229"
     volumes:
       - "./:/app"
+
+  pg_admin:
+    pull_policy: build
+    build:
+      dockerfile: pgadmin.Dockerfile
+      args:
+        DATABASE_HOST: db
+        DATABASE_PORT: ${DB_PORT}
+        DATABASE_NAME: ${DB_NAME}
+        DATABASE_USER: ${DB_USER}
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      PGADMIN_DISABLE_POSTFIX: true
+    ports:
+      - ${PGADMIN_PUBLISHED_PORT}:80

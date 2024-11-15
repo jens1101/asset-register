@@ -11,10 +11,12 @@ const appDataSource = new DataSource({
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
   logging: process.env.ENABLE_DB_LOGGING === "true",
+  // TODO: I don't think this is a good idea...
   synchronize: true,
   entities,
   migrations,
   subscribers: [],
+  // TODO: I don't think this is a good idea...
   migrationsRun: true,
 });
 
