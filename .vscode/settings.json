@@ -1,6 +1,15 @@
 {
-  "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": false,
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": ".*",
+        "isAsync": true,
+        "cmd": "npx prettier --write ${file}"
+      }
+    ]
+  },
   "eslint.validate": ["javascript", "typescript"],
   "eslint.workingDirectories": [
     "workspaces/backend/gql",
