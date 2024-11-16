@@ -5,7 +5,7 @@ const config = {
       project: "*.{js,ts}",
     },
     "workspaces/backend/gql": {
-      entry: ["src/index.ts"],
+      entry: ["src/index.ts", "src/entities/index.ts"],
       project: ["src/**/*.{js,ts}"],
       ignore: ["src/gql-server/*.generated.ts"],
     },

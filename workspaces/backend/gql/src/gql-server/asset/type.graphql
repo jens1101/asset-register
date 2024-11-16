@@ -1,0 +1,14 @@
+union AssetResponse = Asset | AssetError
+
+type AssetError implements Error {
+  message: String!
+}
+
+type Asset {
+  id: ID!
+  name: String
+  description: String
+  filename: String!
+  images: [Image!]!
+  proofOfPurchase: Document
+}

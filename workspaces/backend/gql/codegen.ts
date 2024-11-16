@@ -12,6 +12,21 @@ const config: CodegenConfig = {
           useTypeImports: true,
           strictScalars: true,
         },
+        scalarsModule: "graphql-scalars",
+        scalarsOverrides: {
+          DateTime: {
+            type: {
+              input: "Date | string",
+              output: "Date",
+            },
+          },
+          Byte: {
+            type: {
+              input: "Buffer | string",
+              output: "Buffer",
+            },
+          },
+        },
       },
       {
         schema: "src/gql-server/*/*.graphql",

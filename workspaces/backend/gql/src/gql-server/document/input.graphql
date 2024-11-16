@@ -1,0 +1,5 @@
+input DocumentInput {
+  file: Byte!
+  filename: String!
+  mimeType: String!
+}

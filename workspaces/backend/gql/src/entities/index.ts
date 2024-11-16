@@ -1,3 +1,8 @@
-import { Photo } from "./Photo.js";
+import { type Asset, AssetEntity } from "./Asset.js";
+import { type Document, DocumentEntity } from "./Document.js";
+import { type File, FileEntity } from "./File.js";
+import { type Image, ImageEntity } from "./Image.js";
 
-export const entities = [Photo];
+export type { Asset, Document, File, Image };
+
+export const entities = [AssetEntity, DocumentEntity, FileEntity, ImageEntity];

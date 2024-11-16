@@ -1,4 +1,8 @@
-import type { GraphQLResolveInfo } from "graphql";
+import type {
+  GraphQLResolveInfo,
+  GraphQLScalarType,
+  GraphQLScalarTypeConfig,
+} from "graphql";
 
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
@@ -30,6 +34,51 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
+  /** Represents the Node `Buffer` type */
+  Byte: { input: Buffer | string; output: Buffer };
+  /** RFC 3339 compliant date-time string. */
+  DateTime: { input: Date | string; output: Date };
+};
+
+export type Asset = {
+  __typename?: "Asset";
+  description?: Maybe<Scalars["String"]["output"]>;
+  filename: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
+  images: Array<Image>;
+  name?: Maybe<Scalars["String"]["output"]>;
+  proofOfPurchase?: Maybe<Document>;
+};
+
+export type AssetError = Error & {
+  __typename?: "AssetError";
+  message: Scalars["String"]["output"];
+};
+
+export type AssetInput = {
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  filename: Scalars["String"]["input"];
+  images: Array<ImageInput>;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  proofOfPurchase?: InputMaybe<DocumentInput>;
+};
+
+export type AssetResponse = Asset | AssetError;
+
+export type Document = File & {
+  __typename?: "Document";
+  createdAt: Scalars["DateTime"]["output"];
+  file: Scalars["Byte"]["output"];
+  filename: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
+  mimeType: Scalars["String"]["output"];
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type DocumentInput = {
+  file: Scalars["Byte"]["input"];
+  filename: Scalars["String"]["input"];
+  mimeType: Scalars["String"]["input"];
 };
 
 /** A generic error interface. */
@@ -37,47 +86,53 @@ export type Error = {
   message: Scalars["String"]["output"];
 };
 
-/** An example type */
-export type Example = {
-  __typename?: "Example";
+/** A generic file interface */
+export type File = {
+  createdAt: Scalars["DateTime"]["output"];
+  file: Scalars["Byte"]["output"];
+  filename: Scalars["String"]["output"];
   id: Scalars["ID"]["output"];
-  name: Scalars["String"]["output"];
+  mimeType: Scalars["String"]["output"];
+  updatedAt: Scalars["DateTime"]["output"];
 };
 
-/** An example input */
-export type ExampleFilter = {
-  id?: InputMaybe<Scalars["ID"]["input"]>;
+export type Image = File & {
+  __typename?: "Image";
+  createdAt: Scalars["DateTime"]["output"];
+  description?: Maybe<Scalars["String"]["output"]>;
+  file: Scalars["Byte"]["output"];
+  filename: Scalars["String"]["output"];
+  id: Scalars["ID"]["output"];
+  mimeType: Scalars["String"]["output"];
+  name?: Maybe<Scalars["String"]["output"]>;
+  updatedAt: Scalars["DateTime"]["output"];
+};
+
+export type ImageInput = {
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  file: Scalars["Byte"]["input"];
+  filename: Scalars["String"]["input"];
+  mimeType: Scalars["String"]["input"];
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type Mutation = {
   __typename?: "Mutation";
-  /** An example mutation */
-  createExample: Example;
+  createAsset: AssetResponse;
 };
 
-export type MutationcreateExampleArgs = {
-  name: Scalars["String"]["input"];
+export type MutationcreateAssetArgs = {
+  data: AssetInput;
 };
 
 export type Query = {
   __typename?: "Query";
-  /** An example query */
-  examples: Example;
+  asset: AssetResponse;
+  assets: Array<AssetResponse>;
 };
 
-export type QueryexamplesArgs = {
-  filter?: InputMaybe<ExampleFilter>;
-};
-
-export type Subscription = {
-  __typename?: "Subscription";
-  /** An example subscription */
-  examples: Example;
-};
-
-export type SubscriptionexamplesArgs = {
-  filter?: InputMaybe<ExampleFilter>;
+export type QueryassetArgs = {
+  id: Scalars["ID"]["input"];
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -185,36 +240,131 @@ export type DirectiveResolverFn<
   info: GraphQLResolveInfo,
 ) => TResult | Promise<TResult>;
 
+/** Mapping of union types */
+export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
+  AssetResponse:
+    | (Asset & { __typename: "Asset" })
+    | (AssetError & { __typename: "AssetError" });
+};
+
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
   {
-    Error: never;
+    Error: AssetError & { __typename: "AssetError" };
+    File:
+      | (Document & { __typename: "Document" })
+      | (Image & { __typename: "Image" });
   };
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>["Error"]>;
+  Asset: ResolverTypeWrapper<Asset>;
   String: ResolverTypeWrapper<Scalars["String"]["output"]>;
-  Example: ResolverTypeWrapper<Example>;
   ID: ResolverTypeWrapper<Scalars["ID"]["output"]>;
-  ExampleFilter: ExampleFilter;
+  AssetError: ResolverTypeWrapper<AssetError>;
+  AssetInput: AssetInput;
+  AssetResponse: ResolverTypeWrapper<
+    ResolversUnionTypes<ResolversTypes>["AssetResponse"]
+  >;
+  Byte: ResolverTypeWrapper<Scalars["Byte"]["output"]>;
+  DateTime: ResolverTypeWrapper<Scalars["DateTime"]["output"]>;
+  Document: ResolverTypeWrapper<Document>;
+  DocumentInput: DocumentInput;
+  Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>["Error"]>;
+  File: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>["File"]>;
+  Image: ResolverTypeWrapper<Image>;
+  ImageInput: ImageInput;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
-  Subscription: ResolverTypeWrapper<{}>;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Error: ResolversInterfaceTypes<ResolversParentTypes>["Error"];
+  Asset: Asset;
   String: Scalars["String"]["output"];
-  Example: Example;
   ID: Scalars["ID"]["output"];
-  ExampleFilter: ExampleFilter;
+  AssetError: AssetError;
+  AssetInput: AssetInput;
+  AssetResponse: ResolversUnionTypes<ResolversParentTypes>["AssetResponse"];
+  Byte: Scalars["Byte"]["output"];
+  DateTime: Scalars["DateTime"]["output"];
+  Document: Document;
+  DocumentInput: DocumentInput;
+  Error: ResolversInterfaceTypes<ResolversParentTypes>["Error"];
+  File: ResolversInterfaceTypes<ResolversParentTypes>["File"];
+  Image: Image;
+  ImageInput: ImageInput;
   Mutation: {};
   Query: {};
-  Subscription: {};
   Boolean: Scalars["Boolean"]["output"];
+};
+
+export type AssetResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["Asset"] = ResolversParentTypes["Asset"],
+> = {
+  description?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  filename?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  images?: Resolver<Array<ResolversTypes["Image"]>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  proofOfPurchase?: Resolver<
+    Maybe<ResolversTypes["Document"]>,
+    ParentType,
+    ContextType
+  >;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AssetErrorResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["AssetError"] = ResolversParentTypes["AssetError"],
+> = {
+  message?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AssetResponseResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["AssetResponse"] = ResolversParentTypes["AssetResponse"],
+> = {
+  __resolveType?: TypeResolveFn<
+    "Asset" | "AssetError",
+    ParentType,
+    ContextType
+  >;
+};
+
+export interface ByteScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes["Byte"], any> {
+  name: "Byte";
+}
+
+export interface DateTimeScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes["DateTime"], any> {
+  name: "DateTime";
+}
+
+export type DocumentResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["Document"] = ResolversParentTypes["Document"],
+> = {
+  createdAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
+  file?: Resolver<ResolversTypes["Byte"], ParentType, ContextType>;
+  filename?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  mimeType?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ErrorResolvers<
@@ -222,17 +372,41 @@ export type ErrorResolvers<
   ParentType extends
     ResolversParentTypes["Error"] = ResolversParentTypes["Error"],
 > = {
-  __resolveType?: TypeResolveFn<null, ParentType, ContextType>;
+  __resolveType?: TypeResolveFn<"AssetError", ParentType, ContextType>;
   message?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
 };
 
-export type ExampleResolvers<
+export type FileResolvers<
   ContextType = any,
   ParentType extends
-    ResolversParentTypes["Example"] = ResolversParentTypes["Example"],
+    ResolversParentTypes["File"] = ResolversParentTypes["File"],
 > = {
+  __resolveType?: TypeResolveFn<"Document" | "Image", ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
+  file?: Resolver<ResolversTypes["Byte"], ParentType, ContextType>;
+  filename?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
-  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  mimeType?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
+};
+
+export type ImageResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["Image"] = ResolversParentTypes["Image"],
+> = {
+  createdAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
+  description?: Resolver<
+    Maybe<ResolversTypes["String"]>,
+    ParentType,
+    ContextType
+  >;
+  file?: Resolver<ResolversTypes["Byte"], ParentType, ContextType>;
+  filename?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
+  mimeType?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -241,11 +415,11 @@ export type MutationResolvers<
   ParentType extends
     ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"],
 > = {
-  createExample?: Resolver<
-    ResolversTypes["Example"],
+  createAsset?: Resolver<
+    ResolversTypes["AssetResponse"],
     ParentType,
     ContextType,
-    RequireFields<MutationcreateExampleArgs, "name">
+    RequireFields<MutationcreateAssetArgs, "data">
   >;
 };
 
@@ -254,32 +428,29 @@ export type QueryResolvers<
   ParentType extends
     ResolversParentTypes["Query"] = ResolversParentTypes["Query"],
 > = {
-  examples?: Resolver<
-    ResolversTypes["Example"],
+  asset?: Resolver<
+    ResolversTypes["AssetResponse"],
     ParentType,
     ContextType,
-    Partial<QueryexamplesArgs>
+    RequireFields<QueryassetArgs, "id">
   >;
-};
-
-export type SubscriptionResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes["Subscription"] = ResolversParentTypes["Subscription"],
-> = {
-  examples?: SubscriptionResolver<
-    ResolversTypes["Example"],
-    "examples",
+  assets?: Resolver<
+    Array<ResolversTypes["AssetResponse"]>,
     ParentType,
-    ContextType,
-    Partial<SubscriptionexamplesArgs>
+    ContextType
   >;
 };
 
 export type Resolvers<ContextType = any> = {
+  Asset?: AssetResolvers<ContextType>;
+  AssetError?: AssetErrorResolvers<ContextType>;
+  AssetResponse?: AssetResponseResolvers<ContextType>;
+  Byte?: GraphQLScalarType;
+  DateTime?: GraphQLScalarType;
+  Document?: DocumentResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
-  Example?: ExampleResolvers<ContextType>;
+  File?: FileResolvers<ContextType>;
+  Image?: ImageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
-  Subscription?: SubscriptionResolvers<ContextType>;
 };

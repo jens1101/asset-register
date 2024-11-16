@@ -4,40 +4,62 @@ export const typeDefs = {
   kind: "Document",
   definitions: [
     {
-      name: { kind: "Name", value: "Query" },
-      kind: "ObjectTypeDefinition",
+      kind: "InputObjectTypeDefinition",
+      name: { kind: "Name", value: "AssetInput" },
+      directives: [],
       fields: [
         {
-          kind: "FieldDefinition",
-          description: {
-            kind: "StringValue",
-            value: "An example query",
-            block: false,
-          },
-          name: { kind: "Name", value: "examples" },
-          arguments: [
-            {
-              kind: "InputValueDefinition",
-              name: { kind: "Name", value: "filter" },
-              type: {
-                kind: "NamedType",
-                name: { kind: "Name", value: "ExampleFilter" },
-              },
-              directives: [],
-            },
-          ],
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "name" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "description" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "filename" },
           type: {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "Example" },
+              name: { kind: "Name", value: "String" },
             },
           },
           directives: [],
         },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "images" },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "ImageInput" },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "proofOfPurchase" },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "DocumentInput" },
+          },
+          directives: [],
+        },
       ],
-      directives: [],
-      interfaces: [],
     },
     {
       name: { kind: "Name", value: "Mutation" },
@@ -45,21 +67,16 @@ export const typeDefs = {
       fields: [
         {
           kind: "FieldDefinition",
-          description: {
-            kind: "StringValue",
-            value: "An example mutation",
-            block: false,
-          },
-          name: { kind: "Name", value: "createExample" },
+          name: { kind: "Name", value: "createAsset" },
           arguments: [
             {
               kind: "InputValueDefinition",
-              name: { kind: "Name", value: "name" },
+              name: { kind: "Name", value: "data" },
               type: {
                 kind: "NonNullType",
                 type: {
                   kind: "NamedType",
-                  name: { kind: "Name", value: "String" },
+                  name: { kind: "Name", value: "AssetInput" },
                 },
               },
               directives: [],
@@ -69,7 +86,7 @@ export const typeDefs = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "Example" },
+              name: { kind: "Name", value: "AssetResponse" },
             },
           },
           directives: [],
@@ -79,24 +96,22 @@ export const typeDefs = {
       interfaces: [],
     },
     {
-      name: { kind: "Name", value: "Subscription" },
+      name: { kind: "Name", value: "Query" },
       kind: "ObjectTypeDefinition",
       fields: [
         {
           kind: "FieldDefinition",
-          description: {
-            kind: "StringValue",
-            value: "An example subscription",
-            block: false,
-          },
-          name: { kind: "Name", value: "examples" },
+          name: { kind: "Name", value: "asset" },
           arguments: [
             {
               kind: "InputValueDefinition",
-              name: { kind: "Name", value: "filter" },
+              name: { kind: "Name", value: "id" },
               type: {
-                kind: "NamedType",
-                name: { kind: "Name", value: "ExampleFilter" },
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "ID" },
+                },
               },
               directives: [],
             },
@@ -105,7 +120,26 @@ export const typeDefs = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "Example" },
+              name: { kind: "Name", value: "AssetResponse" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "assets" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "AssetResponse" },
+                },
+              },
             },
           },
           directives: [],
@@ -113,6 +147,132 @@ export const typeDefs = {
       ],
       directives: [],
       interfaces: [],
+    },
+    {
+      kind: "UnionTypeDefinition",
+      name: { kind: "Name", value: "AssetResponse" },
+      directives: [],
+      types: [
+        { kind: "NamedType", name: { kind: "Name", value: "Asset" } },
+        { kind: "NamedType", name: { kind: "Name", value: "AssetError" } },
+      ],
+    },
+    {
+      kind: "ObjectTypeDefinition",
+      name: { kind: "Name", value: "AssetError" },
+      interfaces: [
+        { kind: "NamedType", name: { kind: "Name", value: "Error" } },
+      ],
+      directives: [],
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "message" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "ObjectTypeDefinition",
+      name: { kind: "Name", value: "Asset" },
+      interfaces: [],
+      directives: [],
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "id" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "name" },
+          arguments: [],
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "description" },
+          arguments: [],
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "filename" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "images" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "Image" },
+                },
+              },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "proofOfPurchase" },
+          arguments: [],
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "Document" },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "ScalarTypeDefinition",
+      description: {
+        kind: "StringValue",
+        value: "RFC 3339 compliant date-time string.",
+        block: false,
+      },
+      name: { kind: "Name", value: "DateTime" },
+      directives: [],
+    },
+    {
+      kind: "ScalarTypeDefinition",
+      description: {
+        kind: "StringValue",
+        value: "Represents the Node `Buffer` type",
+        block: false,
+      },
+      name: { kind: "Name", value: "Byte" },
+      directives: [],
     },
     {
       kind: "InterfaceTypeDefinition",
@@ -141,37 +301,13 @@ export const typeDefs = {
       ],
     },
     {
-      kind: "InputObjectTypeDefinition",
+      kind: "InterfaceTypeDefinition",
       description: {
         kind: "StringValue",
-        value: "An example input",
+        value: "A generic file interface",
         block: false,
       },
-      name: { kind: "Name", value: "ExampleFilter" },
-      directives: [],
-      fields: [
-        {
-          kind: "InputValueDefinition",
-          name: { kind: "Name", value: "id" },
-          type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
-          directives: [],
-        },
-        {
-          kind: "InputValueDefinition",
-          name: { kind: "Name", value: "name" },
-          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
-          directives: [],
-        },
-      ],
-    },
-    {
-      kind: "ObjectTypeDefinition",
-      description: {
-        kind: "StringValue",
-        value: "An example type",
-        block: false,
-      },
-      name: { kind: "Name", value: "Example" },
+      name: { kind: "Name", value: "File" },
       interfaces: [],
       directives: [],
       fields: [
@@ -187,7 +323,17 @@ export const typeDefs = {
         },
         {
           kind: "FieldDefinition",
-          name: { kind: "Name", value: "name" },
+          name: { kind: "Name", value: "file" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Byte" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "filename" },
           arguments: [],
           type: {
             kind: "NonNullType",
@@ -196,6 +342,315 @@ export const typeDefs = {
               name: { kind: "Name", value: "String" },
             },
           },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "mimeType" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "createdAt" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "DateTime" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "updatedAt" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "DateTime" },
+            },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "InputObjectTypeDefinition",
+      name: { kind: "Name", value: "DocumentInput" },
+      directives: [],
+      fields: [
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "file" },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Byte" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "filename" },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "mimeType" },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "ObjectTypeDefinition",
+      name: { kind: "Name", value: "Document" },
+      interfaces: [
+        { kind: "NamedType", name: { kind: "Name", value: "File" } },
+      ],
+      directives: [],
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "id" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "file" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Byte" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "filename" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "mimeType" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "createdAt" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "DateTime" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "updatedAt" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "DateTime" },
+            },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "InputObjectTypeDefinition",
+      name: { kind: "Name", value: "ImageInput" },
+      directives: [],
+      fields: [
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "file" },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Byte" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "filename" },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "mimeType" },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "name" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "description" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "ObjectTypeDefinition",
+      name: { kind: "Name", value: "Image" },
+      interfaces: [
+        { kind: "NamedType", name: { kind: "Name", value: "File" } },
+      ],
+      directives: [],
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "id" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "file" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Byte" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "filename" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "mimeType" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "createdAt" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "DateTime" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "updatedAt" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "DateTime" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "name" },
+          arguments: [],
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "description" },
+          arguments: [],
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           directives: [],
         },
       ],
@@ -215,14 +670,6 @@ export const typeDefs = {
             name: { kind: "Name", value: "Mutation" },
           },
           operation: "mutation",
-        },
-        {
-          kind: "OperationTypeDefinition",
-          type: {
-            kind: "NamedType",
-            name: { kind: "Name", value: "Subscription" },
-          },
-          operation: "subscription",
         },
       ],
     },

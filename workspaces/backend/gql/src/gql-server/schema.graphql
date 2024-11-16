@@ -1,3 +1,51 @@
+type Asset {
+  description: String
+  filename: String!
+  id: ID!
+  images: [Image!]!
+  name: String
+  proofOfPurchase: Document
+}
+
+type AssetError implements Error {
+  message: String!
+}
+
+input AssetInput {
+  description: String
+  filename: String!
+  images: [ImageInput!]!
+  name: String
+  proofOfPurchase: DocumentInput
+}
+
+union AssetResponse = Asset | AssetError
+
+"""
+Represents the Node `Buffer` type
+"""
+scalar Byte
+
+"""
+RFC 3339 compliant date-time string.
+"""
+scalar DateTime
+
+type Document implements File {
+  createdAt: DateTime!
+  file: Byte!
+  filename: String!
+  id: ID!
+  mimeType: String!
+  updatedAt: DateTime!
+}
+
+input DocumentInput {
+  file: Byte!
+  filename: String!
+  mimeType: String!
+}
+
 """
 A generic error interface.
 """
@@ -6,38 +54,41 @@ interface Error {
 }
 
 """
-An example type
+A generic file interface
 """
-type Example {
+interface File {
+  createdAt: DateTime!
+  file: Byte!
+  filename: String!
   id: ID!
-  name: String!
+  mimeType: String!
+  updatedAt: DateTime!
 }
 
-"""
-An example input
-"""
-input ExampleFilter {
-  id: ID
+type Image implements File {
+  createdAt: DateTime!
+  description: String
+  file: Byte!
+  filename: String!
+  id: ID!
+  mimeType: String!
+  name: String
+  updatedAt: DateTime!
+}
+
+input ImageInput {
+  description: String
+  file: Byte!
+  filename: String!
+  mimeType: String!
   name: String
 }
 
 type Mutation {
-  """
-  An example mutation
-  """
-  createExample(name: String!): Example!
+  createAsset(data: AssetInput!): AssetResponse!
 }
 
 type Query {
-  """
-  An example query
-  """
-  examples(filter: ExampleFilter): Example!
-}
-
-type Subscription {
-  """
-  An example subscription
-  """
-  examples(filter: ExampleFilter): Example!
+  asset(id: ID!): AssetResponse!
+  assets: [AssetResponse!]!
 }

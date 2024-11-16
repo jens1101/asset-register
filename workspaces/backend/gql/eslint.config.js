@@ -13,6 +13,10 @@ const config = [
         "error",
         { argsIgnorePattern: "^_" },
       ],
+      "@typescript-eslint/no-empty-object-type": [
+        "error",
+        { allowInterfaces: "with-single-extends" },
+      ],
     },
   },
 ];

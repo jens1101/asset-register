@@ -2,9 +2,23 @@ type Query
 
 type Mutation
 
-type Subscription
+"RFC 3339 compliant date-time string."
+scalar DateTime
+
+"Represents the Node `Buffer` type"
+scalar Byte
 
 "A generic error interface."
 interface Error {
   message: String!
+}
+
+"A generic file interface"
+interface File {
+  id: ID!
+  file: Byte!
+  filename: String!
+  mimeType: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }

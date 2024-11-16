@@ -1,0 +1,8 @@
+type Document implements File {
+  id: ID!
+  file: Byte!
+  filename: String!
+  mimeType: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}

@@ -1,0 +1,7 @@
+input AssetInput {
+  name: String
+  description: String
+  filename: String!
+  images: [ImageInput!]!
+  proofOfPurchase: DocumentInput
+}
