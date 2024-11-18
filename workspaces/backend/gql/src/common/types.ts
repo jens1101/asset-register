@@ -1,4 +1,5 @@
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
     interface ProcessEnv {
       GQL_SERVER_PORT: string;
@@ -12,6 +13,4 @@ declare global {
   }
 }
 
-// Ensure that this file is considered a module by adding an empty export
-// statement.
-export {};
+export type Maybe<T> = T | null | undefined;

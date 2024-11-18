@@ -14,8 +14,7 @@ type AssetError implements Error {
 
 input AssetInput {
   description: String
-  filename: String!
-  images: [ImageInput!]!
+  images: [ImageInput!]
   name: String
   proofOfPurchase: DocumentInput
 }
@@ -40,9 +39,7 @@ type Document {
 }
 
 input DocumentInput {
-  file: Byte!
-  filename: String!
-  mimeType: String!
+  file: FileInput!
 }
 
 """
@@ -60,6 +57,12 @@ type File {
   mimeType: String!
 }
 
+input FileInput {
+  file: Byte!
+  filename: String!
+  mimeType: String!
+}
+
 type Image {
   asset: Asset!
   createdAt: DateTime!
@@ -71,9 +74,7 @@ type Image {
 
 input ImageInput {
   description: String
-  file: Byte!
-  filename: String!
-  mimeType: String!
+  file: FileInput!
   name: String
 }
 

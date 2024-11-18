@@ -22,7 +22,7 @@ const config: CodegenConfig = {
           },
           Byte: {
             type: {
-              input: "Buffer | string",
+              input: "Buffer",
               output: "Buffer",
             },
           },

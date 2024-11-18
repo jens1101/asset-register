@@ -22,29 +22,14 @@ export const typeDefs = {
         },
         {
           kind: "InputValueDefinition",
-          name: { kind: "Name", value: "filename" },
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
-          },
-          directives: [],
-        },
-        {
-          kind: "InputValueDefinition",
           name: { kind: "Name", value: "images" },
           type: {
-            kind: "NonNullType",
+            kind: "ListType",
             type: {
-              kind: "ListType",
+              kind: "NonNullType",
               type: {
-                kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "ImageInput" },
-                },
+                kind: "NamedType",
+                name: { kind: "Name", value: "ImageInput" },
               },
             },
           },
@@ -323,30 +308,9 @@ export const typeDefs = {
           name: { kind: "Name", value: "file" },
           type: {
             kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "Byte" } },
-          },
-          directives: [],
-        },
-        {
-          kind: "InputValueDefinition",
-          name: { kind: "Name", value: "filename" },
-          type: {
-            kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
-          },
-          directives: [],
-        },
-        {
-          kind: "InputValueDefinition",
-          name: { kind: "Name", value: "mimeType" },
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
+              name: { kind: "Name", value: "FileInput" },
             },
           },
           directives: [],
@@ -399,6 +363,46 @@ export const typeDefs = {
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "Asset" } },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "InputObjectTypeDefinition",
+      name: { kind: "Name", value: "FileInput" },
+      directives: [],
+      fields: [
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "file" },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Byte" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "filename" },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "mimeType" },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
           },
           directives: [],
         },
@@ -478,39 +482,6 @@ export const typeDefs = {
       fields: [
         {
           kind: "InputValueDefinition",
-          name: { kind: "Name", value: "file" },
-          type: {
-            kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "Byte" } },
-          },
-          directives: [],
-        },
-        {
-          kind: "InputValueDefinition",
-          name: { kind: "Name", value: "filename" },
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
-          },
-          directives: [],
-        },
-        {
-          kind: "InputValueDefinition",
-          name: { kind: "Name", value: "mimeType" },
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
-          },
-          directives: [],
-        },
-        {
-          kind: "InputValueDefinition",
           name: { kind: "Name", value: "name" },
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           directives: [],
@@ -519,6 +490,18 @@ export const typeDefs = {
           kind: "InputValueDefinition",
           name: { kind: "Name", value: "description" },
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "file" },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "FileInput" },
+            },
+          },
           directives: [],
         },
       ],

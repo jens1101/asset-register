@@ -1,3 +1,4 @@
+import type { Maybe } from "../common/types.js";
 import { EntityName } from "../enums/Entities.js";
 import type { Asset } from "./Asset.js";
 import type { File } from "./File.js";
@@ -5,8 +6,8 @@ import { EntitySchema } from "typeorm";
 
 export interface Image {
   id: number;
-  name: string | null;
-  description: string | null;
+  name: Maybe<string>;
+  description: Maybe<string>;
   createdAt: Date;
   file: File;
   asset: Asset;

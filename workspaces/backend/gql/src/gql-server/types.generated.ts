@@ -35,7 +35,7 @@ export type Scalars = {
   Int: { input: number; output: number };
   Float: { input: number; output: number };
   /** Represents the Node `Buffer` type */
-  Byte: { input: Buffer | string; output: Buffer };
+  Byte: { input: Buffer; output: Buffer };
   /** RFC 3339 compliant date-time string. */
   DateTime: { input: Date | string; output: Date };
 };
@@ -58,8 +58,7 @@ export type AssetError = Error & {
 
 export type AssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
-  filename: Scalars["String"]["input"];
-  images: Array<ImageInput>;
+  images?: InputMaybe<Array<ImageInput>>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   proofOfPurchase?: InputMaybe<DocumentInput>;
 };
@@ -75,9 +74,7 @@ export type Document = {
 };
 
 export type DocumentInput = {
-  file: Scalars["Byte"]["input"];
-  filename: Scalars["String"]["input"];
-  mimeType: Scalars["String"]["input"];
+  file: FileInput;
 };
 
 /** A generic error interface. */
@@ -94,6 +91,12 @@ export type File = {
   mimeType: Scalars["String"]["output"];
 };
 
+export type FileInput = {
+  file: Scalars["Byte"]["input"];
+  filename: Scalars["String"]["input"];
+  mimeType: Scalars["String"]["input"];
+};
+
 export type Image = {
   __typename?: "Image";
   asset: Asset;
@@ -106,9 +109,7 @@ export type Image = {
 
 export type ImageInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
-  file: Scalars["Byte"]["input"];
-  filename: Scalars["String"]["input"];
-  mimeType: Scalars["String"]["input"];
+  file: FileInput;
   name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
@@ -265,6 +266,7 @@ export type ResolversTypes = {
   DocumentInput: DocumentInput;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>["Error"]>;
   File: ResolverTypeWrapper<File>;
+  FileInput: FileInput;
   Image: ResolverTypeWrapper<Image>;
   ImageInput: ImageInput;
   Mutation: ResolverTypeWrapper<{}>;
@@ -286,6 +288,7 @@ export type ResolversParentTypes = {
   DocumentInput: DocumentInput;
   Error: ResolversInterfaceTypes<ResolversParentTypes>["Error"];
   File: File;
+  FileInput: FileInput;
   Image: Image;
   ImageInput: ImageInput;
   Mutation: {};

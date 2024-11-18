@@ -1,7 +1,5 @@
 input ImageInput {
-  file: Byte!
-  filename: String!
-  mimeType: String!
   name: String
   description: String
+  file: FileInput!
 }
