@@ -4,8 +4,3 @@ export const enum EntityName {
   File = "file",
   Image = "image",
 }
-
-export const enum FileTableTypes {
-  Document = "document",
-  Image = "image",
-}

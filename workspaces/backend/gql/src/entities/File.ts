@@ -7,7 +7,6 @@ export interface File {
   filename: string;
   mimeType: string;
   createdAt: Date;
-  updatedAt: Date;
 }
 
 export const FileEntity = new EntitySchema<File>({
@@ -31,13 +30,5 @@ export const FileEntity = new EntitySchema<File>({
       type: Date,
       createDate: true,
     },
-    updatedAt: {
-      type: Date,
-      updateDate: true,
-    },
-  },
-  inheritance: {
-    pattern: "STI",
-    column: "type",
   },
 });

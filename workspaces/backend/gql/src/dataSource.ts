@@ -1,9 +1,10 @@
+import { DATA_SOURCE_INIT_RETRIES } from "./config.js";
 import { entities } from "./entities/index.js";
 import { migrations } from "./migrations/index.js";
 import retry from "retry";
 import { DataSource } from "typeorm";
 
-const appDataSource = new DataSource({
+export const appDataSource = new DataSource({
   type: "postgres",
   host: process.env.DATABASE_HOST,
   port: Number(process.env.DATABASE_PORT),
@@ -23,7 +24,9 @@ const appDataSource = new DataSource({
  * @throws {AggregateError} When the maximum number of retries has been reached.
  */
 export function initialiseDataSource(): Promise<DataSource> {
-  const operation = retry.operation();
+  const operation = retry.operation({
+    retries: DATA_SOURCE_INIT_RETRIES,
+  });
 
   return new Promise<DataSource>((resolve, reject) => {
     operation.attempt((currentAttempt) => {

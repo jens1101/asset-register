@@ -10,6 +10,8 @@ export interface Asset {
   filename: string;
   images: Image[];
   proofOfPurchase: Document | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const AssetEntity = new EntitySchema<Asset>({
@@ -21,12 +23,20 @@ export const AssetEntity = new EntitySchema<Asset>({
       generated: true,
     },
     name: {
-      type: String,
+      type: "text",
       nullable: true,
     },
     description: {
       type: "text",
       nullable: true,
+    },
+    createdAt: {
+      type: Date,
+      createDate: true,
+    },
+    updatedAt: {
+      type: Date,
+      updateDate: true,
     },
   },
   relations: {
