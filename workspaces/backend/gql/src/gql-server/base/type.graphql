@@ -12,13 +12,3 @@ scalar Byte
 interface Error {
   message: String!
 }
-
-"A generic file interface"
-interface File {
-  id: ID!
-  file: Byte!
-  filename: String!
-  mimeType: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}

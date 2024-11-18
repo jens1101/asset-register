@@ -1,10 +1,8 @@
-type Image implements File {
+type Image {
   id: ID!
-  file: Byte!
-  filename: String!
-  mimeType: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
   name: String
   description: String
+  createdAt: DateTime!
+  file: File!
+  asset: Asset!
 }

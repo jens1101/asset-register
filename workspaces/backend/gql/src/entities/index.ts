@@ -5,4 +5,6 @@ import { type Image, ImageEntity } from "./Image.js";
 
 export type { Asset, Document, File, Image };
 
+export { AssetEntity, DocumentEntity, FileEntity, ImageEntity };
+
 export const entities = [AssetEntity, DocumentEntity, FileEntity, ImageEntity];

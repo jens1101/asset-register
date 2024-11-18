@@ -42,12 +42,13 @@ export type Scalars = {
 
 export type Asset = {
   __typename?: "Asset";
+  createdAt: Scalars["DateTime"]["output"];
   description?: Maybe<Scalars["String"]["output"]>;
-  filename: Scalars["String"]["output"];
   id: Scalars["ID"]["output"];
   images: Array<Image>;
   name?: Maybe<Scalars["String"]["output"]>;
   proofOfPurchase?: Maybe<Document>;
+  updatedAt: Scalars["DateTime"]["output"];
 };
 
 export type AssetError = Error & {
@@ -65,14 +66,12 @@ export type AssetInput = {
 
 export type AssetResponse = Asset | AssetError;
 
-export type Document = File & {
+export type Document = {
   __typename?: "Document";
+  asset: Asset;
   createdAt: Scalars["DateTime"]["output"];
-  file: Scalars["Byte"]["output"];
-  filename: Scalars["String"]["output"];
+  file: File;
   id: Scalars["ID"]["output"];
-  mimeType: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
 };
 
 export type DocumentInput = {
@@ -86,26 +85,23 @@ export type Error = {
   message: Scalars["String"]["output"];
 };
 
-/** A generic file interface */
 export type File = {
+  __typename?: "File";
   createdAt: Scalars["DateTime"]["output"];
   file: Scalars["Byte"]["output"];
   filename: Scalars["String"]["output"];
   id: Scalars["ID"]["output"];
   mimeType: Scalars["String"]["output"];
-  updatedAt: Scalars["DateTime"]["output"];
 };
 
-export type Image = File & {
+export type Image = {
   __typename?: "Image";
+  asset: Asset;
   createdAt: Scalars["DateTime"]["output"];
   description?: Maybe<Scalars["String"]["output"]>;
-  file: Scalars["Byte"]["output"];
-  filename: Scalars["String"]["output"];
+  file: File;
   id: Scalars["ID"]["output"];
-  mimeType: Scalars["String"]["output"];
   name?: Maybe<Scalars["String"]["output"]>;
-  updatedAt: Scalars["DateTime"]["output"];
 };
 
 export type ImageInput = {
@@ -251,9 +247,6 @@ export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
   {
     Error: AssetError & { __typename: "AssetError" };
-    File:
-      | (Document & { __typename: "Document" })
-      | (Image & { __typename: "Image" });
   };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -271,7 +264,7 @@ export type ResolversTypes = {
   Document: ResolverTypeWrapper<Document>;
   DocumentInput: DocumentInput;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>["Error"]>;
-  File: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>["File"]>;
+  File: ResolverTypeWrapper<File>;
   Image: ResolverTypeWrapper<Image>;
   ImageInput: ImageInput;
   Mutation: ResolverTypeWrapper<{}>;
@@ -292,7 +285,7 @@ export type ResolversParentTypes = {
   Document: Document;
   DocumentInput: DocumentInput;
   Error: ResolversInterfaceTypes<ResolversParentTypes>["Error"];
-  File: ResolversInterfaceTypes<ResolversParentTypes>["File"];
+  File: File;
   Image: Image;
   ImageInput: ImageInput;
   Mutation: {};
@@ -305,12 +298,12 @@ export type AssetResolvers<
   ParentType extends
     ResolversParentTypes["Asset"] = ResolversParentTypes["Asset"],
 > = {
+  createdAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
   description?: Resolver<
     Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
   >;
-  filename?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   images?: Resolver<Array<ResolversTypes["Image"]>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
@@ -319,6 +312,7 @@ export type AssetResolvers<
     ParentType,
     ContextType
   >;
+  updatedAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -358,12 +352,10 @@ export type DocumentResolvers<
   ParentType extends
     ResolversParentTypes["Document"] = ResolversParentTypes["Document"],
 > = {
+  asset?: Resolver<ResolversTypes["Asset"], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
-  file?: Resolver<ResolversTypes["Byte"], ParentType, ContextType>;
-  filename?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  file?: Resolver<ResolversTypes["File"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
-  mimeType?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -381,13 +373,12 @@ export type FileResolvers<
   ParentType extends
     ResolversParentTypes["File"] = ResolversParentTypes["File"],
 > = {
-  __resolveType?: TypeResolveFn<"Document" | "Image", ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
   file?: Resolver<ResolversTypes["Byte"], ParentType, ContextType>;
   filename?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   mimeType?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ImageResolvers<
@@ -395,18 +386,16 @@ export type ImageResolvers<
   ParentType extends
     ResolversParentTypes["Image"] = ResolversParentTypes["Image"],
 > = {
+  asset?: Resolver<ResolversTypes["Asset"], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
   description?: Resolver<
     Maybe<ResolversTypes["String"]>,
     ParentType,
     ContextType
   >;
-  file?: Resolver<ResolversTypes["Byte"], ParentType, ContextType>;
-  filename?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  file?: Resolver<ResolversTypes["File"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
-  mimeType?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

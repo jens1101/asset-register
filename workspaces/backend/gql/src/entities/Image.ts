@@ -39,7 +39,6 @@ export const ImageEntity = new EntitySchema<Image>({
       target: EntityName.File,
       eager: true,
       joinColumn: true,
-      cascade: false,
       onDelete: "RESTRICT",
       onUpdate: "CASCADE",
     },

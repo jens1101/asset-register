@@ -29,7 +29,6 @@ export const DocumentEntity = new EntitySchema<Document>({
       target: EntityName.File,
       eager: true,
       joinColumn: true,
-      cascade: false,
       onDelete: "RESTRICT",
       onUpdate: "CASCADE",
     },

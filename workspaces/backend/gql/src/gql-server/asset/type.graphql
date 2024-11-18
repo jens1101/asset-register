@@ -8,7 +8,8 @@ type Asset {
   id: ID!
   name: String
   description: String
-  filename: String!
   images: [Image!]!
   proofOfPurchase: Document
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }

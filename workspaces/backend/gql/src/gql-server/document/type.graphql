@@ -1,8 +1,6 @@
-type Document implements File {
+type Document {
   id: ID!
-  file: Byte!
-  filename: String!
-  mimeType: String!
   createdAt: DateTime!
-  updatedAt: DateTime!
+  file: File!
+  asset: Asset!
 }

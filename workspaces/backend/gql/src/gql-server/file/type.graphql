@@ -1,0 +1,7 @@
+type File {
+  id: ID!
+  file: Byte!
+  filename: String!
+  mimeType: String!
+  createdAt: DateTime!
+}

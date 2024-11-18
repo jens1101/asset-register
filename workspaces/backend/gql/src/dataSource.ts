@@ -4,7 +4,7 @@ import { migrations } from "./migrations/index.js";
 import retry from "retry";
 import { DataSource } from "typeorm";
 
-export const appDataSource = new DataSource({
+export const dataSource = new DataSource({
   type: "postgres",
   host: process.env.DATABASE_HOST,
   port: Number(process.env.DATABASE_PORT),
@@ -30,7 +30,7 @@ export function initialiseDataSource(): Promise<DataSource> {
 
   return new Promise<DataSource>((resolve, reject) => {
     operation.attempt((currentAttempt) => {
-      appDataSource
+      dataSource
         .initialize()
         .then(resolve)
         .catch((error) => {

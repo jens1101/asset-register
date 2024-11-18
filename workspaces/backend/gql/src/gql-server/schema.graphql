@@ -1,10 +1,11 @@
 type Asset {
+  createdAt: DateTime!
   description: String
-  filename: String!
   id: ID!
   images: [Image!]!
   name: String
   proofOfPurchase: Document
+  updatedAt: DateTime!
 }
 
 type AssetError implements Error {
@@ -31,13 +32,11 @@ RFC 3339 compliant date-time string.
 """
 scalar DateTime
 
-type Document implements File {
+type Document {
+  asset: Asset!
   createdAt: DateTime!
-  file: Byte!
-  filename: String!
+  file: File!
   id: ID!
-  mimeType: String!
-  updatedAt: DateTime!
 }
 
 input DocumentInput {
@@ -53,27 +52,21 @@ interface Error {
   message: String!
 }
 
-"""
-A generic file interface
-"""
-interface File {
+type File {
   createdAt: DateTime!
   file: Byte!
   filename: String!
   id: ID!
   mimeType: String!
-  updatedAt: DateTime!
 }
 
-type Image implements File {
+type Image {
+  asset: Asset!
   createdAt: DateTime!
   description: String
-  file: Byte!
-  filename: String!
+  file: File!
   id: ID!
-  mimeType: String!
   name: String
-  updatedAt: DateTime!
 }
 
 input ImageInput {

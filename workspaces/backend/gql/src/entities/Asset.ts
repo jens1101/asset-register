@@ -7,7 +7,6 @@ export interface Asset {
   id: number;
   name: string | null;
   description: string | null;
-  filename: string;
   images: Image[];
   proofOfPurchase: Document | null;
   createdAt: Date;
@@ -43,10 +42,12 @@ export const AssetEntity = new EntitySchema<Asset>({
     images: {
       type: "one-to-many",
       target: EntityName.Image,
+      inverseSide: "asset",
     },
     proofOfPurchase: {
       type: "one-to-one",
       target: EntityName.Document,
+      inverseSide: "asset",
     },
   },
 });
