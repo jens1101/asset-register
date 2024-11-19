@@ -387,7 +387,7 @@ export const typeDefs = {
       fields: [
         {
           kind: "InputValueDefinition",
-          name: { kind: "Name", value: "file" },
+          name: { kind: "Name", value: "buffer" },
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "Byte" } },
@@ -438,7 +438,7 @@ export const typeDefs = {
         },
         {
           kind: "FieldDefinition",
-          name: { kind: "Name", value: "file" },
+          name: { kind: "Name", value: "buffer" },
           arguments: [],
           type: {
             kind: "NonNullType",

@@ -84,15 +84,15 @@ export type Error = {
 
 export type File = {
   __typename?: "File";
+  buffer: Scalars["Byte"]["output"];
   createdAt: Scalars["DateTime"]["output"];
-  file: Scalars["Byte"]["output"];
   filename: Scalars["String"]["output"];
   id: Scalars["ID"]["output"];
   mimeType: Scalars["String"]["output"];
 };
 
 export type FileInput = {
-  file: Scalars["Byte"]["input"];
+  buffer: Scalars["Byte"]["input"];
   filename: Scalars["String"]["input"];
   mimeType: Scalars["String"]["input"];
 };
@@ -376,8 +376,8 @@ export type FileResolvers<
   ParentType extends
     ResolversParentTypes["File"] = ResolversParentTypes["File"],
 > = {
+  buffer?: Resolver<ResolversTypes["Byte"], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
-  file?: Resolver<ResolversTypes["Byte"], ParentType, ContextType>;
   filename?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   mimeType?: Resolver<ResolversTypes["String"], ParentType, ContextType>;

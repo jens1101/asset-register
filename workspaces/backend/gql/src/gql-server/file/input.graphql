@@ -1,5 +1,5 @@
 input FileInput {
-  file: Byte!
+  buffer: Byte!
   filename: String!
   mimeType: String!
 }

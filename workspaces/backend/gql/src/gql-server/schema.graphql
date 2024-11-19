@@ -50,15 +50,15 @@ interface Error {
 }
 
 type File {
+  buffer: Byte!
   createdAt: DateTime!
-  file: Byte!
   filename: String!
   id: ID!
   mimeType: String!
 }
 
 input FileInput {
-  file: Byte!
+  buffer: Byte!
   filename: String!
   mimeType: String!
 }

@@ -3,7 +3,7 @@ import { EntitySchema } from "typeorm";
 
 export interface File {
   id: number;
-  file: Buffer;
+  buffer: Buffer;
   filename: string;
   mimeType: string;
   createdAt: Date;
@@ -17,7 +17,7 @@ export const FileEntity = new EntitySchema<File>({
       primary: true,
       generated: true,
     },
-    file: {
+    buffer: {
       type: "bytea",
     },
     filename: {

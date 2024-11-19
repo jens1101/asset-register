@@ -1,6 +1,6 @@
 type File {
   id: ID!
-  file: Byte!
+  buffer: Byte!
   filename: String!
   mimeType: String!
   createdAt: DateTime!
