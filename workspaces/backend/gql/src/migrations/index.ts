@@ -1,3 +1,3 @@
-import { Initial1731915839502 } from "./1731915839502-initial.js";
+import { Initial1732003053664 } from "./1732003053664-initial.js";
 
-export const migrations = [Initial1731915839502];
+export const migrations = [Initial1732003053664];

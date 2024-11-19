@@ -1,13 +1,13 @@
 import type { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Initial1731915839502 implements MigrationInterface {
-  name = "Initial1731915839502";
+export class Initial1732003053664 implements MigrationInterface {
+  name = "Initial1732003053664";
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
             CREATE TABLE "asset" (
                 "id" SERIAL NOT NULL,
-                "name" text,
+                "name" text NOT NULL,
                 "description" text,
                 "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
                 "updatedAt" TIMESTAMP NOT NULL DEFAULT now(),
@@ -28,7 +28,7 @@ export class Initial1731915839502 implements MigrationInterface {
     await queryRunner.query(`
             CREATE TABLE "file" (
                 "id" SERIAL NOT NULL,
-                "file" bytea NOT NULL,
+                "buffer" bytea NOT NULL,
                 "filename" text NOT NULL,
                 "mimeType" text NOT NULL,
                 "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
