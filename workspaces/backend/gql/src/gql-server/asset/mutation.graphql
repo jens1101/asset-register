@@ -1,4 +1,5 @@
 extend type Mutation {
-  createAsset(data: AssetInput!): AssetResponse!
+  createAsset(data: CreeateAssetInput!): AssetResponse!
+  updateAsset(data: UpdateAssetInput!): AssetResponse!
   deleteAsset(id: ID!): Void
 }

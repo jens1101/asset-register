@@ -58,14 +58,14 @@ export type AssetError = Error & {
   message: Scalars["String"]["output"];
 };
 
-export type AssetInput = {
+export type AssetResponse = Asset | AssetError;
+
+export type CreeateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   images?: InputMaybe<Array<ImageInput>>;
   name: Scalars["String"]["input"];
   proofOfPurchase?: InputMaybe<DocumentInput>;
 };
-
-export type AssetResponse = Asset | AssetError;
 
 export type Document = {
   __typename?: "Document";
@@ -119,14 +119,19 @@ export type Mutation = {
   __typename?: "Mutation";
   createAsset: AssetResponse;
   deleteAsset?: Maybe<Scalars["Void"]["output"]>;
+  updateAsset: AssetResponse;
 };
 
 export type MutationcreateAssetArgs = {
-  data: AssetInput;
+  data: CreeateAssetInput;
 };
 
 export type MutationdeleteAssetArgs = {
   id: Scalars["ID"]["input"];
+};
+
+export type MutationupdateAssetArgs = {
+  data: UpdateAssetInput;
 };
 
 export type Query = {
@@ -137,6 +142,12 @@ export type Query = {
 
 export type QueryassetArgs = {
   id: Scalars["ID"]["input"];
+};
+
+export type UpdateAssetInput = {
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["ID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -263,11 +274,11 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars["String"]["output"]>;
   ID: ResolverTypeWrapper<Scalars["ID"]["output"]>;
   AssetError: ResolverTypeWrapper<AssetError>;
-  AssetInput: AssetInput;
   AssetResponse: ResolverTypeWrapper<
     ResolversUnionTypes<ResolversTypes>["AssetResponse"]
   >;
   Byte: ResolverTypeWrapper<Scalars["Byte"]["output"]>;
+  CreeateAssetInput: CreeateAssetInput;
   DateTime: ResolverTypeWrapper<Scalars["DateTime"]["output"]>;
   Document: ResolverTypeWrapper<Document>;
   DocumentInput: DocumentInput;
@@ -278,6 +289,7 @@ export type ResolversTypes = {
   ImageInput: ImageInput;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
+  UpdateAssetInput: UpdateAssetInput;
   Void: ResolverTypeWrapper<Scalars["Void"]["output"]>;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
 };
@@ -288,9 +300,9 @@ export type ResolversParentTypes = {
   String: Scalars["String"]["output"];
   ID: Scalars["ID"]["output"];
   AssetError: AssetError;
-  AssetInput: AssetInput;
   AssetResponse: ResolversUnionTypes<ResolversParentTypes>["AssetResponse"];
   Byte: Scalars["Byte"]["output"];
+  CreeateAssetInput: CreeateAssetInput;
   DateTime: Scalars["DateTime"]["output"];
   Document: Document;
   DocumentInput: DocumentInput;
@@ -301,6 +313,7 @@ export type ResolversParentTypes = {
   ImageInput: ImageInput;
   Mutation: {};
   Query: {};
+  UpdateAssetInput: UpdateAssetInput;
   Void: Scalars["Void"]["output"];
   Boolean: Scalars["Boolean"]["output"];
 };
@@ -427,6 +440,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationdeleteAssetArgs, "id">
+  >;
+  updateAsset?: Resolver<
+    ResolversTypes["AssetResponse"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationupdateAssetArgs, "data">
   >;
 };
 

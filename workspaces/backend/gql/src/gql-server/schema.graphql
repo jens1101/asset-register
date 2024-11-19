@@ -12,19 +12,19 @@ type AssetError implements Error {
   message: String!
 }
 
-input AssetInput {
-  description: String
-  images: [ImageInput!]
-  name: String!
-  proofOfPurchase: DocumentInput
-}
-
 union AssetResponse = Asset | AssetError
 
 """
 Represents the Node `Buffer` type
 """
 scalar Byte
+
+input CreeateAssetInput {
+  description: String
+  images: [ImageInput!]
+  name: String!
+  proofOfPurchase: DocumentInput
+}
 
 """
 RFC 3339 compliant date-time string.
@@ -79,13 +79,20 @@ input ImageInput {
 }
 
 type Mutation {
-  createAsset(data: AssetInput!): AssetResponse!
+  createAsset(data: CreeateAssetInput!): AssetResponse!
   deleteAsset(id: ID!): Void
+  updateAsset(data: UpdateAssetInput!): AssetResponse!
 }
 
 type Query {
   asset(id: ID!): AssetResponse!
   assets: [AssetResponse!]!
+}
+
+input UpdateAssetInput {
+  description: String
+  id: ID!
+  name: String
 }
 
 """

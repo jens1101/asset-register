@@ -5,7 +5,7 @@ export const typeDefs = {
   definitions: [
     {
       kind: "InputObjectTypeDefinition",
-      name: { kind: "Name", value: "AssetInput" },
+      name: { kind: "Name", value: "CreeateAssetInput" },
       directives: [],
       fields: [
         {
@@ -53,6 +53,34 @@ export const typeDefs = {
       ],
     },
     {
+      kind: "InputObjectTypeDefinition",
+      name: { kind: "Name", value: "UpdateAssetInput" },
+      directives: [],
+      fields: [
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "id" },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "name" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "description" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          directives: [],
+        },
+      ],
+    },
+    {
       name: { kind: "Name", value: "Mutation" },
       kind: "ObjectTypeDefinition",
       fields: [
@@ -67,7 +95,33 @@ export const typeDefs = {
                 kind: "NonNullType",
                 type: {
                   kind: "NamedType",
-                  name: { kind: "Name", value: "AssetInput" },
+                  name: { kind: "Name", value: "CreeateAssetInput" },
+                },
+              },
+              directives: [],
+            },
+          ],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "AssetResponse" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "updateAsset" },
+          arguments: [
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "data" },
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "UpdateAssetInput" },
                 },
               },
               directives: [],
