@@ -46,7 +46,7 @@ export type Asset = {
   description?: Maybe<Scalars["String"]["output"]>;
   id: Scalars["ID"]["output"];
   images: Array<Image>;
-  name?: Maybe<Scalars["String"]["output"]>;
+  name: Scalars["String"]["output"];
   proofOfPurchase?: Maybe<Document>;
   updatedAt: Scalars["DateTime"]["output"];
 };
@@ -59,7 +59,7 @@ export type AssetError = Error & {
 export type AssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   images?: InputMaybe<Array<ImageInput>>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
+  name: Scalars["String"]["input"];
   proofOfPurchase?: InputMaybe<DocumentInput>;
 };
 
@@ -309,7 +309,7 @@ export type AssetResolvers<
   >;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   images?: Resolver<Array<ResolversTypes["Image"]>, ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   proofOfPurchase?: Resolver<
     Maybe<ResolversTypes["Document"]>,
     ParentType,

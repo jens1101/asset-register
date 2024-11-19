@@ -6,7 +6,7 @@ import { EntitySchema } from "typeorm";
 
 export interface Asset {
   id: number;
-  name: Maybe<string>;
+  name: string;
   description: Maybe<string>;
   images: Image[];
   proofOfPurchase: Maybe<Document>;
@@ -24,7 +24,6 @@ export const AssetEntity = new EntitySchema<Asset>({
     },
     name: {
       type: "text",
-      nullable: true,
     },
     description: {
       type: "text",

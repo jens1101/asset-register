@@ -1,5 +1,5 @@
 input AssetInput {
-  name: String
+  name: String!
   description: String
   images: [ImageInput!]
   proofOfPurchase: DocumentInput

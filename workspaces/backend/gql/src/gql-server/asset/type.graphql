@@ -6,7 +6,7 @@ type AssetError implements Error {
 
 type Asset {
   id: ID!
-  name: String
+  name: String!
   description: String
   images: [Image!]!
   proofOfPurchase: Document

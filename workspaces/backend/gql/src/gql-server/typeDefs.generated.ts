@@ -11,7 +11,13 @@ export const typeDefs = {
         {
           kind: "InputValueDefinition",
           name: { kind: "Name", value: "name" },
-          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
           directives: [],
         },
         {
@@ -185,7 +191,13 @@ export const typeDefs = {
           kind: "FieldDefinition",
           name: { kind: "Name", value: "name" },
           arguments: [],
-          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
           directives: [],
         },
         {

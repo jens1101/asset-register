@@ -3,7 +3,7 @@ type Asset {
   description: String
   id: ID!
   images: [Image!]!
-  name: String
+  name: String!
   proofOfPurchase: Document
   updatedAt: DateTime!
 }
@@ -15,7 +15,7 @@ type AssetError implements Error {
 input AssetInput {
   description: String
   images: [ImageInput!]
-  name: String
+  name: String!
   proofOfPurchase: DocumentInput
 }
 
