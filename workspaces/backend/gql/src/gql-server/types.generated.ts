@@ -38,6 +38,8 @@ export type Scalars = {
   Byte: { input: Buffer; output: Buffer };
   /** RFC 3339 compliant date-time string. */
   DateTime: { input: Date | string; output: Date };
+  /** Represents the absence of a value */
+  Void: { input: void; output: void };
 };
 
 export type Asset = {
@@ -116,10 +118,15 @@ export type ImageInput = {
 export type Mutation = {
   __typename?: "Mutation";
   createAsset: AssetResponse;
+  deleteAsset?: Maybe<Scalars["Void"]["output"]>;
 };
 
 export type MutationcreateAssetArgs = {
   data: AssetInput;
+};
+
+export type MutationdeleteAssetArgs = {
+  id: Scalars["ID"]["input"];
 };
 
 export type Query = {
@@ -271,6 +278,7 @@ export type ResolversTypes = {
   ImageInput: ImageInput;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
+  Void: ResolverTypeWrapper<Scalars["Void"]["output"]>;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
 };
 
@@ -293,6 +301,7 @@ export type ResolversParentTypes = {
   ImageInput: ImageInput;
   Mutation: {};
   Query: {};
+  Void: Scalars["Void"]["output"];
   Boolean: Scalars["Boolean"]["output"];
 };
 
@@ -413,6 +422,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationcreateAssetArgs, "data">
   >;
+  deleteAsset?: Resolver<
+    Maybe<ResolversTypes["Void"]>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationdeleteAssetArgs, "id">
+  >;
 };
 
 export type QueryResolvers<
@@ -433,6 +448,11 @@ export type QueryResolvers<
   >;
 };
 
+export interface VoidScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes["Void"], any> {
+  name: "Void";
+}
+
 export type Resolvers<ContextType = any> = {
   Asset?: AssetResolvers<ContextType>;
   AssetError?: AssetErrorResolvers<ContextType>;
@@ -445,4 +465,5 @@ export type Resolvers<ContextType = any> = {
   Image?: ImageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Void?: GraphQLScalarType;
 };

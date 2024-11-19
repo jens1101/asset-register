@@ -8,6 +8,9 @@ scalar DateTime
 "Represents the Node `Buffer` type"
 scalar Byte
 
+"Represents the absence of a value"
+scalar Void
+
 "A generic error interface."
 interface Error {
   message: String!

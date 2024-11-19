@@ -1,3 +1,4 @@
 extend type Mutation {
   createAsset(data: AssetInput!): AssetResponse!
+  deleteAsset(id: ID!): Void
 }

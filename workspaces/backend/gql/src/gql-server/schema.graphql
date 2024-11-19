@@ -80,9 +80,15 @@ input ImageInput {
 
 type Mutation {
   createAsset(data: AssetInput!): AssetResponse!
+  deleteAsset(id: ID!): Void
 }
 
 type Query {
   asset(id: ID!): AssetResponse!
   assets: [AssetResponse!]!
 }
+
+"""
+Represents the absence of a value
+"""
+scalar Void

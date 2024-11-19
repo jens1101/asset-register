@@ -82,6 +82,26 @@ export const typeDefs = {
           },
           directives: [],
         },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "deleteAsset" },
+          arguments: [
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "id" },
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "ID" },
+                },
+              },
+              directives: [],
+            },
+          ],
+          type: { kind: "NamedType", name: { kind: "Name", value: "Void" } },
+          directives: [],
+        },
       ],
       directives: [],
       interfaces: [],
@@ -282,6 +302,16 @@ export const typeDefs = {
         block: false,
       },
       name: { kind: "Name", value: "Byte" },
+      directives: [],
+    },
+    {
+      kind: "ScalarTypeDefinition",
+      description: {
+        kind: "StringValue",
+        value: "Represents the absence of a value",
+        block: false,
+      },
+      name: { kind: "Name", value: "Void" },
       directives: [],
     },
     {
