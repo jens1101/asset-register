@@ -2,4 +2,11 @@ extend type Mutation {
   createAsset(data: CreeateAssetInput!): AssetResponse!
   updateAsset(data: UpdateAssetInput!): AssetResponse!
   deleteAsset(id: ID!): Void
+  replaceProofOfPurchase(
+    id: ID!
+    proofOfPurchase: DocumentInput!
+  ): AssetResponse!
+  removeProofOfPurchase(id: ID!): AssetResponse!
+  addAssetImages(id: ID!, images: [ImageInput!]!): AssetResponse!
+  removeAssetImages(id: ID!, imageIds: [ID!]): AssetResponse!
 }

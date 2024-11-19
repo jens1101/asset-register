@@ -117,9 +117,18 @@ export type ImageInput = {
 
 export type Mutation = {
   __typename?: "Mutation";
+  addAssetImages: AssetResponse;
   createAsset: AssetResponse;
   deleteAsset?: Maybe<Scalars["Void"]["output"]>;
+  removeAssetImages: AssetResponse;
+  removeProofOfPurchase: AssetResponse;
+  replaceProofOfPurchase: AssetResponse;
   updateAsset: AssetResponse;
+};
+
+export type MutationaddAssetImagesArgs = {
+  id: Scalars["ID"]["input"];
+  images: Array<ImageInput>;
 };
 
 export type MutationcreateAssetArgs = {
@@ -128,6 +137,20 @@ export type MutationcreateAssetArgs = {
 
 export type MutationdeleteAssetArgs = {
   id: Scalars["ID"]["input"];
+};
+
+export type MutationremoveAssetImagesArgs = {
+  id: Scalars["ID"]["input"];
+  imageIds?: InputMaybe<Array<Scalars["ID"]["input"]>>;
+};
+
+export type MutationremoveProofOfPurchaseArgs = {
+  id: Scalars["ID"]["input"];
+};
+
+export type MutationreplaceProofOfPurchaseArgs = {
+  id: Scalars["ID"]["input"];
+  proofOfPurchase: DocumentInput;
 };
 
 export type MutationupdateAssetArgs = {
@@ -429,6 +452,12 @@ export type MutationResolvers<
   ParentType extends
     ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"],
 > = {
+  addAssetImages?: Resolver<
+    ResolversTypes["AssetResponse"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationaddAssetImagesArgs, "id" | "images">
+  >;
   createAsset?: Resolver<
     ResolversTypes["AssetResponse"],
     ParentType,
@@ -440,6 +469,24 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationdeleteAssetArgs, "id">
+  >;
+  removeAssetImages?: Resolver<
+    ResolversTypes["AssetResponse"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationremoveAssetImagesArgs, "id">
+  >;
+  removeProofOfPurchase?: Resolver<
+    ResolversTypes["AssetResponse"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationremoveProofOfPurchaseArgs, "id">
+  >;
+  replaceProofOfPurchase?: Resolver<
+    ResolversTypes["AssetResponse"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationreplaceProofOfPurchaseArgs, "id" | "proofOfPurchase">
   >;
   updateAsset?: Resolver<
     ResolversTypes["AssetResponse"],
