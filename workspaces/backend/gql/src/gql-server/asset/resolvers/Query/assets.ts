@@ -11,8 +11,13 @@ export const assets: NonNullable<QueryResolvers["assets"]> = async (
 
   const assets = await assetDataRepository.find({
     relations: {
-      proofOfPurchase: true,
       images: true,
+      proofOfPurchase: true,
+    },
+    order: {
+      images: {
+        position: "ASC",
+      },
     },
   });
 

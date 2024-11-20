@@ -2,12 +2,14 @@ import type { Maybe } from "../common/types.js";
 import { EntityName } from "../enums/Entities.js";
 import type { Asset } from "./Asset.js";
 import type { File } from "./File.js";
+import { Decimal } from "decimal.js";
 import { EntitySchema } from "typeorm";
 
 export interface Image {
   id: number;
   name: Maybe<string>;
   description: Maybe<string>;
+  position: Decimal;
   createdAt: Date;
   file: File;
   asset: Asset;
@@ -15,6 +17,16 @@ export interface Image {
 
 export const ImageEntity = new EntitySchema<Image>({
   name: EntityName.Image,
+  orderBy: {
+    asset: "ASC",
+    position: "ASC",
+  },
+  indices: [
+    {
+      columns: ["asset", "position"],
+      unique: true,
+    },
+  ],
   columns: {
     id: {
       type: Number,
@@ -28,6 +40,17 @@ export const ImageEntity = new EntitySchema<Image>({
     description: {
       type: "text",
       nullable: true,
+    },
+    position: {
+      type: "numeric",
+      transformer: {
+        to: (value: Decimal): string => {
+          return value.toString();
+        },
+        from: (value: string): Decimal => {
+          return new Decimal(value);
+        },
+      },
     },
     createdAt: {
       type: Date,

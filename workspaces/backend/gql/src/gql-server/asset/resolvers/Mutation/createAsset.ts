@@ -10,6 +10,7 @@ import {
   ImageEntity,
 } from "../../../../entities/index.js";
 import type { MutationResolvers } from "./../../../types.generated.js";
+import { Decimal } from "decimal.js";
 
 export const createAsset: NonNullable<
   MutationResolvers["createAsset"]
@@ -25,9 +26,10 @@ export const createAsset: NonNullable<
       ? await manager.save(
           ImageEntity,
           await Promise.all(
-            data.images.map(async (image) => ({
+            data.images.map(async (image, index) => ({
               ...image,
               asset,
+              position: new Decimal(index),
               file: await manager.save(FileEntity, image.file),
             })),
           ),
