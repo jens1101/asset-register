@@ -13,9 +13,9 @@ export class ImagePosition1732089070792 implements MigrationInterface {
       CREATE TEMP SEQUENCE "positionSerial" START 0 MINVALUE 0
     `);
 
-    const assets: { assetId: number }[] = await queryRunner.query(`
+    const assets = (await queryRunner.query(`
       SELECT DISTINCT "assetId" FROM "image"
-    `);
+    `)) as { assetId: number }[];
 
     for (const { assetId } of assets) {
       await queryRunner.query(

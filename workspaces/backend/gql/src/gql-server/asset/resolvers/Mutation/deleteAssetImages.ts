@@ -3,6 +3,7 @@ import {
   type Asset,
   AssetEntity,
   FileEntity,
+  type Image,
   ImageEntity,
 } from "../../../../entities/index.js";
 import type { MutationResolvers } from "./../../../types.generated.js";
@@ -19,8 +20,18 @@ export const deleteAssetImages: NonNullable<
       },
     });
 
-    const imagesToRemove = asset.images.filter(
-      (image) => !imageIds || imageIds.includes(String(image.id)),
+    const { imagesToKeep, imagesToRemove } = asset.images.reduce<{
+      imagesToKeep: Image[];
+      imagesToRemove: Image[];
+    }>(
+      (acc, image) => {
+        !imageIds || imageIds.includes(String(image.id))
+          ? acc.imagesToRemove.push(image)
+          : acc.imagesToKeep.push(image);
+
+        return acc;
+      },
+      { imagesToKeep: [], imagesToRemove: [] },
     );
 
     await manager.remove(ImageEntity, imagesToRemove);
@@ -31,7 +42,7 @@ export const deleteAssetImages: NonNullable<
 
     return {
       ...asset,
-      images: asset.images.filter((image) => image.id != null),
+      images: imagesToKeep,
     } satisfies Asset;
   });
 

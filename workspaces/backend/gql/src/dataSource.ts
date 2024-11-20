@@ -33,8 +33,8 @@ export function initialiseDataSource(): Promise<DataSource> {
       dataSource
         .initialize()
         .then(resolve)
-        .catch((error) => {
-          if (operation.retry(error)) {
+        .catch((error: unknown) => {
+          if (operation.retry(error instanceof Error ? error : undefined)) {
             return;
           }
 
