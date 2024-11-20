@@ -196,7 +196,7 @@ export const typeDefs = {
         },
         {
           kind: "FieldDefinition",
-          name: { kind: "Name", value: "removeProofOfPurchase" },
+          name: { kind: "Name", value: "deleteProofOfPurchase" },
           arguments: [
             {
               kind: "InputValueDefinition",
@@ -266,7 +266,7 @@ export const typeDefs = {
         },
         {
           kind: "FieldDefinition",
-          name: { kind: "Name", value: "removeAssetImages" },
+          name: { kind: "Name", value: "deleteAssetImages" },
           arguments: [
             {
               kind: "InputValueDefinition",

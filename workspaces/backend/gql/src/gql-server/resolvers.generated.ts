@@ -4,8 +4,8 @@ import { AssetError } from "./asset/resolvers/AssetError.js";
 import { addAssetImages as Mutation_addAssetImages } from "./asset/resolvers/Mutation/addAssetImages.js";
 import { createAsset as Mutation_createAsset } from "./asset/resolvers/Mutation/createAsset.js";
 import { deleteAsset as Mutation_deleteAsset } from "./asset/resolvers/Mutation/deleteAsset.js";
-import { removeAssetImages as Mutation_removeAssetImages } from "./asset/resolvers/Mutation/removeAssetImages.js";
-import { removeProofOfPurchase as Mutation_removeProofOfPurchase } from "./asset/resolvers/Mutation/removeProofOfPurchase.js";
+import { deleteAssetImages as Mutation_deleteAssetImages } from "./asset/resolvers/Mutation/deleteAssetImages.js";
+import { deleteProofOfPurchase as Mutation_deleteProofOfPurchase } from "./asset/resolvers/Mutation/deleteProofOfPurchase.js";
 import { replaceProofOfPurchase as Mutation_replaceProofOfPurchase } from "./asset/resolvers/Mutation/replaceProofOfPurchase.js";
 import { updateAsset as Mutation_updateAsset } from "./asset/resolvers/Mutation/updateAsset.js";
 import { asset as Query_asset } from "./asset/resolvers/Query/asset.js";
@@ -22,8 +22,8 @@ export const resolvers: Resolvers = {
     addAssetImages: Mutation_addAssetImages,
     createAsset: Mutation_createAsset,
     deleteAsset: Mutation_deleteAsset,
-    removeAssetImages: Mutation_removeAssetImages,
-    removeProofOfPurchase: Mutation_removeProofOfPurchase,
+    deleteAssetImages: Mutation_deleteAssetImages,
+    deleteProofOfPurchase: Mutation_deleteProofOfPurchase,
     replaceProofOfPurchase: Mutation_replaceProofOfPurchase,
     updateAsset: Mutation_updateAsset,
   },

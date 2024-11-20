@@ -6,7 +6,7 @@ extend type Mutation {
     id: ID!
     proofOfPurchase: DocumentInput!
   ): AssetResponse!
-  removeProofOfPurchase(id: ID!): AssetResponse!
+  deleteProofOfPurchase(id: ID!): AssetResponse!
   addAssetImages(id: ID!, images: [ImageInput!]!): AssetResponse!
-  removeAssetImages(id: ID!, imageIds: [ID!]): AssetResponse!
+  deleteAssetImages(id: ID!, imageIds: [ID!]): AssetResponse!
 }

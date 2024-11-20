@@ -7,8 +7,8 @@ import {
 } from "../../../../entities/index.js";
 import type { MutationResolvers } from "./../../../types.generated.js";
 
-export const removeProofOfPurchase: NonNullable<
-  MutationResolvers["removeProofOfPurchase"]
+export const deleteProofOfPurchase: NonNullable<
+  MutationResolvers["deleteProofOfPurchase"]
 > = async (_parent, { id }, _ctx) => {
   const asset = await dataSource.transaction<Asset>(async (manager) => {
     const asset = await manager.findOneOrFail(AssetEntity, {

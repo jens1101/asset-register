@@ -7,8 +7,8 @@ import {
 } from "../../../../entities/index.js";
 import type { MutationResolvers } from "./../../../types.generated.js";
 
-export const removeAssetImages: NonNullable<
-  MutationResolvers["removeAssetImages"]
+export const deleteAssetImages: NonNullable<
+  MutationResolvers["deleteAssetImages"]
 > = async (_parent, { id, imageIds }, _ctx) => {
   const asset = await dataSource.transaction<Asset>(async (manager) => {
     const asset = await manager.findOneOrFail(AssetEntity, {

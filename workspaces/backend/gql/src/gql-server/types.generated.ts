@@ -120,8 +120,8 @@ export type Mutation = {
   addAssetImages: AssetResponse;
   createAsset: AssetResponse;
   deleteAsset?: Maybe<Scalars["Void"]["output"]>;
-  removeAssetImages: AssetResponse;
-  removeProofOfPurchase: AssetResponse;
+  deleteAssetImages: AssetResponse;
+  deleteProofOfPurchase: AssetResponse;
   replaceProofOfPurchase: AssetResponse;
   updateAsset: AssetResponse;
 };
@@ -139,12 +139,12 @@ export type MutationdeleteAssetArgs = {
   id: Scalars["ID"]["input"];
 };
 
-export type MutationremoveAssetImagesArgs = {
+export type MutationdeleteAssetImagesArgs = {
   id: Scalars["ID"]["input"];
   imageIds?: InputMaybe<Array<Scalars["ID"]["input"]>>;
 };
 
-export type MutationremoveProofOfPurchaseArgs = {
+export type MutationdeleteProofOfPurchaseArgs = {
   id: Scalars["ID"]["input"];
 };
 
@@ -470,17 +470,17 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationdeleteAssetArgs, "id">
   >;
-  removeAssetImages?: Resolver<
+  deleteAssetImages?: Resolver<
     ResolversTypes["AssetResponse"],
     ParentType,
     ContextType,
-    RequireFields<MutationremoveAssetImagesArgs, "id">
+    RequireFields<MutationdeleteAssetImagesArgs, "id">
   >;
-  removeProofOfPurchase?: Resolver<
+  deleteProofOfPurchase?: Resolver<
     ResolversTypes["AssetResponse"],
     ParentType,
     ContextType,
-    RequireFields<MutationremoveProofOfPurchaseArgs, "id">
+    RequireFields<MutationdeleteProofOfPurchaseArgs, "id">
   >;
   replaceProofOfPurchase?: Resolver<
     ResolversTypes["AssetResponse"],

@@ -82,8 +82,8 @@ type Mutation {
   addAssetImages(id: ID!, images: [ImageInput!]!): AssetResponse!
   createAsset(data: CreeateAssetInput!): AssetResponse!
   deleteAsset(id: ID!): Void
-  removeAssetImages(id: ID!, imageIds: [ID!]): AssetResponse!
-  removeProofOfPurchase(id: ID!): AssetResponse!
+  deleteAssetImages(id: ID!, imageIds: [ID!]): AssetResponse!
+  deleteProofOfPurchase(id: ID!): AssetResponse!
   replaceProofOfPurchase(
     id: ID!
     proofOfPurchase: DocumentInput!
