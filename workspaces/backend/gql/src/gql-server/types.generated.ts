@@ -60,11 +60,27 @@ export type AssetError = Error & {
 
 export type AssetResponse = Asset | AssetError;
 
+export type CreateDocumentInput = {
+  file: CreeateFileInput;
+};
+
+export type CreateImageInput = {
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  file: CreeateFileInput;
+  name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
 export type CreeateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
-  images?: InputMaybe<Array<ImageInput>>;
+  images?: InputMaybe<Array<CreateImageInput>>;
   name: Scalars["String"]["input"];
-  proofOfPurchase?: InputMaybe<DocumentInput>;
+  proofOfPurchase?: InputMaybe<CreateDocumentInput>;
+};
+
+export type CreeateFileInput = {
+  buffer: Scalars["Byte"]["input"];
+  filename: Scalars["String"]["input"];
+  mimeType: Scalars["String"]["input"];
 };
 
 export type Document = {
@@ -73,10 +89,6 @@ export type Document = {
   createdAt: Scalars["DateTime"]["output"];
   file: File;
   id: Scalars["ID"]["output"];
-};
-
-export type DocumentInput = {
-  file: FileInput;
 };
 
 /** A generic error interface. */
@@ -93,12 +105,6 @@ export type File = {
   mimeType: Scalars["String"]["output"];
 };
 
-export type FileInput = {
-  buffer: Scalars["Byte"]["input"];
-  filename: Scalars["String"]["input"];
-  mimeType: Scalars["String"]["input"];
-};
-
 export type Image = {
   __typename?: "Image";
   asset: Asset;
@@ -109,11 +115,12 @@ export type Image = {
   name?: Maybe<Scalars["String"]["output"]>;
 };
 
-export type ImageInput = {
-  description?: InputMaybe<Scalars["String"]["input"]>;
-  file: FileInput;
-  name?: InputMaybe<Scalars["String"]["input"]>;
+export type ImageError = Error & {
+  __typename?: "ImageError";
+  message: Scalars["String"]["output"];
 };
+
+export type ImageResponse = Image | ImageError;
 
 export type Mutation = {
   __typename?: "Mutation";
@@ -124,11 +131,12 @@ export type Mutation = {
   deleteProofOfPurchase: AssetResponse;
   replaceProofOfPurchase: AssetResponse;
   updateAsset: AssetResponse;
+  updateImage: ImageResponse;
 };
 
 export type MutationaddAssetImagesArgs = {
   id: Scalars["ID"]["input"];
-  images: Array<ImageInput>;
+  images: Array<CreateImageInput>;
 };
 
 export type MutationcreateAssetArgs = {
@@ -150,11 +158,15 @@ export type MutationdeleteProofOfPurchaseArgs = {
 
 export type MutationreplaceProofOfPurchaseArgs = {
   id: Scalars["ID"]["input"];
-  proofOfPurchase: DocumentInput;
+  proofOfPurchase: CreateDocumentInput;
 };
 
 export type MutationupdateAssetArgs = {
   data: UpdateAssetInput;
+};
+
+export type MutationupdateImageArgs = {
+  data: UpdateImageInput;
 };
 
 export type Query = {
@@ -171,6 +183,13 @@ export type UpdateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   id: Scalars["ID"]["input"];
   name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateImageInput = {
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  id: Scalars["ID"]["input"];
+  name?: InputMaybe<Scalars["String"]["input"]>;
+  previousImageId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
@@ -283,12 +302,17 @@ export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
   AssetResponse:
     | (Asset & { __typename: "Asset" })
     | (AssetError & { __typename: "AssetError" });
+  ImageResponse:
+    | (Image & { __typename: "Image" })
+    | (ImageError & { __typename: "ImageError" });
 };
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
   {
-    Error: AssetError & { __typename: "AssetError" };
+    Error:
+      | (AssetError & { __typename: "AssetError" })
+      | (ImageError & { __typename: "ImageError" });
   };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -301,18 +325,23 @@ export type ResolversTypes = {
     ResolversUnionTypes<ResolversTypes>["AssetResponse"]
   >;
   Byte: ResolverTypeWrapper<Scalars["Byte"]["output"]>;
+  CreateDocumentInput: CreateDocumentInput;
+  CreateImageInput: CreateImageInput;
   CreeateAssetInput: CreeateAssetInput;
+  CreeateFileInput: CreeateFileInput;
   DateTime: ResolverTypeWrapper<Scalars["DateTime"]["output"]>;
   Document: ResolverTypeWrapper<Document>;
-  DocumentInput: DocumentInput;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>["Error"]>;
   File: ResolverTypeWrapper<File>;
-  FileInput: FileInput;
   Image: ResolverTypeWrapper<Image>;
-  ImageInput: ImageInput;
+  ImageError: ResolverTypeWrapper<ImageError>;
+  ImageResponse: ResolverTypeWrapper<
+    ResolversUnionTypes<ResolversTypes>["ImageResponse"]
+  >;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   UpdateAssetInput: UpdateAssetInput;
+  UpdateImageInput: UpdateImageInput;
   Void: ResolverTypeWrapper<Scalars["Void"]["output"]>;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
 };
@@ -325,18 +354,21 @@ export type ResolversParentTypes = {
   AssetError: AssetError;
   AssetResponse: ResolversUnionTypes<ResolversParentTypes>["AssetResponse"];
   Byte: Scalars["Byte"]["output"];
+  CreateDocumentInput: CreateDocumentInput;
+  CreateImageInput: CreateImageInput;
   CreeateAssetInput: CreeateAssetInput;
+  CreeateFileInput: CreeateFileInput;
   DateTime: Scalars["DateTime"]["output"];
   Document: Document;
-  DocumentInput: DocumentInput;
   Error: ResolversInterfaceTypes<ResolversParentTypes>["Error"];
   File: File;
-  FileInput: FileInput;
   Image: Image;
-  ImageInput: ImageInput;
+  ImageError: ImageError;
+  ImageResponse: ResolversUnionTypes<ResolversParentTypes>["ImageResponse"];
   Mutation: {};
   Query: {};
   UpdateAssetInput: UpdateAssetInput;
+  UpdateImageInput: UpdateImageInput;
   Void: Scalars["Void"]["output"];
   Boolean: Scalars["Boolean"]["output"];
 };
@@ -412,7 +444,11 @@ export type ErrorResolvers<
   ParentType extends
     ResolversParentTypes["Error"] = ResolversParentTypes["Error"],
 > = {
-  __resolveType?: TypeResolveFn<"AssetError", ParentType, ContextType>;
+  __resolveType?: TypeResolveFn<
+    "AssetError" | "ImageError",
+    ParentType,
+    ContextType
+  >;
   message?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
 };
 
@@ -445,6 +481,27 @@ export type ImageResolvers<
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ImageErrorResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["ImageError"] = ResolversParentTypes["ImageError"],
+> = {
+  message?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ImageResponseResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["ImageResponse"] = ResolversParentTypes["ImageResponse"],
+> = {
+  __resolveType?: TypeResolveFn<
+    "Image" | "ImageError",
+    ParentType,
+    ContextType
+  >;
 };
 
 export type MutationResolvers<
@@ -494,6 +551,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationupdateAssetArgs, "data">
   >;
+  updateImage?: Resolver<
+    ResolversTypes["ImageResponse"],
+    ParentType,
+    ContextType,
+    RequireFields<MutationupdateImageArgs, "data">
+  >;
 };
 
 export type QueryResolvers<
@@ -529,6 +592,8 @@ export type Resolvers<ContextType = any> = {
   Error?: ErrorResolvers<ContextType>;
   File?: FileResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
+  ImageError?: ImageErrorResolvers<ContextType>;
+  ImageResponse?: ImageResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Void?: GraphQLScalarType;

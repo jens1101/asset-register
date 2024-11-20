@@ -1,4 +1,4 @@
-input FileInput {
+input CreeateFileInput {
   buffer: Byte!
   filename: String!
   mimeType: String!

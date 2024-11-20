@@ -13,6 +13,8 @@ import { assets as Query_assets } from "./asset/resolvers/Query/assets.js";
 import { Document } from "./document/resolvers/Document.js";
 import { File } from "./file/resolvers/File.js";
 import { Image } from "./image/resolvers/Image.js";
+import { ImageError } from "./image/resolvers/ImageError.js";
+import { updateImage as Mutation_updateImage } from "./image/resolvers/Mutation/updateImage.js";
 import type { Resolvers } from "./types.generated.js";
 import { ByteResolver, DateTimeResolver, VoidResolver } from "graphql-scalars";
 
@@ -26,6 +28,7 @@ export const resolvers: Resolvers = {
     deleteProofOfPurchase: Mutation_deleteProofOfPurchase,
     replaceProofOfPurchase: Mutation_replaceProofOfPurchase,
     updateAsset: Mutation_updateAsset,
+    updateImage: Mutation_updateImage,
   },
 
   Asset: Asset,
@@ -33,6 +36,7 @@ export const resolvers: Resolvers = {
   Document: Document,
   File: File,
   Image: Image,
+  ImageError: ImageError,
   Byte: ByteResolver,
   DateTime: DateTimeResolver,
   Void: VoidResolver,

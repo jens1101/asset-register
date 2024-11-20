@@ -1,8 +1,8 @@
 input CreeateAssetInput {
   name: String!
   description: String
-  images: [ImageInput!]
-  proofOfPurchase: DocumentInput
+  images: [CreateImageInput!]
+  proofOfPurchase: CreateDocumentInput
 }
 
 input UpdateAssetInput {

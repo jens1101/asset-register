@@ -19,11 +19,27 @@ Represents the Node `Buffer` type
 """
 scalar Byte
 
+input CreateDocumentInput {
+  file: CreeateFileInput!
+}
+
+input CreateImageInput {
+  description: String
+  file: CreeateFileInput!
+  name: String
+}
+
 input CreeateAssetInput {
   description: String
-  images: [ImageInput!]
+  images: [CreateImageInput!]
   name: String!
-  proofOfPurchase: DocumentInput
+  proofOfPurchase: CreateDocumentInput
+}
+
+input CreeateFileInput {
+  buffer: Byte!
+  filename: String!
+  mimeType: String!
 }
 
 """
@@ -36,10 +52,6 @@ type Document {
   createdAt: DateTime!
   file: File!
   id: ID!
-}
-
-input DocumentInput {
-  file: FileInput!
 }
 
 """
@@ -57,12 +69,6 @@ type File {
   mimeType: String!
 }
 
-input FileInput {
-  buffer: Byte!
-  filename: String!
-  mimeType: String!
-}
-
 type Image {
   asset: Asset!
   createdAt: DateTime!
@@ -72,23 +78,24 @@ type Image {
   name: String
 }
 
-input ImageInput {
-  description: String
-  file: FileInput!
-  name: String
+type ImageError implements Error {
+  message: String!
 }
 
+union ImageResponse = Image | ImageError
+
 type Mutation {
-  addAssetImages(id: ID!, images: [ImageInput!]!): AssetResponse!
+  addAssetImages(id: ID!, images: [CreateImageInput!]!): AssetResponse!
   createAsset(data: CreeateAssetInput!): AssetResponse!
   deleteAsset(id: ID!): Void
   deleteAssetImages(id: ID!, imageIds: [ID!]): AssetResponse!
   deleteProofOfPurchase(id: ID!): AssetResponse!
   replaceProofOfPurchase(
     id: ID!
-    proofOfPurchase: DocumentInput!
+    proofOfPurchase: CreateDocumentInput!
   ): AssetResponse!
   updateAsset(data: UpdateAssetInput!): AssetResponse!
+  updateImage(data: UpdateImageInput!): ImageResponse!
 }
 
 type Query {
@@ -100,6 +107,13 @@ input UpdateAssetInput {
   description: String
   id: ID!
   name: String
+}
+
+input UpdateImageInput {
+  description: String
+  id: ID!
+  name: String
+  previousImageId: ID
 }
 
 """

@@ -35,7 +35,7 @@ export const typeDefs = {
               kind: "NonNullType",
               type: {
                 kind: "NamedType",
-                name: { kind: "Name", value: "ImageInput" },
+                name: { kind: "Name", value: "CreateImageInput" },
               },
             },
           },
@@ -46,7 +46,7 @@ export const typeDefs = {
           name: { kind: "Name", value: "proofOfPurchase" },
           type: {
             kind: "NamedType",
-            name: { kind: "Name", value: "DocumentInput" },
+            name: { kind: "Name", value: "CreateDocumentInput" },
           },
           directives: [],
         },
@@ -179,7 +179,7 @@ export const typeDefs = {
                 kind: "NonNullType",
                 type: {
                   kind: "NamedType",
-                  name: { kind: "Name", value: "DocumentInput" },
+                  name: { kind: "Name", value: "CreateDocumentInput" },
                 },
               },
               directives: [],
@@ -247,7 +247,7 @@ export const typeDefs = {
                     kind: "NonNullType",
                     type: {
                       kind: "NamedType",
-                      name: { kind: "Name", value: "ImageInput" },
+                      name: { kind: "Name", value: "CreateImageInput" },
                     },
                   },
                 },
@@ -301,6 +301,32 @@ export const typeDefs = {
             type: {
               kind: "NamedType",
               name: { kind: "Name", value: "AssetResponse" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "updateImage" },
+          arguments: [
+            {
+              kind: "InputValueDefinition",
+              name: { kind: "Name", value: "data" },
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "UpdateImageInput" },
+                },
+              },
+              directives: [],
+            },
+          ],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "ImageResponse" },
             },
           },
           directives: [],
@@ -545,7 +571,7 @@ export const typeDefs = {
     },
     {
       kind: "InputObjectTypeDefinition",
-      name: { kind: "Name", value: "DocumentInput" },
+      name: { kind: "Name", value: "CreateDocumentInput" },
       directives: [],
       fields: [
         {
@@ -555,7 +581,7 @@ export const typeDefs = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "FileInput" },
+              name: { kind: "Name", value: "CreeateFileInput" },
             },
           },
           directives: [],
@@ -615,7 +641,7 @@ export const typeDefs = {
     },
     {
       kind: "InputObjectTypeDefinition",
-      name: { kind: "Name", value: "FileInput" },
+      name: { kind: "Name", value: "CreeateFileInput" },
       directives: [],
       fields: [
         {
@@ -722,7 +748,7 @@ export const typeDefs = {
     },
     {
       kind: "InputObjectTypeDefinition",
-      name: { kind: "Name", value: "ImageInput" },
+      name: { kind: "Name", value: "CreateImageInput" },
       directives: [],
       fields: [
         {
@@ -744,7 +770,73 @@ export const typeDefs = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "FileInput" },
+              name: { kind: "Name", value: "CreeateFileInput" },
+            },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "InputObjectTypeDefinition",
+      name: { kind: "Name", value: "UpdateImageInput" },
+      directives: [],
+      fields: [
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "id" },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "name" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "description" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "previousImageId" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "UnionTypeDefinition",
+      name: { kind: "Name", value: "ImageResponse" },
+      directives: [],
+      types: [
+        { kind: "NamedType", name: { kind: "Name", value: "Image" } },
+        { kind: "NamedType", name: { kind: "Name", value: "ImageError" } },
+      ],
+    },
+    {
+      kind: "ObjectTypeDefinition",
+      name: { kind: "Name", value: "ImageError" },
+      interfaces: [
+        { kind: "NamedType", name: { kind: "Name", value: "Error" } },
+      ],
+      directives: [],
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "message" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
             },
           },
           directives: [],

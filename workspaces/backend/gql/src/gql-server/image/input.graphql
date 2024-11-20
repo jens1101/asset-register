@@ -1,5 +1,12 @@
-input ImageInput {
+input CreateImageInput {
   name: String
   description: String
-  file: FileInput!
+  file: CreeateFileInput!
+}
+
+input UpdateImageInput {
+  id: ID!
+  name: String
+  description: String
+  previousImageId: ID
 }

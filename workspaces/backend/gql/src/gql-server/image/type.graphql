@@ -1,3 +1,9 @@
+union ImageResponse = Image | ImageError
+
+type ImageError implements Error {
+  message: String!
+}
+
 type Image {
   id: ID!
   name: String

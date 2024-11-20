@@ -4,9 +4,9 @@ extend type Mutation {
   deleteAsset(id: ID!): Void
   replaceProofOfPurchase(
     id: ID!
-    proofOfPurchase: DocumentInput!
+    proofOfPurchase: CreateDocumentInput!
   ): AssetResponse!
   deleteProofOfPurchase(id: ID!): AssetResponse!
-  addAssetImages(id: ID!, images: [ImageInput!]!): AssetResponse!
+  addAssetImages(id: ID!, images: [CreateImageInput!]!): AssetResponse!
   deleteAssetImages(id: ID!, imageIds: [ID!]): AssetResponse!
 }
