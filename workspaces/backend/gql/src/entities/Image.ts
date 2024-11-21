@@ -44,12 +44,8 @@ export const ImageEntity = new EntitySchema<Image>({
     position: {
       type: "numeric",
       transformer: {
-        to: (value: Decimal): string => {
-          return value.toString();
-        },
-        from: (value: string): Decimal => {
-          return new Decimal(value);
-        },
+        to: (value: Decimal): string => value.toString(),
+        from: (value: string): Decimal => new Decimal(value),
       },
     },
     createdAt: {

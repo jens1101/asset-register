@@ -10,7 +10,7 @@
   "scripts": {
     "build": "lerna run build",
     "clean": "lerna run clean",
-    "format": "npx prettier . '!workspaces/**/*' --write && lerna run format",
+    "format": "npx prettier . --write && lerna run format",
     "lint": "npm run lint:knip && lerna run lint",
     "lint:commit": "commitlint --edit",
     "lint:knip": "knip",
