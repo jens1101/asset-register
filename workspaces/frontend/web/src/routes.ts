@@ -3,6 +3,7 @@ import { Home } from "./pages/home.js";
 import type { RouteDefinition } from "@solidjs/router";
 import { lazy } from "solid-js";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const routes: RouteDefinition<string | string[], any>[] = [
   {
     path: "/",

@@ -3,9 +3,22 @@ import tseslint from "typescript-eslint";
 
 const config = [
   eslint.configs.recommended,
-  ...tseslint.configs.strict,
+  ...tseslint.configs.strictTypeChecked,
   {
-    ignores: ["dist/", "src/gql-client/types/"],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  {
+    ignores: [
+      "dist/",
+      "codegen.ts",
+      "eslint.config.js",
+      "src/gql-client/types/*",
+    ],
   },
   {
     rules: {
@@ -13,7 +26,18 @@ const config = [
         "error",
         { argsIgnorePattern: "^_" },
       ],
-      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-empty-object-type": [
+        "error",
+        { allowInterfaces: "with-single-extends" },
+      ],
+      "@typescript-eslint/restrict-template-expressions": [
+        "error",
+        { allowNumber: true },
+      ],
+      "@typescript-eslint/no-unused-expressions": [
+        "error",
+        { allowShortCircuit: true, allowTernary: true },
+      ],
     },
   },
 ];
