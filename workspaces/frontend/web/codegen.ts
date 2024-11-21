@@ -10,6 +10,11 @@ const config: CodegenConfig = {
       config: {
         useTypeImports: true,
         strictScalars: true,
+        scalars: {
+          DateTime: "string",
+          Byte: "string",
+          Void: "void",
+        },
       },
     },
   },

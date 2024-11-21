@@ -14,12 +14,10 @@ import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 const documents = {
-  "mutation CreateExample($name: String!) {\n  createExample(name: $name) {\n    id\n    name\n  }\n}":
-    types.CreateExampleDocument,
-  "query Examples($filter: ExampleFilter) {\n  examples(filter: $filter) {\n    id\n    name\n  }\n}":
-    types.ExamplesDocument,
-  "subscription StreamExamples($filter: ExampleFilter) {\n  examples(filter: $filter) {\n    id\n    name\n  }\n}":
-    types.StreamExamplesDocument,
+  "mutation CreateAsset($data: CreeateAssetInput!) {\n  createAsset(data: $data) {\n    ... on Asset {\n      id\n      name\n      description\n      createdAt\n      updatedAt\n      images {\n        id\n        name\n        file {\n          filename\n          mimeType\n        }\n        createdAt\n        description\n      }\n      proofOfPurchase {\n        file {\n          filename\n          mimeType\n        }\n        id\n        createdAt\n      }\n    }\n  }\n}":
+    types.CreateAssetDocument,
+  "query Assets {\n  assets {\n    ... on Asset {\n      id\n      name\n      description\n      createdAt\n      proofOfPurchase {\n        id\n        createdAt\n        file {\n          filename\n          mimeType\n          id\n        }\n      }\n      images {\n        id\n        createdAt\n        file {\n          filename\n          id\n          mimeType\n        }\n        name\n      }\n    }\n  }\n}":
+    types.AssetsDocument,
 };
 
 /**
@@ -40,20 +38,14 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "mutation CreateExample($name: String!) {\n  createExample(name: $name) {\n    id\n    name\n  }\n}",
-): (typeof documents)["mutation CreateExample($name: String!) {\n  createExample(name: $name) {\n    id\n    name\n  }\n}"];
+  source: "mutation CreateAsset($data: CreeateAssetInput!) {\n  createAsset(data: $data) {\n    ... on Asset {\n      id\n      name\n      description\n      createdAt\n      updatedAt\n      images {\n        id\n        name\n        file {\n          filename\n          mimeType\n        }\n        createdAt\n        description\n      }\n      proofOfPurchase {\n        file {\n          filename\n          mimeType\n        }\n        id\n        createdAt\n      }\n    }\n  }\n}",
+): (typeof documents)["mutation CreateAsset($data: CreeateAssetInput!) {\n  createAsset(data: $data) {\n    ... on Asset {\n      id\n      name\n      description\n      createdAt\n      updatedAt\n      images {\n        id\n        name\n        file {\n          filename\n          mimeType\n        }\n        createdAt\n        description\n      }\n      proofOfPurchase {\n        file {\n          filename\n          mimeType\n        }\n        id\n        createdAt\n      }\n    }\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "query Examples($filter: ExampleFilter) {\n  examples(filter: $filter) {\n    id\n    name\n  }\n}",
-): (typeof documents)["query Examples($filter: ExampleFilter) {\n  examples(filter: $filter) {\n    id\n    name\n  }\n}"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: "subscription StreamExamples($filter: ExampleFilter) {\n  examples(filter: $filter) {\n    id\n    name\n  }\n}",
-): (typeof documents)["subscription StreamExamples($filter: ExampleFilter) {\n  examples(filter: $filter) {\n    id\n    name\n  }\n}"];
+  source: "query Assets {\n  assets {\n    ... on Asset {\n      id\n      name\n      description\n      createdAt\n      proofOfPurchase {\n        id\n        createdAt\n        file {\n          filename\n          mimeType\n          id\n        }\n      }\n      images {\n        id\n        createdAt\n        file {\n          filename\n          id\n          mimeType\n        }\n        name\n      }\n    }\n  }\n}",
+): (typeof documents)["query Assets {\n  assets {\n    ... on Asset {\n      id\n      name\n      description\n      createdAt\n      proofOfPurchase {\n        id\n        createdAt\n        file {\n          filename\n          mimeType\n          id\n        }\n      }\n      images {\n        id\n        createdAt\n        file {\n          filename\n          id\n          mimeType\n        }\n        name\n      }\n    }\n  }\n}"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

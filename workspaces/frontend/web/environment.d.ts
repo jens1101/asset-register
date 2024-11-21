@@ -1,6 +1,5 @@
 interface ImportMetaEnv {
-  readonly VITE_GQL_SERVER_PORT: string;
-  readonly VITE_GQL_SERVER_HOST: string;
+  readonly VITE_UPSTREAM_GQL_URL: string;
 }
 
 interface ImportMeta {

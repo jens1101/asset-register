@@ -2,8 +2,7 @@ import { Client, fetchExchange, subscriptionExchange } from "@urql/core";
 import type { FetchBody } from "@urql/core/internal";
 import { type SubscribePayload, createClient } from "graphql-ws";
 
-const UPSTREAM_GQL_URL = "http://example.com/graphql";
-const ACCESS_TOKEN = "TODO";
+const UPSTREAM_GQL_URL = import.meta.env.VITE_UPSTREAM_GQL_URL;
 
 const webSocketClient = createClient({
   url: UPSTREAM_GQL_URL,
@@ -12,9 +11,6 @@ const webSocketClient = createClient({
 
 export const client = new Client({
   url: UPSTREAM_GQL_URL,
-  fetchOptions: {
-    headers: { Authorization: `Bearer ${ACCESS_TOKEN}` },
-  },
   exchanges: [
     fetchExchange,
     subscriptionExchange({
@@ -23,13 +19,7 @@ export const client = new Client({
           operationName: request.operationName ?? null,
           query: request.query ?? "",
           variables: request.variables ?? null,
-          extensions: {
-            headers: {
-              Authorization: `Bearer ${ACCESS_TOKEN}`,
-              ...request.extensions?.["headers"],
-            },
-            ...request.extensions,
-          },
+          extensions: request.extensions ?? {},
         };
 
         return {

@@ -9,8 +9,7 @@ services:
     build:
       dockerfile: dev.Dockerfile
     environment:
-      VITE_GQL_SERVER_HOST: gql
-      VITE_GQL_SERVER_PORT: ${GQL_SERVER_PORT}
+      VITE_UPSTREAM_GQL_URL: ${UPSTREAM_GQL_URL}
     volumes:
       - "./:/app"
 

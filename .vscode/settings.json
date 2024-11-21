@@ -1,11 +1,5 @@
 {
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "eslint.validate": ["javascript", "typescript"],
-  "eslint.workingDirectories": [
-    "workspaces/backend/gql",
-    "workspaces/frontend/web"
-  ],
   "emeraldwalk.runonsave": {
     "commands": [
       {
@@ -14,5 +8,10 @@
       }
     ]
   },
+  "eslint.validate": ["javascript", "typescript"],
+  "eslint.workingDirectories": [
+    "workspaces/backend/gql",
+    "workspaces/frontend/web"
+  ],
   "files.autoSave": "onFocusChange"
 }

@@ -8,7 +8,7 @@
     "prebuild": "npm run clean",
     "build": "vite build",
     "clean": "rimraf ./dist",
-    "codegen": "graphql-codegen && npm run format",
+    "codegen": "graphql-codegen && prettier --write ./src/gql-client/types",
     "format": "prettier --write ./",
     "lint": "npm run lint:eslint && npm run lint:format && npm run lint:circular",
     "lint:circular": "dpdm -T --exit-code circular:1 --no-warning --no-tree ./src/index.tsx",

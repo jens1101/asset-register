@@ -1,6 +1,0 @@
-mutation CreateExample($name: String!) {
-  createExample(name: $name) {
-    id
-    name
-  }
-}

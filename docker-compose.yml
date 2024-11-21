@@ -12,8 +12,7 @@ services:
       dockerfile: Dockerfile
       context: "./workspaces/frontend/web/"
       args:
-        GQL_SERVER_HOST: gql
-        GQL_SERVER_PORT: ${GQL_SERVER_PORT}
+        UPSTREAM_GQL_URL: ${UPSTREAM_GQL_URL}
     environment:
       WEB_PORT: ${WEB_PORT}
     ports:

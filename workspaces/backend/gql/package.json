@@ -34,7 +34,6 @@
   "dependencies": {
     "@app/tsconfig": "1.0.0",
     "decimal.js": "10.4.3",
-    "dedent": "1.5.3",
     "graphql": "^16.9.0",
     "graphql-scalars": "1.23.0",
     "graphql-ws": "^5.16.0",

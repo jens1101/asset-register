@@ -1,6 +1,5 @@
 import { resolvers } from "./resolvers.generated.js";
 import { typeDefs } from "./typeDefs.generated.js";
-import dedent from "dedent";
 import { useServer } from "graphql-ws/lib/use/ws";
 import {
   createSchema,
@@ -14,49 +13,6 @@ export function initServer(port: string) {
   const yoga = createYoga({
     graphiql: {
       subscriptionsProtocol: "WS",
-      defaultTabs: [
-        {
-          query: dedent`
-          query Asset($id: ID!) {
-            asset(id: $id) {
-              ... on Asset {
-                id
-                name
-                description
-                filename
-                images {
-                  id
-                  file
-                  filename
-                  mimeType
-                  name
-                  description
-                  createdAt
-                  updatedAt
-                }
-                proofOfPurchase {
-                  createdAt
-                  file
-                  filename
-                  id
-                  mimeType
-                  updatedAt
-                }
-              }
-              ... on AssetError {
-                __typename
-                message
-              }
-            }
-          }
-        `,
-          variables: dedent`
-          {
-            "id": 1
-          }
-        `,
-        },
-      ],
     },
     schema: createSchema({ typeDefs, resolvers }),
     plugins: [useExecutionCancellation()],
