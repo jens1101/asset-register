@@ -5,5 +5,14 @@
   "eslint.workingDirectories": [
     "workspaces/backend/gql",
     "workspaces/frontend/web"
-  ]
+  ],
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": ".*",
+        "cmd": "npx prettier --write ${file}"
+      }
+    ]
+  },
+  "files.autoSave": "onFocusChange"
 }
