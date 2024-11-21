@@ -44,7 +44,13 @@
     "vscode": {
       // Add the IDs of extensions you want installed when the container is
       // created.
-      "extensions": []
+      "extensions": [
+        "graphql.vscode-graphql",
+        "graphql.vscode-graphql-syntax",
+        "gruntfuggly.todo-tree",
+        "dbaeumer.vscode-eslint",
+        "emeraldwalk.runonsave"
+      ]
     }
   }
 
