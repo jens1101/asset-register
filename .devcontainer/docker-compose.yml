@@ -1,4 +1,7 @@
 services:
+  web:
+    user: "1000:100"
+
   gql:
     user: "1000:100"
     # Overrides default command so things don't shut down after the process ends.

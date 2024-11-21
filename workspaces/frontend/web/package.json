@@ -9,14 +9,13 @@
     "build": "vite build",
     "clean": "rimraf ./dist",
     "codegen": "graphql-codegen && npm run format",
-    "dev": "vite",
     "format": "prettier --write ./",
     "lint": "npm run lint:eslint && npm run lint:format && npm run lint:circular",
     "lint:circular": "dpdm -T --exit-code circular:1 --no-warning --no-tree ./src/index.tsx",
     "lint:eslint": "eslint --max-warnings 0",
     "lint:format": "prettier --check .",
-    "serve": "vite preview",
-    "start": "vite",
+    "start": "vite preview",
+    "start:dev": "vite",
     "test": "tsc --noEmit"
   },
   "dependencies": {

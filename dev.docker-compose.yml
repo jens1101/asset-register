@@ -3,7 +3,16 @@ services:
     build:
       dockerfile: dev.Dockerfile
       tags:
-        - "asset_register_base:dev"
+        - "asset-register-base:dev"
+
+  web:
+    build:
+      dockerfile: dev.Dockerfile
+    environment:
+      VITE_GQL_SERVER_HOST: gql
+      VITE_GQL_SERVER_PORT: ${GQL_SERVER_PORT}
+    volumes:
+      - "./:/app"
 
   gql:
     build:

@@ -8,6 +8,8 @@ export const Home: Component = () => {
       <h1 class="text-2xl font-bold">Home</h1>
       <p class="mt-4">This is the home page.</p>
 
+      <pre>{JSON.stringify(import.meta.env, null, 2)}</pre>
+
       <div class="flex items-center space-x-2">
         <button
           class="border rounded-lg px-2 border-gray-900"

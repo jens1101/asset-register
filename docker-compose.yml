@@ -4,7 +4,23 @@ services:
     build:
       dockerfile: Dockerfile
       tags:
-        - "asset_register_base:prod"
+        - "asset-register-base:prod"
+
+  web:
+    pull_policy: build
+    build:
+      dockerfile: Dockerfile
+      context: "./workspaces/frontend/web/"
+      args:
+        GQL_SERVER_HOST: gql
+        GQL_SERVER_PORT: ${GQL_SERVER_PORT}
+    environment:
+      WEB_PORT: ${WEB_PORT}
+    ports:
+      - "${WEB_PUBLISHED_PORT}:${WEB_PORT}"
+    depends_on:
+      - base
+      - gql
 
   gql:
     pull_policy: build
