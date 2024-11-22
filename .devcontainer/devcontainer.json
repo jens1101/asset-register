@@ -49,7 +49,7 @@
         "graphql.vscode-graphql-syntax",
         "gruntfuggly.todo-tree",
         "dbaeumer.vscode-eslint",
-        "emeraldwalk.runonsave"
+        "esbenp.prettier-vscode"
       ]
     }
   }
