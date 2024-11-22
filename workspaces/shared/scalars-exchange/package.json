@@ -11,15 +11,12 @@
   "scripts": {
     "prebuild": "npm run clean",
     "build": "tsc",
-    "build:watch": "tsc --watch --preserveWatchOutput",
     "clean": "rimraf ./dist",
     "format": "prettier --write ./",
     "lint": "npm run lint:eslint && npm run lint:format && npm run lint:circular",
     "lint:circular": "dpdm -T --exit-code circular:1 --no-warning --no-tree ./src/index.ts",
     "lint:eslint": "eslint --max-warnings 0 ./src/",
     "lint:format": "prettier --check .",
-    "start": "node dist/index.js",
-    "start:dev": "node --inspect=0.0.0.0 --watch dist/index.js",
     "test": "tsc --noEmit"
   },
   "devDependencies": {
