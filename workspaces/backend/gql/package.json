@@ -17,7 +17,7 @@
     "format": "prettier --write ./",
     "lint": "npm run lint:eslint && npm run lint:format && npm run lint:circular",
     "lint:circular": "dpdm -T --exit-code circular:1 --no-warning --no-tree ./src/index.ts",
-    "lint:eslint": "eslint --max-warnings 0",
+    "lint:eslint": "eslint --max-warnings 0 ./src/",
     "lint:format": "prettier --check .",
     "migration:generate": "npm run typeorm migration:generate -- -d dist/dataSource.js -p",
     "postmigration:generate": "prettier --write ./src/migrations",
@@ -32,7 +32,6 @@
     "typeorm": "typeorm"
   },
   "dependencies": {
-    "@app/tsconfig": "1.0.0",
     "decimal.js": "10.4.3",
     "graphql": "^16.9.0",
     "graphql-scalars": "1.23.0",
@@ -45,6 +44,7 @@
     "ws": "^8.18.0"
   },
   "devDependencies": {
+    "@app/tsconfig": "1.0.0",
     "@eddeee888/gcg-typescript-resolver-files": "^0.11.0",
     "@eslint/js": "^9.14.0",
     "@graphql-codegen/cli": "^5.0.3",

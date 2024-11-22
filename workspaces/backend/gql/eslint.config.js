@@ -13,13 +13,7 @@ const config = [
     },
   },
   {
-    ignores: [
-      "dist/",
-      "codegen.ts",
-      "eslint.config.js",
-      "src/gql-server/*.generated.ts",
-      "src/gql-server/server.ts",
-    ],
+    ignores: ["src/gql-server/*.generated.ts", "src/gql-server/server.ts"],
   },
   {
     rules: {
