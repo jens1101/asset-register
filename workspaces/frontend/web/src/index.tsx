@@ -1,6 +1,7 @@
 import { App } from "./app.js";
 import { routes } from "./routes.js";
 import { Router } from "@solidjs/router";
+import "bootstrap/scss/bootstrap.scss";
 import { render } from "solid-js/web";
 
 const root = document.getElementById("root");
