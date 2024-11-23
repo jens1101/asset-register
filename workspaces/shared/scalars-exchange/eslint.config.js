@@ -13,7 +13,7 @@ const config = [
     },
   },
   {
-    ignores: ["src/gql-server/*.generated.ts", "src/gql-server/server.ts"],
+    ignores: ["*.*", "dist", "node_modules"],
   },
   {
     rules: {

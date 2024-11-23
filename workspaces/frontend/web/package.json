@@ -12,7 +12,7 @@
     "format": "prettier --write ./",
     "lint": "npm run lint:eslint && npm run lint:format && npm run lint:circular",
     "lint:circular": "dpdm -T --exit-code circular:1 --no-warning --no-tree ./src/index.tsx",
-    "lint:eslint": "eslint --max-warnings 0 ./src/",
+    "lint:eslint": "eslint --max-warnings 0",
     "lint:format": "prettier --check .",
     "start": "vite preview",
     "start:dev": "vite",
