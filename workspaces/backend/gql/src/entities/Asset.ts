@@ -1,7 +1,7 @@
-import type { Maybe } from "../common/types.js";
 import { EntityName } from "../enums/Entities.js";
 import type { Document } from "./Document.js";
 import type { Image } from "./Image.js";
+import type { Maybe } from "@app/common";
 import { EntitySchema } from "typeorm";
 
 export interface Asset {

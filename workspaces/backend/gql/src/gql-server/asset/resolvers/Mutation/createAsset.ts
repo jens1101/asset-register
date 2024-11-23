@@ -1,4 +1,3 @@
-import type { Maybe } from "../../../../common/types.js";
 import { dataSource } from "../../../../dataSource.js";
 import {
   type Asset,
@@ -10,6 +9,7 @@ import {
   ImageEntity,
 } from "../../../../entities/index.js";
 import type { MutationResolvers } from "./../../../types.generated.js";
+import type { Maybe } from "@app/common";
 import { Decimal } from "decimal.js";
 
 export const createAsset: NonNullable<

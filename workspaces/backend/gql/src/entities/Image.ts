@@ -1,7 +1,7 @@
-import type { Maybe } from "../common/types.js";
 import { EntityName } from "../enums/Entities.js";
 import type { Asset } from "./Asset.js";
 import type { File } from "./File.js";
+import type { Maybe } from "@app/common";
 import { Decimal } from "decimal.js";
 import { EntitySchema } from "typeorm";
 
