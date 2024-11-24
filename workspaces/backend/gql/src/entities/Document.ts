@@ -1,11 +1,13 @@
 import { EntityName } from "../enums/Entities.js";
 import type { Asset } from "./Asset.js";
 import type { File } from "./File.js";
+import { TemporalInstantTransformer } from "./transformers.js";
+import type { Temporal } from "temporal-polyfill";
 import { EntitySchema } from "typeorm";
 
 export interface Document {
   id: number;
-  createdAt: Date;
+  createdAt: Temporal.Instant;
   file: File;
   asset: Asset;
 }
@@ -19,8 +21,9 @@ export const DocumentEntity = new EntitySchema<Document>({
       generated: true,
     },
     createdAt: {
-      type: Date,
+      type: "timestamp",
       createDate: true,
+      transformer: TemporalInstantTransformer,
     },
   },
   relations: {

@@ -10,6 +10,6 @@ type Asset {
   description: String
   images: [Image!]!
   proofOfPurchase: Document
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: TemporalInstant!
+  updatedAt: TemporalInstant!
 }

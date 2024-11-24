@@ -1,6 +1,6 @@
 type Document {
   id: ID!
-  createdAt: DateTime!
+  createdAt: TemporalInstant!
   file: File!
   asset: Asset!
 }

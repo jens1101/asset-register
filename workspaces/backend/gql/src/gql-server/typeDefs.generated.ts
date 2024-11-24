@@ -493,7 +493,7 @@ export const typeDefs = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "DateTime" },
+              name: { kind: "Name", value: "TemporalInstant" },
             },
           },
           directives: [],
@@ -506,7 +506,7 @@ export const typeDefs = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "DateTime" },
+              name: { kind: "Name", value: "TemporalInstant" },
             },
           },
           directives: [],
@@ -515,41 +515,21 @@ export const typeDefs = {
     },
     {
       kind: "ScalarTypeDefinition",
-      description: {
-        kind: "StringValue",
-        value: "RFC 3339 compliant date-time string.",
-        block: false,
-      },
-      name: { kind: "Name", value: "DateTime" },
+      name: { kind: "Name", value: "TemporalInstant" },
       directives: [],
     },
     {
       kind: "ScalarTypeDefinition",
-      description: {
-        kind: "StringValue",
-        value: "Represents the Node `Buffer` type",
-        block: false,
-      },
-      name: { kind: "Name", value: "Byte" },
+      name: { kind: "Name", value: "Uint8Array" },
       directives: [],
     },
     {
       kind: "ScalarTypeDefinition",
-      description: {
-        kind: "StringValue",
-        value: "Represents the absence of a value",
-        block: false,
-      },
       name: { kind: "Name", value: "Void" },
       directives: [],
     },
     {
       kind: "InterfaceTypeDefinition",
-      description: {
-        kind: "StringValue",
-        value: "A generic error interface.",
-        block: false,
-      },
       name: { kind: "Name", value: "Error" },
       interfaces: [],
       directives: [],
@@ -612,7 +592,7 @@ export const typeDefs = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "DateTime" },
+              name: { kind: "Name", value: "TemporalInstant" },
             },
           },
           directives: [],
@@ -649,7 +629,10 @@ export const typeDefs = {
           name: { kind: "Name", value: "buffer" },
           type: {
             kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "Byte" } },
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "Uint8Array" },
+            },
           },
           directives: [],
         },
@@ -701,7 +684,10 @@ export const typeDefs = {
           arguments: [],
           type: {
             kind: "NonNullType",
-            type: { kind: "NamedType", name: { kind: "Name", value: "Byte" } },
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "Uint8Array" },
+            },
           },
           directives: [],
         },
@@ -739,7 +725,7 @@ export const typeDefs = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "DateTime" },
+              name: { kind: "Name", value: "TemporalInstant" },
             },
           },
           directives: [],
@@ -881,7 +867,7 @@ export const typeDefs = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "DateTime" },
+              name: { kind: "Name", value: "TemporalInstant" },
             },
           },
           directives: [],

@@ -2,16 +2,12 @@ type Query
 
 type Mutation
 
-"RFC 3339 compliant date-time string."
-scalar DateTime
+scalar TemporalInstant
 
-"Represents the Node `Buffer` type"
-scalar Byte
+scalar Uint8Array
 
-"Represents the absence of a value"
 scalar Void
 
-"A generic error interface."
 interface Error {
   message: String!
 }

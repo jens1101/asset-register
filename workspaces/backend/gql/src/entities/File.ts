@@ -1,12 +1,14 @@
 import { EntityName } from "../enums/Entities.js";
+import { TemporalInstantTransformer } from "./transformers.js";
+import type { Temporal } from "temporal-polyfill";
 import { EntitySchema } from "typeorm";
 
 export interface File {
   id: number;
-  buffer: Buffer;
+  buffer: Uint8Array;
   filename: string;
   mimeType: string;
-  createdAt: Date;
+  createdAt: Temporal.Instant;
 }
 
 export const FileEntity = new EntitySchema<File>({
@@ -27,8 +29,9 @@ export const FileEntity = new EntitySchema<File>({
       type: "text",
     },
     createdAt: {
-      type: Date,
+      type: "timestamp",
       createDate: true,
+      transformer: TemporalInstantTransformer,
     },
   },
 });

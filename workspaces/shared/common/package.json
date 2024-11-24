@@ -4,7 +4,11 @@
   "private": true,
   "description": "",
   "type": "module",
-  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./scalars/TemporalInstant": "./dist/scalars/TemporalInstant.js",
+    "./scalars/Uint8Array": "./dist/scalars/Uint8Array.js"
+  },
   "files": [
     "dist"
   ],
@@ -27,5 +31,10 @@
     "dpdm": "^3.14.0",
     "eslint": "^9.14.0",
     "typescript-eslint": "^8.12.2"
+  },
+  "peerDependencies": {
+    "effect": "^3.10.0",
+    "graphql": "^16.9.0",
+    "temporal-polyfill": "^0.2.5"
   }
 }

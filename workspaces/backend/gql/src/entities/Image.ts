@@ -1,16 +1,22 @@
 import { EntityName } from "../enums/Entities.js";
 import type { Asset } from "./Asset.js";
 import type { File } from "./File.js";
+import {
+  DecimalTransformer,
+  TemporalInstantTransformer,
+} from "./transformers.js";
 import type { Maybe } from "@app/common";
 import { Decimal } from "decimal.js";
+import type { Temporal } from "temporal-polyfill";
 import { EntitySchema } from "typeorm";
 
+// TODO: add updated at
 export interface Image {
   id: number;
   name: Maybe<string>;
   description: Maybe<string>;
   position: Decimal;
-  createdAt: Date;
+  createdAt: Temporal.Instant;
   file: File;
   asset: Asset;
 }
@@ -43,14 +49,12 @@ export const ImageEntity = new EntitySchema<Image>({
     },
     position: {
       type: "numeric",
-      transformer: {
-        to: (value: Decimal): string => value.toString(),
-        from: (value: string): Decimal => new Decimal(value),
-      },
+      transformer: DecimalTransformer,
     },
     createdAt: {
-      type: Date,
+      type: "timestamp",
       createDate: true,
+      transformer: TemporalInstantTransformer,
     },
   },
   relations: {
