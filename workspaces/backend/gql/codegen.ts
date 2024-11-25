@@ -12,19 +12,33 @@ const config: CodegenConfig = {
           useTypeImports: true,
           strictScalars: true,
         },
-        scalarsModule: "graphql-scalars",
         scalarsOverrides: {
-          DateTime: {
+          Void: {
+            type: "void",
+          },
+          TemporalInstant: {
             type: {
-              input: "Date | string",
-              output: "Date",
+              input: "TemporalInstantScalar",
+              output: "Temporal.Instant",
             },
           },
-          Byte: {
+          Uint8Array: {
             type: {
-              input: "Buffer",
-              output: "Buffer",
+              input: "Uint8ArrayScalar",
+              output: "Uint8Array",
             },
+          },
+        },
+        add: {
+          "./types.generated.ts": {
+            content: `
+              import type {
+                TemporalInstantScalar,
+              } from "@app/common/scalars/TemporalInstant";
+              import type {
+                Uint8ArrayScalar,
+              } from "@app/common/scalars/Uint8Array";
+              import type { Temporal } from "temporal-polyfill";`,
           },
         },
       },

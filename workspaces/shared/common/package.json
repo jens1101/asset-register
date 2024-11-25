@@ -1,0 +1,40 @@
+{
+  "name": "@app/common",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./scalars/TemporalInstant": "./dist/scalars/TemporalInstant.js",
+    "./scalars/Uint8Array": "./dist/scalars/Uint8Array.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prebuild": "npm run clean",
+    "build": "tsc",
+    "clean": "rimraf ./dist",
+    "format": "prettier --write ./",
+    "lint": "npm run lint:eslint && npm run lint:format && npm run lint:circular",
+    "lint:circular": "dpdm -T --exit-code circular:1 --no-warning --no-tree ./src/index.ts",
+    "lint:eslint": "eslint --max-warnings 0",
+    "lint:format": "prettier --check .",
+    "test": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@app/tsconfig": "^1.0.0",
+    "@eslint/js": "^9.14.0",
+    "@types/eslint__js": "^8.42.3",
+    "@types/node": "^22.9.0",
+    "dpdm": "^3.14.0",
+    "eslint": "^9.14.0",
+    "typescript-eslint": "^8.12.2"
+  },
+  "peerDependencies": {
+    "effect": "^3.10.0",
+    "graphql": "^16.9.0",
+    "temporal-polyfill": "^0.2.5"
+  }
+}

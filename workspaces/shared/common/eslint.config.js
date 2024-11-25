@@ -13,7 +13,7 @@ const config = [
     },
   },
   {
-    ignores: ["*.*", "dist", "node_modules", "src/gql-client/types/*"],
+    ignores: ["*.*", "dist", "node_modules"],
   },
   {
     rules: {

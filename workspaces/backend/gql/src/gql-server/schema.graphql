@@ -1,11 +1,11 @@
 type Asset {
-  createdAt: DateTime!
+  createdAt: TemporalInstant!
   description: String
   id: ID!
   images: [Image!]!
   name: String!
   proofOfPurchase: Document
-  updatedAt: DateTime!
+  updatedAt: TemporalInstant!
 }
 
 type AssetError implements Error {
@@ -13,11 +13,6 @@ type AssetError implements Error {
 }
 
 union AssetResponse = Asset | AssetError
-
-"""
-Represents the Node `Buffer` type
-"""
-scalar Byte
 
 input CreateDocumentInput {
   file: CreeateFileInput!
@@ -37,33 +32,25 @@ input CreeateAssetInput {
 }
 
 input CreeateFileInput {
-  buffer: Byte!
+  buffer: Uint8Array!
   filename: String!
   mimeType: String!
 }
 
-"""
-RFC 3339 compliant date-time string.
-"""
-scalar DateTime
-
 type Document {
   asset: Asset!
-  createdAt: DateTime!
+  createdAt: TemporalInstant!
   file: File!
   id: ID!
 }
 
-"""
-A generic error interface.
-"""
 interface Error {
   message: String!
 }
 
 type File {
-  buffer: Byte!
-  createdAt: DateTime!
+  buffer: Uint8Array!
+  createdAt: TemporalInstant!
   filename: String!
   id: ID!
   mimeType: String!
@@ -71,11 +58,12 @@ type File {
 
 type Image {
   asset: Asset!
-  createdAt: DateTime!
+  createdAt: TemporalInstant!
   description: String
   file: File!
   id: ID!
   name: String
+  updatedAt: TemporalInstant!
 }
 
 type ImageError implements Error {
@@ -103,6 +91,10 @@ type Query {
   assets: [AssetResponse!]!
 }
 
+scalar TemporalInstant
+
+scalar Uint8Array
+
 input UpdateAssetInput {
   description: String
   id: ID!
@@ -116,7 +108,4 @@ input UpdateImageInput {
   previousImageId: ID
 }
 
-"""
-Represents the absence of a value
-"""
 scalar Void

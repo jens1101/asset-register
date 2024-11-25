@@ -1,8 +1,11 @@
+import type { TemporalInstantScalar } from "@app/common/scalars/TemporalInstant";
+import type { Uint8ArrayScalar } from "@app/common/scalars/Uint8Array";
 import type {
   GraphQLResolveInfo,
   GraphQLScalarType,
   GraphQLScalarTypeConfig,
 } from "graphql";
+import type { Temporal } from "temporal-polyfill";
 
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
@@ -27,6 +30,7 @@ export type Incremental<T> =
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
+
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string | number };
@@ -34,23 +38,20 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
-  /** Represents the Node `Buffer` type */
-  Byte: { input: Buffer; output: Buffer };
-  /** RFC 3339 compliant date-time string. */
-  DateTime: { input: Date | string; output: Date };
-  /** Represents the absence of a value */
+  TemporalInstant: { input: TemporalInstantScalar; output: Temporal.Instant };
+  Uint8Array: { input: Uint8ArrayScalar; output: Uint8Array };
   Void: { input: void; output: void };
 };
 
 export type Asset = {
   __typename?: "Asset";
-  createdAt: Scalars["DateTime"]["output"];
+  createdAt: Scalars["TemporalInstant"]["output"];
   description?: Maybe<Scalars["String"]["output"]>;
   id: Scalars["ID"]["output"];
   images: Array<Image>;
   name: Scalars["String"]["output"];
   proofOfPurchase?: Maybe<Document>;
-  updatedAt: Scalars["DateTime"]["output"];
+  updatedAt: Scalars["TemporalInstant"]["output"];
 };
 
 export type AssetError = Error & {
@@ -78,7 +79,7 @@ export type CreeateAssetInput = {
 };
 
 export type CreeateFileInput = {
-  buffer: Scalars["Byte"]["input"];
+  buffer: Scalars["Uint8Array"]["input"];
   filename: Scalars["String"]["input"];
   mimeType: Scalars["String"]["input"];
 };
@@ -86,20 +87,19 @@ export type CreeateFileInput = {
 export type Document = {
   __typename?: "Document";
   asset: Asset;
-  createdAt: Scalars["DateTime"]["output"];
+  createdAt: Scalars["TemporalInstant"]["output"];
   file: File;
   id: Scalars["ID"]["output"];
 };
 
-/** A generic error interface. */
 export type Error = {
   message: Scalars["String"]["output"];
 };
 
 export type File = {
   __typename?: "File";
-  buffer: Scalars["Byte"]["output"];
-  createdAt: Scalars["DateTime"]["output"];
+  buffer: Scalars["Uint8Array"]["output"];
+  createdAt: Scalars["TemporalInstant"]["output"];
   filename: Scalars["String"]["output"];
   id: Scalars["ID"]["output"];
   mimeType: Scalars["String"]["output"];
@@ -108,11 +108,12 @@ export type File = {
 export type Image = {
   __typename?: "Image";
   asset: Asset;
-  createdAt: Scalars["DateTime"]["output"];
+  createdAt: Scalars["TemporalInstant"]["output"];
   description?: Maybe<Scalars["String"]["output"]>;
   file: File;
   id: Scalars["ID"]["output"];
   name?: Maybe<Scalars["String"]["output"]>;
+  updatedAt: Scalars["TemporalInstant"]["output"];
 };
 
 export type ImageError = Error & {
@@ -324,12 +325,10 @@ export type ResolversTypes = {
   AssetResponse: ResolverTypeWrapper<
     ResolversUnionTypes<ResolversTypes>["AssetResponse"]
   >;
-  Byte: ResolverTypeWrapper<Scalars["Byte"]["output"]>;
   CreateDocumentInput: CreateDocumentInput;
   CreateImageInput: CreateImageInput;
   CreeateAssetInput: CreeateAssetInput;
   CreeateFileInput: CreeateFileInput;
-  DateTime: ResolverTypeWrapper<Scalars["DateTime"]["output"]>;
   Document: ResolverTypeWrapper<Document>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>["Error"]>;
   File: ResolverTypeWrapper<File>;
@@ -340,6 +339,8 @@ export type ResolversTypes = {
   >;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
+  TemporalInstant: ResolverTypeWrapper<Scalars["TemporalInstant"]["output"]>;
+  Uint8Array: ResolverTypeWrapper<Scalars["Uint8Array"]["output"]>;
   UpdateAssetInput: UpdateAssetInput;
   UpdateImageInput: UpdateImageInput;
   Void: ResolverTypeWrapper<Scalars["Void"]["output"]>;
@@ -353,12 +354,10 @@ export type ResolversParentTypes = {
   ID: Scalars["ID"]["output"];
   AssetError: AssetError;
   AssetResponse: ResolversUnionTypes<ResolversParentTypes>["AssetResponse"];
-  Byte: Scalars["Byte"]["output"];
   CreateDocumentInput: CreateDocumentInput;
   CreateImageInput: CreateImageInput;
   CreeateAssetInput: CreeateAssetInput;
   CreeateFileInput: CreeateFileInput;
-  DateTime: Scalars["DateTime"]["output"];
   Document: Document;
   Error: ResolversInterfaceTypes<ResolversParentTypes>["Error"];
   File: File;
@@ -367,6 +366,8 @@ export type ResolversParentTypes = {
   ImageResponse: ResolversUnionTypes<ResolversParentTypes>["ImageResponse"];
   Mutation: {};
   Query: {};
+  TemporalInstant: Scalars["TemporalInstant"]["output"];
+  Uint8Array: Scalars["Uint8Array"]["output"];
   UpdateAssetInput: UpdateAssetInput;
   UpdateImageInput: UpdateImageInput;
   Void: Scalars["Void"]["output"];
@@ -378,7 +379,11 @@ export type AssetResolvers<
   ParentType extends
     ResolversParentTypes["Asset"] = ResolversParentTypes["Asset"],
 > = {
-  createdAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
+  createdAt?: Resolver<
+    ResolversTypes["TemporalInstant"],
+    ParentType,
+    ContextType
+  >;
   description?: Resolver<
     Maybe<ResolversTypes["String"]>,
     ParentType,
@@ -392,7 +397,11 @@ export type AssetResolvers<
     ParentType,
     ContextType
   >;
-  updatedAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
+  updatedAt?: Resolver<
+    ResolversTypes["TemporalInstant"],
+    ParentType,
+    ContextType
+  >;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -417,23 +426,17 @@ export type AssetResponseResolvers<
   >;
 };
 
-export interface ByteScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes["Byte"], any> {
-  name: "Byte";
-}
-
-export interface DateTimeScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes["DateTime"], any> {
-  name: "DateTime";
-}
-
 export type DocumentResolvers<
   ContextType = any,
   ParentType extends
     ResolversParentTypes["Document"] = ResolversParentTypes["Document"],
 > = {
   asset?: Resolver<ResolversTypes["Asset"], ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
+  createdAt?: Resolver<
+    ResolversTypes["TemporalInstant"],
+    ParentType,
+    ContextType
+  >;
   file?: Resolver<ResolversTypes["File"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -457,8 +460,12 @@ export type FileResolvers<
   ParentType extends
     ResolversParentTypes["File"] = ResolversParentTypes["File"],
 > = {
-  buffer?: Resolver<ResolversTypes["Byte"], ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
+  buffer?: Resolver<ResolversTypes["Uint8Array"], ParentType, ContextType>;
+  createdAt?: Resolver<
+    ResolversTypes["TemporalInstant"],
+    ParentType,
+    ContextType
+  >;
   filename?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   mimeType?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
@@ -471,7 +478,11 @@ export type ImageResolvers<
     ResolversParentTypes["Image"] = ResolversParentTypes["Image"],
 > = {
   asset?: Resolver<ResolversTypes["Asset"], ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes["DateTime"], ParentType, ContextType>;
+  createdAt?: Resolver<
+    ResolversTypes["TemporalInstant"],
+    ParentType,
+    ContextType
+  >;
   description?: Resolver<
     Maybe<ResolversTypes["String"]>,
     ParentType,
@@ -480,6 +491,11 @@ export type ImageResolvers<
   file?: Resolver<ResolversTypes["File"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  updatedAt?: Resolver<
+    ResolversTypes["TemporalInstant"],
+    ParentType,
+    ContextType
+  >;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -577,6 +593,16 @@ export type QueryResolvers<
   >;
 };
 
+export interface TemporalInstantScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes["TemporalInstant"], any> {
+  name: "TemporalInstant";
+}
+
+export interface Uint8ArrayScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes["Uint8Array"], any> {
+  name: "Uint8Array";
+}
+
 export interface VoidScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes["Void"], any> {
   name: "Void";
@@ -586,8 +612,6 @@ export type Resolvers<ContextType = any> = {
   Asset?: AssetResolvers<ContextType>;
   AssetError?: AssetErrorResolvers<ContextType>;
   AssetResponse?: AssetResponseResolvers<ContextType>;
-  Byte?: GraphQLScalarType;
-  DateTime?: GraphQLScalarType;
   Document?: DocumentResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
   File?: FileResolvers<ContextType>;
@@ -596,5 +620,7 @@ export type Resolvers<ContextType = any> = {
   ImageResponse?: ImageResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  TemporalInstant?: GraphQLScalarType;
+  Uint8Array?: GraphQLScalarType;
   Void?: GraphQLScalarType;
 };

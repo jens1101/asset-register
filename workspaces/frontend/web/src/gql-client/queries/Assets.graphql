@@ -1,29 +1,7 @@
 query Assets {
   assets {
     ... on Asset {
-      id
-      name
-      description
-      createdAt
-      proofOfPurchase {
-        id
-        createdAt
-        file {
-          filename
-          mimeType
-          id
-        }
-      }
-      images {
-        id
-        createdAt
-        file {
-          filename
-          id
-          mimeType
-        }
-        name
-      }
+      ...asset
     }
   }
 }

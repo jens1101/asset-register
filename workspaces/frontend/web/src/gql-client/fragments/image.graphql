@@ -1,0 +1,10 @@
+fragment image on Image {
+  id
+  name
+  description
+  file {
+    ...file
+  }
+  createdAt
+  updatedAt
+}

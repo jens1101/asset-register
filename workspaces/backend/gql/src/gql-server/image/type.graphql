@@ -8,7 +8,8 @@ type Image {
   id: ID!
   name: String
   description: String
-  createdAt: DateTime!
+  createdAt: TemporalInstant!
+  updatedAt: TemporalInstant!
   file: File!
   asset: Asset!
 }

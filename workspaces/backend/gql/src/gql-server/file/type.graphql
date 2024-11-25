@@ -1,7 +1,7 @@
 type File {
   id: ID!
-  buffer: Byte!
+  buffer: Uint8Array!
   filename: String!
   mimeType: String!
-  createdAt: DateTime!
+  createdAt: TemporalInstant!
 }

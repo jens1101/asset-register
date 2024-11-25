@@ -1,7 +1,9 @@
-import type { Maybe } from "../common/types.js";
 import { EntityName } from "../enums/Entities.js";
 import type { Document } from "./Document.js";
 import type { Image } from "./Image.js";
+import { TemporalInstantTransformer } from "./transformers.js";
+import type { Maybe } from "@app/common";
+import { Temporal } from "temporal-polyfill";
 import { EntitySchema } from "typeorm";
 
 export interface Asset {
@@ -10,8 +12,8 @@ export interface Asset {
   description: Maybe<string>;
   images: Image[];
   proofOfPurchase: Maybe<Document>;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Temporal.Instant;
+  updatedAt: Temporal.Instant;
 }
 
 export const AssetEntity = new EntitySchema<Asset>({
@@ -30,12 +32,14 @@ export const AssetEntity = new EntitySchema<Asset>({
       nullable: true,
     },
     createdAt: {
-      type: Date,
+      type: "timestamp",
       createDate: true,
+      transformer: TemporalInstantTransformer,
     },
     updatedAt: {
-      type: Date,
+      type: "timestamp",
       updateDate: true,
+      transformer: TemporalInstantTransformer,
     },
   },
   relations: {

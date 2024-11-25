@@ -14,6 +14,14 @@ const config = {
       project: ["src/**/*.{js,ts,jsx,tsx}"],
       ignore: ["src/gql-client/types/*"],
     },
+    "workspaces/shared/common": {
+      entry: [
+        "src/index.ts",
+        "src/scalars/TemporalInstant.ts",
+        "src/scalars/Uint8Array.ts",
+      ],
+      project: ["src/**/*.{js,ts}"],
+    },
   },
 };
 

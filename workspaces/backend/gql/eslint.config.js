@@ -14,9 +14,9 @@ const config = [
   },
   {
     ignores: [
-      "dist/",
-      "codegen.ts",
-      "eslint.config.js",
+      "*.*",
+      "dist",
+      "node_modules",
       "src/gql-server/*.generated.ts",
       "src/gql-server/server.ts",
     ],

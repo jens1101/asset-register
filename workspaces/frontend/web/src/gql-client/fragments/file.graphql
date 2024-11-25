@@ -1,0 +1,7 @@
+fragment file on File {
+  id
+  buffer
+  filename
+  mimeType
+  createdAt
+}

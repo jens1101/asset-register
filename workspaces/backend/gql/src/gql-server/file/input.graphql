@@ -1,5 +1,5 @@
 input CreeateFileInput {
-  buffer: Byte!
+  buffer: Uint8Array!
   filename: String!
   mimeType: String!
 }

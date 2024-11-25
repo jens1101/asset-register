@@ -1,0 +1,7 @@
+fragment document on Document {
+  id
+  file {
+    ...file
+  }
+  createdAt
+}
