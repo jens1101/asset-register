@@ -6,8 +6,9 @@ import {
   ScalarFromUint8Array,
   type Uint8ArrayScalar,
 } from "@app/common/scalars/Uint8Array";
-import type { Exchange } from "@urql/core";
+import { CombinedError, type Exchange } from "@urql/core";
 import { Schema } from "effect";
+import { GraphQLError } from "graphql";
 import { walkStep } from "walkjs";
 import { map, pipe } from "wonka";
 
@@ -32,38 +33,65 @@ export const taggedScalarExchange: Exchange = ({ forward }) => {
           return operationResult;
         }
 
-        // TODO: catch and handle errors. Probably want to add any errors to the operationResult.error object
-        for (const node of walkStep(operationResult.data)) {
-          if (node.nodeType === "value") {
-            continue;
+        try {
+          for (const node of walkStep(operationResult.data)) {
+            if (node.nodeType === "value") {
+              continue;
+            }
+
+            const value: unknown = node.val;
+
+            if (
+              !(
+                value &&
+                typeof value === "object" &&
+                "_tag" in value &&
+                typeof value._tag === "string" &&
+                "value" in value &&
+                typeof value.value === "string"
+              )
+            ) {
+              continue;
+            }
+
+            const scalar = {
+              _tag: value._tag,
+              value: value.value,
+            } as TaggedScalar;
+
+            if (!node.parent?.val || !node.key) {
+              continue;
+            }
+
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            node.parent.val[node.key] = decodeScalar(scalar);
+          }
+        } catch (error) {
+          const originalError = operationResult.error;
+
+          const graphQLErrors = [
+            new GraphQLError("Error while decoding tagged scalars", {
+              ...(error instanceof Error && { originalError: error }),
+            }),
+          ];
+
+          if (originalError?.graphQLErrors) {
+            graphQLErrors.push(...originalError.graphQLErrors);
           }
 
-          const value: unknown = node.val;
+          const input: ConstructorParameters<typeof CombinedError>[0] = {
+            graphQLErrors,
+          };
 
-          if (
-            !(
-              value &&
-              typeof value === "object" &&
-              "_tag" in value &&
-              typeof value._tag === "string" &&
-              "value" in value &&
-              typeof value.value === "string"
-            )
-          ) {
-            continue;
+          if (originalError?.networkError) {
+            input.networkError = originalError.networkError;
           }
 
-          const scalar = {
-            _tag: value._tag,
-            value: value.value,
-          } as TaggedScalar;
-
-          if (!node.parent?.val || !node.key) {
-            continue;
+          if (originalError?.response) {
+            input.response = originalError.response as unknown;
           }
 
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          node.parent.val[node.key] = decodeScalar(scalar);
+          operationResult.error = new CombinedError(input);
         }
 
         return operationResult;
