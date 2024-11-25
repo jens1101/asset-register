@@ -874,6 +874,19 @@ export const typeDefs = {
         },
         {
           kind: "FieldDefinition",
+          name: { kind: "Name", value: "updatedAt" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "TemporalInstant" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
           name: { kind: "Name", value: "file" },
           arguments: [],
           type: {

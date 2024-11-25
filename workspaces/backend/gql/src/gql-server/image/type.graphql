@@ -9,6 +9,7 @@ type Image {
   name: String
   description: String
   createdAt: TemporalInstant!
+  updatedAt: TemporalInstant!
   file: File!
   asset: Asset!
 }

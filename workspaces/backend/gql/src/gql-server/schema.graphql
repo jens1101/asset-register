@@ -63,6 +63,7 @@ type Image {
   file: File!
   id: ID!
   name: String
+  updatedAt: TemporalInstant!
 }
 
 type ImageError implements Error {

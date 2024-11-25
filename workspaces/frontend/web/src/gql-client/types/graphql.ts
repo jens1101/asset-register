@@ -104,6 +104,7 @@ export type Image = {
   file: File;
   id: Scalars["ID"]["output"];
   name?: Maybe<Scalars["String"]["output"]>;
+  updatedAt: Scalars["TemporalInstant"]["output"];
 };
 
 export type ImageError = Error & {
@@ -225,6 +226,7 @@ export type ImageFragment = {
   name?: string | null;
   description?: string | null;
   createdAt: Temporal.Instant;
+  updatedAt: Temporal.Instant;
   file: { __typename?: "File" } & {
     " $fragmentRefs"?: { FileFragment: FileFragment };
   };
@@ -359,6 +361,7 @@ export const ImageFragmentDoc = {
             },
           },
           { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+          { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
         ],
       },
     },
@@ -501,6 +504,7 @@ export const AssetFragmentDoc = {
             },
           },
           { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+          { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
         ],
       },
     },
@@ -640,6 +644,7 @@ export const CreateAssetDocument = {
             },
           },
           { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+          { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
         ],
       },
     },
@@ -799,6 +804,7 @@ export const AssetsDocument = {
             },
           },
           { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+          { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
         ],
       },
     },

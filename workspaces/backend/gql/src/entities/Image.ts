@@ -10,13 +10,13 @@ import { Decimal } from "decimal.js";
 import type { Temporal } from "temporal-polyfill";
 import { EntitySchema } from "typeorm";
 
-// TODO: add updated at
 export interface Image {
   id: number;
   name: Maybe<string>;
   description: Maybe<string>;
   position: Decimal;
   createdAt: Temporal.Instant;
+  updatedAt: Temporal.Instant;
   file: File;
   asset: Asset;
 }
@@ -54,6 +54,11 @@ export const ImageEntity = new EntitySchema<Image>({
     createdAt: {
       type: "timestamp",
       createDate: true,
+      transformer: TemporalInstantTransformer,
+    },
+    updatedAt: {
+      type: "timestamp",
+      updateDate: true,
       transformer: TemporalInstantTransformer,
     },
   },

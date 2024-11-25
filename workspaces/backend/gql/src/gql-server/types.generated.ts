@@ -113,6 +113,7 @@ export type Image = {
   file: File;
   id: Scalars["ID"]["output"];
   name?: Maybe<Scalars["String"]["output"]>;
+  updatedAt: Scalars["TemporalInstant"]["output"];
 };
 
 export type ImageError = Error & {
@@ -490,6 +491,11 @@ export type ImageResolvers<
   file?: Resolver<ResolversTypes["File"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  updatedAt?: Resolver<
+    ResolversTypes["TemporalInstant"],
+    ParentType,
+    ContextType
+  >;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

@@ -6,4 +6,5 @@ fragment image on Image {
     ...file
   }
   createdAt
+  updatedAt
 }
