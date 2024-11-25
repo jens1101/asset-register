@@ -1,24 +1,24 @@
-import { type Component, createSignal } from "solid-js";
+import { AssetSummary } from "../components/AssetSummary.jsx";
+import type { HomeData } from "./home.data.js";
+import { type Component, For, Suspense } from "solid-js";
 
-export const Home: Component = () => {
-  const [count, setCount] = createSignal(0);
-
+export const Home: Component<{ data: HomeData }> = ({ data: assets }) => {
   return (
     <section>
       <h1>Home</h1>
       <p>This is the home page.</p>
 
-      <div class="d-flex align-items-center">
-        <button class="btn btn-primary" onClick={() => setCount(count() - 1)}>
-          -
-        </button>
-
-        <output>Count: {count()}</output>
-
-        <button class="btn btn-primary" onClick={() => setCount(count() + 1)}>
-          +
-        </button>
-      </div>
+      <Suspense fallback={<span>...</span>}>
+        <For each={assets()?.assets}>
+          {(asset) =>
+            asset.__typename === "Asset" ? (
+              <AssetSummary asset={asset} />
+            ) : (
+              <></>
+            )
+          }
+        </For>
+      </Suspense>
     </section>
   );
 };

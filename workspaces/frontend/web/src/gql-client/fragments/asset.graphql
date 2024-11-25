@@ -1,4 +1,5 @@
 fragment asset on Asset {
+  __typename
   id
   name
   description

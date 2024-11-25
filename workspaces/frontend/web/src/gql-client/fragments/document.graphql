@@ -1,4 +1,5 @@
 fragment document on Document {
+  __typename
   id
   file {
     ...file

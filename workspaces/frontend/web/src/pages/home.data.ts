@@ -7,16 +7,16 @@ import {
 import type { RoutePreloadFunc } from "@solidjs/router";
 import { type Resource, createResource } from "solid-js";
 
-export type AboutData = Resource<string>;
+export type HomeData = Resource<AssetsQuery | undefined>;
 
-export const loadAbout: RoutePreloadFunc<AboutData> = () => {
+export const loadHome: RoutePreloadFunc<HomeData> = () => {
   const [data] = createResource(async () => {
     const { data } = await client.query<AssetsQuery, AssetsQueryVariables>(
       AssetsDocument,
       {},
     );
 
-    return JSON.stringify(data, null, 2);
+    return data;
   });
 
   return data;

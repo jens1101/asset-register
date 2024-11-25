@@ -185,52 +185,81 @@ export type UpdateImageInput = {
 };
 
 export type AssetFragment = {
-  __typename?: "Asset";
+  __typename: "Asset";
   id: string;
   name: string;
   description?: string | null;
   createdAt: Temporal.Instant;
-  proofOfPurchase?:
-    | ({ __typename?: "Document" } & {
-        " $fragmentRefs"?: { DocumentFragment: DocumentFragment };
-      })
-    | null;
-  images: Array<
-    { __typename?: "Image" } & {
-      " $fragmentRefs"?: { ImageFragment: ImageFragment };
-    }
-  >;
-} & { " $fragmentName"?: "AssetFragment" };
+  proofOfPurchase?: {
+    __typename: "Document";
+    id: string;
+    createdAt: Temporal.Instant;
+    file: {
+      __typename: "File";
+      id: string;
+      buffer: Uint8Array;
+      filename: string;
+      mimeType: string;
+      createdAt: Temporal.Instant;
+    };
+  } | null;
+  images: Array<{
+    __typename: "Image";
+    id: string;
+    name?: string | null;
+    description?: string | null;
+    createdAt: Temporal.Instant;
+    updatedAt: Temporal.Instant;
+    file: {
+      __typename: "File";
+      id: string;
+      buffer: Uint8Array;
+      filename: string;
+      mimeType: string;
+      createdAt: Temporal.Instant;
+    };
+  }>;
+};
 
 export type DocumentFragment = {
-  __typename?: "Document";
+  __typename: "Document";
   id: string;
   createdAt: Temporal.Instant;
-  file: { __typename?: "File" } & {
-    " $fragmentRefs"?: { FileFragment: FileFragment };
+  file: {
+    __typename: "File";
+    id: string;
+    buffer: Uint8Array;
+    filename: string;
+    mimeType: string;
+    createdAt: Temporal.Instant;
   };
-} & { " $fragmentName"?: "DocumentFragment" };
+};
 
 export type FileFragment = {
-  __typename?: "File";
+  __typename: "File";
   id: string;
   buffer: Uint8Array;
   filename: string;
   mimeType: string;
   createdAt: Temporal.Instant;
-} & { " $fragmentName"?: "FileFragment" };
+};
 
 export type ImageFragment = {
-  __typename?: "Image";
+  __typename: "Image";
   id: string;
   name?: string | null;
   description?: string | null;
   createdAt: Temporal.Instant;
   updatedAt: Temporal.Instant;
-  file: { __typename?: "File" } & {
-    " $fragmentRefs"?: { FileFragment: FileFragment };
+  file: {
+    __typename: "File";
+    id: string;
+    buffer: Uint8Array;
+    filename: string;
+    mimeType: string;
+    createdAt: Temporal.Instant;
   };
-} & { " $fragmentName"?: "ImageFragment" };
+};
 
 export type CreateAssetMutationVariables = Exact<{
   data: CreeateAssetInput;
@@ -239,9 +268,88 @@ export type CreateAssetMutationVariables = Exact<{
 export type CreateAssetMutation = {
   __typename?: "Mutation";
   createAsset:
-    | ({ __typename?: "Asset" } & {
-        " $fragmentRefs"?: { AssetFragment: AssetFragment };
-      })
+    | {
+        __typename: "Asset";
+        id: string;
+        name: string;
+        description?: string | null;
+        createdAt: Temporal.Instant;
+        proofOfPurchase?: {
+          __typename: "Document";
+          id: string;
+          createdAt: Temporal.Instant;
+          file: {
+            __typename: "File";
+            id: string;
+            buffer: Uint8Array;
+            filename: string;
+            mimeType: string;
+            createdAt: Temporal.Instant;
+          };
+        } | null;
+        images: Array<{
+          __typename: "Image";
+          id: string;
+          name?: string | null;
+          description?: string | null;
+          createdAt: Temporal.Instant;
+          updatedAt: Temporal.Instant;
+          file: {
+            __typename: "File";
+            id: string;
+            buffer: Uint8Array;
+            filename: string;
+            mimeType: string;
+            createdAt: Temporal.Instant;
+          };
+        }>;
+      }
+    | { __typename?: "AssetError" };
+};
+
+export type AssetQueryVariables = Exact<{
+  id: Scalars["ID"]["input"];
+}>;
+
+export type AssetQuery = {
+  __typename?: "Query";
+  asset:
+    | {
+        __typename: "Asset";
+        id: string;
+        name: string;
+        description?: string | null;
+        createdAt: Temporal.Instant;
+        proofOfPurchase?: {
+          __typename: "Document";
+          id: string;
+          createdAt: Temporal.Instant;
+          file: {
+            __typename: "File";
+            id: string;
+            buffer: Uint8Array;
+            filename: string;
+            mimeType: string;
+            createdAt: Temporal.Instant;
+          };
+        } | null;
+        images: Array<{
+          __typename: "Image";
+          id: string;
+          name?: string | null;
+          description?: string | null;
+          createdAt: Temporal.Instant;
+          updatedAt: Temporal.Instant;
+          file: {
+            __typename: "File";
+            id: string;
+            buffer: Uint8Array;
+            filename: string;
+            mimeType: string;
+            createdAt: Temporal.Instant;
+          };
+        }>;
+      }
     | { __typename?: "AssetError" };
 };
 
@@ -250,9 +358,42 @@ export type AssetsQueryVariables = Exact<{ [key: string]: never }>;
 export type AssetsQuery = {
   __typename?: "Query";
   assets: Array<
-    | ({ __typename?: "Asset" } & {
-        " $fragmentRefs"?: { AssetFragment: AssetFragment };
-      })
+    | {
+        __typename: "Asset";
+        id: string;
+        name: string;
+        description?: string | null;
+        createdAt: Temporal.Instant;
+        proofOfPurchase?: {
+          __typename: "Document";
+          id: string;
+          createdAt: Temporal.Instant;
+          file: {
+            __typename: "File";
+            id: string;
+            buffer: Uint8Array;
+            filename: string;
+            mimeType: string;
+            createdAt: Temporal.Instant;
+          };
+        } | null;
+        images: Array<{
+          __typename: "Image";
+          id: string;
+          name?: string | null;
+          description?: string | null;
+          createdAt: Temporal.Instant;
+          updatedAt: Temporal.Instant;
+          file: {
+            __typename: "File";
+            id: string;
+            buffer: Uint8Array;
+            filename: string;
+            mimeType: string;
+            createdAt: Temporal.Instant;
+          };
+        }>;
+      }
     | { __typename?: "AssetError" }
   >;
 };
@@ -270,6 +411,7 @@ export const FileFragmentDoc = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "buffer" } },
           { kind: "Field", name: { kind: "Name", value: "filename" } },
@@ -293,6 +435,7 @@ export const DocumentFragmentDoc = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           {
             kind: "Field",
@@ -321,6 +464,7 @@ export const DocumentFragmentDoc = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "buffer" } },
           { kind: "Field", name: { kind: "Name", value: "filename" } },
@@ -344,6 +488,7 @@ export const ImageFragmentDoc = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
@@ -375,6 +520,7 @@ export const ImageFragmentDoc = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "buffer" } },
           { kind: "Field", name: { kind: "Name", value: "filename" } },
@@ -398,6 +544,7 @@ export const AssetFragmentDoc = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
@@ -441,6 +588,7 @@ export const AssetFragmentDoc = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "buffer" } },
           { kind: "Field", name: { kind: "Name", value: "filename" } },
@@ -459,6 +607,7 @@ export const AssetFragmentDoc = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           {
             kind: "Field",
@@ -487,6 +636,7 @@ export const AssetFragmentDoc = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
@@ -581,6 +731,7 @@ export const CreateAssetDocument = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "buffer" } },
           { kind: "Field", name: { kind: "Name", value: "filename" } },
@@ -599,6 +750,7 @@ export const CreateAssetDocument = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           {
             kind: "Field",
@@ -627,6 +779,7 @@ export const CreateAssetDocument = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
@@ -658,6 +811,7 @@ export const CreateAssetDocument = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
@@ -693,6 +847,190 @@ export const CreateAssetDocument = {
     },
   ],
 } as unknown as DocumentNode<CreateAssetMutation, CreateAssetMutationVariables>;
+export const AssetDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "query",
+      name: { kind: "Name", value: "Asset" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "asset" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "id" },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "InlineFragment",
+                  typeCondition: {
+                    kind: "NamedType",
+                    name: { kind: "Name", value: "Asset" },
+                  },
+                  selectionSet: {
+                    kind: "SelectionSet",
+                    selections: [
+                      {
+                        kind: "FragmentSpread",
+                        name: { kind: "Name", value: "asset" },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "file" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "File" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "buffer" } },
+          { kind: "Field", name: { kind: "Name", value: "filename" } },
+          { kind: "Field", name: { kind: "Name", value: "mimeType" } },
+          { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "document" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "Document" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "file" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "FragmentSpread",
+                  name: { kind: "Name", value: "file" },
+                },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "image" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "Image" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "file" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "FragmentSpread",
+                  name: { kind: "Name", value: "file" },
+                },
+              ],
+            },
+          },
+          { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+          { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "asset" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "Asset" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
+          { kind: "Field", name: { kind: "Name", value: "id" } },
+          { kind: "Field", name: { kind: "Name", value: "name" } },
+          { kind: "Field", name: { kind: "Name", value: "description" } },
+          { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "proofOfPurchase" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "FragmentSpread",
+                  name: { kind: "Name", value: "document" },
+                },
+              ],
+            },
+          },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "images" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "FragmentSpread",
+                  name: { kind: "Name", value: "image" },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AssetQuery, AssetQueryVariables>;
 export const AssetsDocument = {
   kind: "Document",
   definitions: [
@@ -741,6 +1079,7 @@ export const AssetsDocument = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "buffer" } },
           { kind: "Field", name: { kind: "Name", value: "filename" } },
@@ -759,6 +1098,7 @@ export const AssetsDocument = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           {
             kind: "Field",
@@ -787,6 +1127,7 @@ export const AssetsDocument = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
@@ -818,6 +1159,7 @@ export const AssetsDocument = {
       selectionSet: {
         kind: "SelectionSet",
         selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
