@@ -1,0 +1,12 @@
+fragment asset on Asset {
+  id
+  name
+  description
+  createdAt
+  proofOfPurchase {
+    ...document
+  }
+  images {
+    ...image
+  }
+}

@@ -1,29 +1,7 @@
 mutation CreateAsset($data: CreeateAssetInput!) {
   createAsset(data: $data) {
     ... on Asset {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-      images {
-        id
-        name
-        file {
-          filename
-          mimeType
-        }
-        createdAt
-        description
-      }
-      proofOfPurchase {
-        file {
-          filename
-          mimeType
-        }
-        id
-        createdAt
-      }
+      ...asset
     }
   }
 }
