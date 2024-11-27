@@ -1,4 +1,4 @@
-import { Carousel } from "../components/Carousel/index.js";
+import { Carousel } from "../components/Carousel/Carousel.jsx";
 import type { AssetFragment } from "../gql-client/types/graphql.js";
 import type { AssetData } from "./asset.data.js";
 import { type Accessor, type Component, Show, Suspense } from "solid-js";

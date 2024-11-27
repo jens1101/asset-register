@@ -1,4 +1,4 @@
-import { AssetListItem } from "../components/AssetListItem/index.js";
+import { AssetListItem } from "../components/AssetListItem/AssetListItem.jsx";
 import type { AssetFragment } from "../gql-client/types/graphql.js";
 import type { HomeData } from "./home.data.js";
 import {
