@@ -14,7 +14,7 @@ import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 const documents = {
-  "fragment asset on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  proofOfPurchase {\n    ...document\n  }\n  images {\n    ...image\n  }\n}":
+  "fragment asset on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  updatedAt\n  proofOfPurchase {\n    ...document\n  }\n  images {\n    ...image\n  }\n}":
     types.AssetFragmentDoc,
   "fragment document on Document {\n  __typename\n  id\n  file {\n    ...file\n  }\n  createdAt\n}":
     types.DocumentFragmentDoc,
@@ -48,8 +48,8 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "fragment asset on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  proofOfPurchase {\n    ...document\n  }\n  images {\n    ...image\n  }\n}",
-): (typeof documents)["fragment asset on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  proofOfPurchase {\n    ...document\n  }\n  images {\n    ...image\n  }\n}"];
+  source: "fragment asset on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  updatedAt\n  proofOfPurchase {\n    ...document\n  }\n  images {\n    ...image\n  }\n}",
+): (typeof documents)["fragment asset on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  updatedAt\n  proofOfPurchase {\n    ...document\n  }\n  images {\n    ...image\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

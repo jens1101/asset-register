@@ -190,6 +190,7 @@ export type AssetFragment = {
   name: string;
   description?: string | null;
   createdAt: Temporal.Instant;
+  updatedAt: Temporal.Instant;
   proofOfPurchase?: {
     __typename: "Document";
     id: string;
@@ -274,6 +275,7 @@ export type CreateAssetMutation = {
         name: string;
         description?: string | null;
         createdAt: Temporal.Instant;
+        updatedAt: Temporal.Instant;
         proofOfPurchase?: {
           __typename: "Document";
           id: string;
@@ -320,6 +322,7 @@ export type AssetQuery = {
         name: string;
         description?: string | null;
         createdAt: Temporal.Instant;
+        updatedAt: Temporal.Instant;
         proofOfPurchase?: {
           __typename: "Document";
           id: string;
@@ -364,6 +367,7 @@ export type AssetsQuery = {
         name: string;
         description?: string | null;
         createdAt: Temporal.Instant;
+        updatedAt: Temporal.Instant;
         proofOfPurchase?: {
           __typename: "Document";
           id: string;
@@ -549,6 +553,7 @@ export const AssetFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
           { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+          { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
           {
             kind: "Field",
             name: { kind: "Name", value: "proofOfPurchase" },
@@ -816,6 +821,7 @@ export const CreateAssetDocument = {
           { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
           { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+          { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
           {
             kind: "Field",
             name: { kind: "Name", value: "proofOfPurchase" },
@@ -1000,6 +1006,7 @@ export const AssetDocument = {
           { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
           { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+          { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
           {
             kind: "Field",
             name: { kind: "Name", value: "proofOfPurchase" },
@@ -1164,6 +1171,7 @@ export const AssetsDocument = {
           { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
           { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+          { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
           {
             kind: "Field",
             name: { kind: "Name", value: "proofOfPurchase" },

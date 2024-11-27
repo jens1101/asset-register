@@ -1,24 +1,32 @@
-import { AssetSummary } from "../components/AssetSummary.jsx";
+import { AssetSummary } from "../components/AssetSummary/index.js";
+import type { AssetFragment } from "../gql-client/types/graphql.js";
 import type { HomeData } from "./home.data.js";
-import { type Component, For, Suspense } from "solid-js";
+import {
+  type Accessor,
+  type Component,
+  For,
+  Suspense,
+  createMemo,
+} from "solid-js";
 
-export const Home: Component<{ data: HomeData }> = ({ data: assets }) => {
+export const Home: Component<{ data: HomeData }> = ({ data }) => {
+  const assets: Accessor<AssetFragment[]> = createMemo(
+    () => data()?.assets.filter((asset) => asset.__typename === "Asset") ?? [],
+  );
+
   return (
-    <section>
-      <h1>Home</h1>
-      <p>This is the home page.</p>
-
-      <Suspense fallback={<span>...</span>}>
-        <For each={assets()?.assets}>
-          {(asset) =>
-            asset.__typename === "Asset" ? (
-              <AssetSummary asset={asset} />
-            ) : (
-              <></>
-            )
-          }
-        </For>
-      </Suspense>
+    <section class={"container"}>
+      <div class={"row row-cols-1 row-cols-sm-2 row-cols-md-3"}>
+        <Suspense fallback={<span>...</span>}>
+          <For each={assets()}>
+            {(asset) => (
+              <div class={"col"}>
+                <AssetSummary asset={asset} />
+              </div>
+            )}
+          </For>
+        </Suspense>
+      </div>
     </section>
   );
 };

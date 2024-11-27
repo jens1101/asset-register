@@ -8,7 +8,7 @@ import type { RoutePreloadFunc } from "@solidjs/router";
 import { type Resource, createResource } from "solid-js";
 
 // TODO: return the asset fragment or error fragment
-export type AssetData = Resource<string>;
+export type AssetData = Resource<AssetQuery | undefined>;
 
 export const loadAsset: RoutePreloadFunc<AssetData> = ({ params }) => {
   // TODO: error handling. Maybe we need to separate the errors from the data?
@@ -20,7 +20,7 @@ export const loadAsset: RoutePreloadFunc<AssetData> = ({ params }) => {
       },
     );
 
-    return JSON.stringify(data, null, 2);
+    return data;
   });
 
   return data;
