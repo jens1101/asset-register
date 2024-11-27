@@ -1,10 +1,10 @@
-import type { AssetFragment } from "../../gql-client/types/graphql.js";
+import type { AssetListItemFragment } from "../../gql-client/types/graphql.js";
 import { useObjectUrl } from "../../hooks/useObjectUrl.js";
 import "./styles.scss";
+import { A } from "@solidjs/router";
 import { type Component, Show } from "solid-js";
 
-// TODO: create an asset summary fragment
-export const AssetSummary: Component<{ asset: AssetFragment }> = ({
+export const AssetListItem: Component<{ asset: AssetListItemFragment }> = ({
   asset,
 }) => {
   const mainImageFile = asset.images[0]?.file;
@@ -17,7 +17,7 @@ export const AssetSummary: Component<{ asset: AssetFragment }> = ({
     <div class={"card h-100"}>
       <img
         src={objectUrl}
-        class={"card-img-top asset-summary__image"}
+        class={"card-img-top asset-list-item__image"}
         alt={"Asset main image"}
       />
 
@@ -28,9 +28,9 @@ export const AssetSummary: Component<{ asset: AssetFragment }> = ({
           <p class={"card-text"}>{asset.description}</p>
         </Show>
 
-        <a href={`/asset/${asset.id}`} class={"btn btn-primary"}>
+        <A href={`/asset/${asset.id}`} class={"btn btn-primary"}>
           View
-        </a>
+        </A>
       </div>
     </div>
   );

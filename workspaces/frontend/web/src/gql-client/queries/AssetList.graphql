@@ -1,7 +1,7 @@
-query Assets {
+query AssetList {
   assets {
     ... on Asset {
-      ...asset
+      ...assetListItem
     }
   }
 }

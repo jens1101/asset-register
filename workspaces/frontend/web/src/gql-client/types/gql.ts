@@ -16,6 +16,8 @@ import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-
 const documents = {
   "fragment asset on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  updatedAt\n  proofOfPurchase {\n    ...document\n  }\n  images {\n    ...image\n  }\n}":
     types.AssetFragmentDoc,
+  "fragment assetListItem on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  updatedAt\n  images {\n    ...image\n  }\n}":
+    types.AssetListItemFragmentDoc,
   "fragment document on Document {\n  __typename\n  id\n  file {\n    ...file\n  }\n  createdAt\n}":
     types.DocumentFragmentDoc,
   "fragment file on File {\n  __typename\n  id\n  buffer\n  filename\n  mimeType\n  createdAt\n}":
@@ -26,8 +28,8 @@ const documents = {
     types.CreateAssetDocument,
   "query Asset($id: ID!) {\n  asset(id: $id) {\n    ... on Asset {\n      ...asset\n    }\n  }\n}":
     types.AssetDocument,
-  "query Assets {\n  assets {\n    ... on Asset {\n      ...asset\n    }\n  }\n}":
-    types.AssetsDocument,
+  "query AssetList {\n  assets {\n    ... on Asset {\n      ...assetListItem\n    }\n  }\n}":
+    types.AssetListDocument,
 };
 
 /**
@@ -50,6 +52,12 @@ export function graphql(source: string): unknown;
 export function graphql(
   source: "fragment asset on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  updatedAt\n  proofOfPurchase {\n    ...document\n  }\n  images {\n    ...image\n  }\n}",
 ): (typeof documents)["fragment asset on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  updatedAt\n  proofOfPurchase {\n    ...document\n  }\n  images {\n    ...image\n  }\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "fragment assetListItem on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  updatedAt\n  images {\n    ...image\n  }\n}",
+): (typeof documents)["fragment assetListItem on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  updatedAt\n  images {\n    ...image\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -84,8 +92,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "query Assets {\n  assets {\n    ... on Asset {\n      ...asset\n    }\n  }\n}",
-): (typeof documents)["query Assets {\n  assets {\n    ... on Asset {\n      ...asset\n    }\n  }\n}"];
+  source: "query AssetList {\n  assets {\n    ... on Asset {\n      ...assetListItem\n    }\n  }\n}",
+): (typeof documents)["query AssetList {\n  assets {\n    ... on Asset {\n      ...assetListItem\n    }\n  }\n}"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

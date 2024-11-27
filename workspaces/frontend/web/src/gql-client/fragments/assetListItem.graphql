@@ -1,0 +1,12 @@
+fragment assetListItem on Asset {
+  __typename
+  id
+  name
+  description
+  createdAt
+  updatedAt
+  # TODO: use main/thumbnail image when that's implemented
+  images {
+    ...image
+  }
+}

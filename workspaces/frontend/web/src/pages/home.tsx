@@ -1,4 +1,4 @@
-import { AssetSummary } from "../components/AssetSummary/index.js";
+import { AssetListItem } from "../components/AssetListItem/index.js";
 import type { AssetFragment } from "../gql-client/types/graphql.js";
 import type { HomeData } from "./home.data.js";
 import {
@@ -20,8 +20,8 @@ export const Home: Component<{ data: HomeData }> = ({ data }) => {
         <Suspense fallback={<span>...</span>}>
           <For each={assets()}>
             {(asset) => (
-              <div class={"col"}>
-                <AssetSummary asset={asset} />
+              <div class={"col py-2"}>
+                <AssetListItem asset={asset} />
               </div>
             )}
           </For>
