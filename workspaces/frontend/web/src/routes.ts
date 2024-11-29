@@ -15,6 +15,12 @@ export const routes: RouteDefinition<string | string[], any>[] = [
     preload: loadHome,
   } satisfies RouteDefinition<string, HomeData>,
   {
+    path: "/asset/create",
+    component: lazy(async () => ({
+      default: (await import("./pages/createAsset.jsx")).Asset,
+    })),
+  },
+  {
     path: "/asset/:id",
     component: lazy(async () => ({
       default: (await import("./pages/asset.js")).Asset,
