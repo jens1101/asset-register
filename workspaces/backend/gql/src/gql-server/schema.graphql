@@ -14,27 +14,27 @@ type AssetError implements Error {
 
 union AssetResponse = Asset | AssetError
 
-input CreateDocumentInput {
-  file: CreeateFileInput!
-}
-
-input CreateImageInput {
-  description: String
-  file: CreeateFileInput!
-  name: String
-}
-
-input CreeateAssetInput {
+input CreateAssetInput {
   description: String
   images: [CreateImageInput!]
   name: String!
   proofOfPurchase: CreateDocumentInput
 }
 
-input CreeateFileInput {
+input CreateDocumentInput {
+  file: CreateFileInput!
+}
+
+input CreateFileInput {
   buffer: Uint8Array!
   filename: String!
   mimeType: String!
+}
+
+input CreateImageInput {
+  description: String
+  file: CreateFileInput!
+  name: String
 }
 
 type Document {
@@ -74,7 +74,7 @@ union ImageResponse = Image | ImageError
 
 type Mutation {
   addAssetImages(id: ID!, images: [CreateImageInput!]!): AssetResponse!
-  createAsset(data: CreeateAssetInput!): AssetResponse!
+  createAsset(data: CreateAssetInput!): AssetResponse!
   deleteAsset(id: ID!): Void
   deleteAssetImages(id: ID!, imageIds: [ID!]): AssetResponse!
   deleteProofOfPurchase(id: ID!): AssetResponse!

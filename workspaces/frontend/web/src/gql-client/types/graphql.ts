@@ -52,27 +52,27 @@ export type AssetError = Error & {
 
 export type AssetResponse = Asset | AssetError;
 
-export type CreateDocumentInput = {
-  file: CreeateFileInput;
-};
-
-export type CreateImageInput = {
-  description?: InputMaybe<Scalars["String"]["input"]>;
-  file: CreeateFileInput;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type CreeateAssetInput = {
+export type CreateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   images?: InputMaybe<Array<CreateImageInput>>;
   name: Scalars["String"]["input"];
   proofOfPurchase?: InputMaybe<CreateDocumentInput>;
 };
 
-export type CreeateFileInput = {
+export type CreateDocumentInput = {
+  file: CreateFileInput;
+};
+
+export type CreateFileInput = {
   buffer: Scalars["Uint8Array"]["input"];
   filename: Scalars["String"]["input"];
   mimeType: Scalars["String"]["input"];
+};
+
+export type CreateImageInput = {
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  file: CreateFileInput;
+  name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type Document = {
@@ -132,7 +132,7 @@ export type MutationAddAssetImagesArgs = {
 };
 
 export type MutationCreateAssetArgs = {
-  data: CreeateAssetInput;
+  data: CreateAssetInput;
 };
 
 export type MutationDeleteAssetArgs = {
@@ -288,7 +288,7 @@ export type ImageFragment = {
 };
 
 export type CreateAssetMutationVariables = Exact<{
-  data: CreeateAssetInput;
+  data: CreateAssetInput;
 }>;
 
 export type CreateAssetMutation = {
@@ -780,7 +780,7 @@ export const CreateAssetDocument = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "CreeateAssetInput" },
+              name: { kind: "Name", value: "CreateAssetInput" },
             },
           },
         },

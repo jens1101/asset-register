@@ -61,27 +61,27 @@ export type AssetError = Error & {
 
 export type AssetResponse = Asset | AssetError;
 
-export type CreateDocumentInput = {
-  file: CreeateFileInput;
-};
-
-export type CreateImageInput = {
-  description?: InputMaybe<Scalars["String"]["input"]>;
-  file: CreeateFileInput;
-  name?: InputMaybe<Scalars["String"]["input"]>;
-};
-
-export type CreeateAssetInput = {
+export type CreateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   images?: InputMaybe<Array<CreateImageInput>>;
   name: Scalars["String"]["input"];
   proofOfPurchase?: InputMaybe<CreateDocumentInput>;
 };
 
-export type CreeateFileInput = {
+export type CreateDocumentInput = {
+  file: CreateFileInput;
+};
+
+export type CreateFileInput = {
   buffer: Scalars["Uint8Array"]["input"];
   filename: Scalars["String"]["input"];
   mimeType: Scalars["String"]["input"];
+};
+
+export type CreateImageInput = {
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  file: CreateFileInput;
+  name?: InputMaybe<Scalars["String"]["input"]>;
 };
 
 export type Document = {
@@ -141,7 +141,7 @@ export type MutationaddAssetImagesArgs = {
 };
 
 export type MutationcreateAssetArgs = {
-  data: CreeateAssetInput;
+  data: CreateAssetInput;
 };
 
 export type MutationdeleteAssetArgs = {
@@ -325,10 +325,10 @@ export type ResolversTypes = {
   AssetResponse: ResolverTypeWrapper<
     ResolversUnionTypes<ResolversTypes>["AssetResponse"]
   >;
+  CreateAssetInput: CreateAssetInput;
   CreateDocumentInput: CreateDocumentInput;
+  CreateFileInput: CreateFileInput;
   CreateImageInput: CreateImageInput;
-  CreeateAssetInput: CreeateAssetInput;
-  CreeateFileInput: CreeateFileInput;
   Document: ResolverTypeWrapper<Document>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>["Error"]>;
   File: ResolverTypeWrapper<File>;
@@ -354,10 +354,10 @@ export type ResolversParentTypes = {
   ID: Scalars["ID"]["output"];
   AssetError: AssetError;
   AssetResponse: ResolversUnionTypes<ResolversParentTypes>["AssetResponse"];
+  CreateAssetInput: CreateAssetInput;
   CreateDocumentInput: CreateDocumentInput;
+  CreateFileInput: CreateFileInput;
   CreateImageInput: CreateImageInput;
-  CreeateAssetInput: CreeateAssetInput;
-  CreeateFileInput: CreeateFileInput;
   Document: Document;
   Error: ResolversInterfaceTypes<ResolversParentTypes>["Error"];
   File: File;

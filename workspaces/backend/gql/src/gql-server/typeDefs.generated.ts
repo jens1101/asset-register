@@ -5,7 +5,7 @@ export const typeDefs = {
   definitions: [
     {
       kind: "InputObjectTypeDefinition",
-      name: { kind: "Name", value: "CreeateAssetInput" },
+      name: { kind: "Name", value: "CreateAssetInput" },
       directives: [],
       fields: [
         {
@@ -95,7 +95,7 @@ export const typeDefs = {
                 kind: "NonNullType",
                 type: {
                   kind: "NamedType",
-                  name: { kind: "Name", value: "CreeateAssetInput" },
+                  name: { kind: "Name", value: "CreateAssetInput" },
                 },
               },
               directives: [],
@@ -561,7 +561,7 @@ export const typeDefs = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "CreeateFileInput" },
+              name: { kind: "Name", value: "CreateFileInput" },
             },
           },
           directives: [],
@@ -621,7 +621,7 @@ export const typeDefs = {
     },
     {
       kind: "InputObjectTypeDefinition",
-      name: { kind: "Name", value: "CreeateFileInput" },
+      name: { kind: "Name", value: "CreateFileInput" },
       directives: [],
       fields: [
         {
@@ -756,7 +756,7 @@ export const typeDefs = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "CreeateFileInput" },
+              name: { kind: "Name", value: "CreateFileInput" },
             },
           },
           directives: [],

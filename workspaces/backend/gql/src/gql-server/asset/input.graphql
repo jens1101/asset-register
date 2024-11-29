@@ -1,4 +1,4 @@
-input CreeateAssetInput {
+input CreateAssetInput {
   name: String!
   description: String
   images: [CreateImageInput!]

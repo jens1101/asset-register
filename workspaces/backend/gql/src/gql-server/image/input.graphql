@@ -1,7 +1,7 @@
 input CreateImageInput {
   name: String
   description: String
-  file: CreeateFileInput!
+  file: CreateFileInput!
 }
 
 input UpdateImageInput {
