@@ -12,7 +12,7 @@ export const Asset: Component = () => {
     },
   });
 
-  const [nameValidation, nameErrors] = useFormField({
+  const [nameValidation, nameErrors] = useFormField<HTMLInputElement>({
     validatonErrorMap: {
       patternMismatch: "Name may not contain numbers",
     },
