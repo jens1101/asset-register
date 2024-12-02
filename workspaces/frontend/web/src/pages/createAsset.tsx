@@ -4,7 +4,6 @@ import { type Component, createUniqueId } from "solid-js";
 
 export const Asset: Component = () => {
   // const [assetInput, setAssetInput] = createSignal<CreateAssetInput>();
-  // const [nameErrors, setNameErrors] = createSignal<string[]>([]);
   const nameId = createUniqueId();
   const formSubmit = useForm({
     onSubmit: (formData: FormData) => {
@@ -17,6 +16,7 @@ export const Asset: Component = () => {
     validatonErrorMap: {
       patternMismatch: "Name may not contain numbers",
     },
+    eventType: "input",
     customValidators: {
       isAsync: false,
       functions: [

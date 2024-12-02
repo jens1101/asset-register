@@ -29,8 +29,6 @@ export function useForm({
       // means that the custom validators would not have been run. This is by
       // design. To force the user to enter a value the `required` attribute
       // should be used.
-      // TODO: If I just submit the form without anything entered, then nothing
-      //  gets propagated to the `onValidationComplete` callback.
       formElement.reportValidity()
         ? onSubmit?.(new FormData(formElement), event)
         : onInvalid?.(event);

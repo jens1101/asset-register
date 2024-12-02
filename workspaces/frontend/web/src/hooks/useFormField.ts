@@ -1,8 +1,7 @@
+import type { Maybe } from "@app/common";
 import { createSignal, onCleanup } from "solid-js";
 
 // TODO: add documentation!
-
-// TODO: reconsider the message transformer idea. The easiest solution is to have validations show on the form field itself.
 
 // TODO: maybe use an interface? That might correctly thread the type
 type FormFieldElement = Element & {
@@ -15,6 +14,10 @@ type FormFieldElement = Element & {
   // TODO: not technically needed
   value: string;
 };
+
+type ValidationComplete =
+  | ((errorMessages: string[]) => string)
+  | ((errorMessages: string[]) => void);
 
 type AsyncValidator = (
   element: FormFieldElement,
@@ -76,18 +79,39 @@ async function runAsyncValidations(
   return errorMessages;
 }
 
+const runValidationComplete = ({
+  element,
+  errorMessages,
+  callback,
+}: {
+  element: FormFieldElement;
+  errorMessages: string[];
+  callback: Maybe<ValidationComplete>;
+}) => {
+  const customErrorMessage = callback?.(errorMessages);
+
+  element.setCustomValidity(
+    customErrorMessage ||
+      (errorMessages.length > 0 ? "Element failed custom validators" : ""),
+  );
+};
+
 export function useFormField({
-  eventType = "blur",
+  eventType = "change",
   validatonErrorMap,
   customValidators,
   invalidUntilResolved = true,
   stopOnFirstError = false,
+  useDefaultErrorReporting = false,
+  onValidationComplete,
 }: Partial<{
   eventType: string;
   validatonErrorMap: ValidityMessages;
   customValidators: Validators;
   invalidUntilResolved: boolean;
   stopOnFirstError: boolean;
+  useDefaultErrorReporting: boolean;
+  onValidationComplete: ValidationComplete;
 }> = {}): [(element: FormFieldElement) => void, () => string[]] {
   const [element, setElement] = createSignal<FormFieldElement>();
   const [validationErrorMessages, setValidationErrorMessages] = createSignal<
@@ -101,13 +125,8 @@ export function useFormField({
     ...customErrorMessages(),
   ];
 
-  // TODO: this does not trigger for custom valiation messages! However, it
-  // does trigger every time the checkValidity is called
-  // TODO: `reporValidity` will apparantly only show errors to users if the
-  // invalid event was not cancelled. So maybe we can use this behaviour to
-  // intelligently report issues to the user.
   const onInvalid: EventListener = (event) => {
-    event.preventDefault();
+    if (!useDefaultErrorReporting) event.preventDefault();
 
     const currentElement = element();
 
@@ -166,14 +185,17 @@ export function useFormField({
 
     if (currentElement.validity.valueMissing || !customValidators) {
       setCustomErrorMessages([]);
+      runValidationComplete({
+        element: currentElement,
+        errorMessages: allErrorMessages(),
+        callback: onValidationComplete,
+      });
       return;
     }
 
-    const errorMessages: string[] = [];
-
     if (!customValidators.isAsync) {
-      errorMessages.push(
-        ...runSyncValidations(
+      setCustomErrorMessages(
+        runSyncValidations(
           currentElement,
           event,
           customValidators.functions,
@@ -181,11 +203,11 @@ export function useFormField({
         ),
       );
 
-      if (errorMessages.length > 0) {
-        currentElement.setCustomValidity("Element failed custom validators");
-      }
-
-      setCustomErrorMessages(errorMessages);
+      runValidationComplete({
+        element: currentElement,
+        errorMessages: allErrorMessages(),
+        callback: onValidationComplete,
+      });
     } else {
       if (invalidUntilResolved) {
         currentElement.setCustomValidity("Running custom validators");
@@ -197,19 +219,13 @@ export function useFormField({
         customValidators.functions,
         stopOnFirstError,
       )
-        .then((errors) => {
-          errorMessages.push(...errors);
-
-          errorMessages.length > 0
-            ? currentElement.setCustomValidity(
-                "Element failed custom validators",
-              )
-            : currentElement.setCustomValidity("");
-
-          // TODO: an optional `onValidationComplete` callback could be useful
-          //  to show a loading spinner. Additionally, it could return a string
-          //  to be used as the custom error message.
+        .then((errorMessages) => {
           setCustomErrorMessages(errorMessages);
+          runValidationComplete({
+            element: currentElement,
+            errorMessages: allErrorMessages(),
+            callback: onValidationComplete,
+          });
         })
         .catch(() => {});
     }
