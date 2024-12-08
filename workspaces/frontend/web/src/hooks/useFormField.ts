@@ -11,6 +11,7 @@ interface FormFieldElement extends Element {
   reportValidity(): boolean;
   readonly validationMessage: string;
   validity: ValidityState;
+  value: string;
 }
 
 /**
@@ -100,19 +101,22 @@ async function runAsyncValidations<E extends FormFieldElement>(
  *
  * @example
  * ```
- * const [nameValidation, nameErrors] = useFormField<HTMLInputElement>({
- *   eventType: "input",
+ * const {
+ *   validation: nameValidation,
+ *   errors: nameErrors,
+ *   touched: nameTouched,
+ * } =  useFormField<HTMLInputElement>({
+ *   validationEventType: "input",
  *   validatonErrorMap: {
+ *     valueMissing: "Name is required",
  *     patternMismatch: "Name may not contain numbers",
  *   },
  * });
  * ```
- * @returns A tuple where the first element is a function to be used as a ref
- * or directive on the form field, and the second is an accessor to all
- * validation error messages.
  */
 export function useFormField<E extends FormFieldElement>({
-  eventType = "change",
+  validationEventType = "change",
+  touchedEventType = "change",
   validatonErrorMap,
   customValidators,
   invalidUntilResolved = true,
@@ -121,7 +125,9 @@ export function useFormField<E extends FormFieldElement>({
   onValidationComplete,
 }: Partial<{
   /** Which event will trigger validations */
-  eventType: string;
+  validationEventType: string;
+  /** Which event will cause the form field to be marked as "touched" */
+  touchedEventType: string;
   /** Map from validity state to display message */
   validatonErrorMap: ValidityMessages;
   /**
@@ -153,8 +159,25 @@ export function useFormField<E extends FormFieldElement>({
    * {@link useDefaultErrorReporting}
    */
   onValidationComplete: ValidationComplete;
-}> = {}): [(element: E) => void, Accessor<string[]>] {
+}> = {}): {
+  /**
+   * Directive or ref function that adds the necessary listeners to enable the
+   * enhanced validation functionalities
+   * @param element The form field element
+   */
+  validation: (element: E) => void;
+  /** Accessor to all validation error messages */
+  errors: Accessor<string[]>;
+  /** Accessor to determine if the field has been touched by the user at all */
+  touched: Accessor<boolean>;
+  /** Accessor to determine if the field holds no value */
+  empty: Accessor<boolean>;
+  /** When called, clears the value of this input field. */
+  clear: () => void;
+} {
   const [element, setElement] = createSignal<E>();
+  const [touched, setTouched] = createSignal<boolean>(false);
+  const [empty, setEmpty] = createSignal<boolean>(true);
   const [nativeErrorMessages, setNativeErrorMessages] = createSignal<string[]>(
     [],
   );
@@ -244,8 +267,8 @@ export function useFormField<E extends FormFieldElement>({
    * - No custom validators were specified.
    * - The element has the "required" attribute and no value was entered.
    * - {@link stopOnFirstError} is true and native validation errors occurred.
-   * @param event The event, as specified by {@link eventType}, that triggerd
-   * this listener
+   * @param event The event, as specified by {@link validationEventType}, that
+   * triggerd this listener
    */
   const onValidation: EventListener = (event) => {
     const currentElement = element();
@@ -284,18 +307,49 @@ export function useFormField<E extends FormFieldElement>({
         currentElement.setCustomValidity("Running custom validators");
       }
 
-      runAsyncValidations(
-        currentElement,
-        event,
-        customValidators.functions,
-        stopOnFirstError,
-      )
-        .then((errorMessages) => {
-          setCustomErrorMessages(errorMessages);
-          runValidationComplete();
-        })
-        .catch(() => {});
+      // TODO: how to cancel stale async validations?
+      // TODO: Is this the best way to set validations? Maybe we should make them more controlled?
+      void (async () => {
+        setCustomErrorMessages(
+          await runAsyncValidations(
+            currentElement,
+            event,
+            customValidators.functions,
+            stopOnFirstError,
+          ),
+        );
+
+        runValidationComplete();
+      })();
     }
+  };
+
+  /**
+   * Event listener to mark the form field as "touched".
+   * @param event The event, as specified by {@link touchedEventType}, that
+   * triggerd this listener
+   */
+  const onTouched: EventListener = () => {
+    setTouched(true);
+  };
+
+  /**
+   * Event listener to mark the form field as "empty".
+   * @param event The change event
+   */
+  const onEmpty: EventListener = () => {
+    setEmpty(!element()?.value);
+  };
+
+  /** Clears the value of the form field along with any custom validatons. */
+  const clear = (): void => {
+    const currentElement = element();
+    if (!currentElement) return;
+
+    currentElement.value = "";
+    setEmpty(true);
+    currentElement.setCustomValidity("");
+    setCustomErrorMessages([]);
   };
 
   /**
@@ -316,8 +370,10 @@ export function useFormField<E extends FormFieldElement>({
     }
 
     setElement(() => formFieldElement);
-    formFieldElement.addEventListener(eventType, onValidation);
+    formFieldElement.addEventListener(validationEventType, onValidation);
     formFieldElement.addEventListener("invalid", onInvalid);
+    formFieldElement.addEventListener(touchedEventType, onTouched);
+    formFieldElement.addEventListener("change", onEmpty);
   };
 
   onCleanup(() => {
@@ -325,9 +381,17 @@ export function useFormField<E extends FormFieldElement>({
 
     if (!currentElement) return;
 
-    currentElement.removeEventListener(eventType, onValidation);
+    currentElement.removeEventListener(validationEventType, onValidation);
     currentElement.removeEventListener("invalid", onInvalid);
+    currentElement.removeEventListener(touchedEventType, onTouched);
+    currentElement.removeEventListener("change", onEmpty);
   });
 
-  return [fieldValidation, allErrorMessages];
+  return {
+    validation: fieldValidation,
+    errors: allErrorMessages,
+    touched,
+    empty,
+    clear,
+  };
 }

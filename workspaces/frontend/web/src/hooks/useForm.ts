@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type { useFormField } from "./useFormField.js";
-import { createSignal, onCleanup } from "solid-js";
+import { type Accessor, createSignal, onCleanup } from "solid-js";
 
 /**
  * Hook to enhance the functionality of form submission:
@@ -33,8 +33,22 @@ export function useForm({
   onInvalid: EventListener;
   /** If true, will prevent the default form submission behaviour. */
   preventDefault: boolean;
-}> = {}) {
+}> = {}): {
+  /**
+   * Directive or ref function that adds the necessary listeners to enable the
+   * enhanced form submission functionality.
+   * @param formElement The form element
+   */
+  submit: (formElement: HTMLFormElement) => void;
+  /**
+   * Accessor to determine if the form has at any time failed submission due to
+   * failed validations.
+   */
+  previouslyFailedSubmission: Accessor<boolean>;
+} {
   const [element, setElement] = createSignal<HTMLFormElement>();
+  const [previouslyFailedSubmission, setPreviouslyFailedSubmission] =
+    createSignal<boolean>(false);
 
   /**
    * Event listener for the "submit" event on the form.
@@ -54,9 +68,12 @@ export function useForm({
     // means that the custom validators would not have been run. This is by
     // design. To force the user to enter a value the `required` attribute
     // should be used.
-    currentElement.reportValidity()
-      ? onSubmit?.(new FormData(currentElement), event)
-      : onInvalid?.(event);
+    if (currentElement.reportValidity()) {
+      onSubmit?.(new FormData(currentElement), event);
+    } else {
+      setPreviouslyFailedSubmission(true);
+      onInvalid?.(event);
+    }
   };
 
   /**
@@ -84,5 +101,8 @@ export function useForm({
     currentElement.removeEventListener("submit", onFormSubmit);
   });
 
-  return submit;
+  return {
+    submit,
+    previouslyFailedSubmission,
+  };
 }
