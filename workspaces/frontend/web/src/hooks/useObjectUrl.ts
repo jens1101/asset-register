@@ -1,8 +1,14 @@
+import type { FileFragment } from "../gql-client/types/graphql.js";
 import { onCleanup } from "solid-js";
 
-export function useObjectUrl(source: Uint8Array, mimeType: string) {
+/**
+ * Convenience hook to manage object URLs. This will automatically revoke the
+ * object URL on cleanup.
+ * @returns An accessor to the object URL.
+ */
+export function useObjectUrl(file: FileFragment): string {
   const objectUrl = URL.createObjectURL(
-    new Blob([source.buffer], { type: mimeType }),
+    new Blob([file.buffer], { type: file.mimeType }),
   );
 
   onCleanup(() => {

@@ -1,5 +1,5 @@
 import type { ParentComponent } from "solid-js";
 
-export const App: ParentComponent = ({ children }) => {
-  return <main>{children}</main>;
+export const App: ParentComponent = (props) => {
+  return <main>{props.children}</main>;
 };

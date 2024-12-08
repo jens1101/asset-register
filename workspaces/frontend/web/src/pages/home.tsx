@@ -9,9 +9,11 @@ import {
   createMemo,
 } from "solid-js";
 
-export const Home: Component<{ data: HomeData }> = ({ data }) => {
+export const Home: Component<{ data: HomeData }> = (props) => {
   const assets: Accessor<AssetFragment[]> = createMemo(
-    () => data()?.assets.filter((asset) => asset.__typename === "Asset") ?? [],
+    () =>
+      props.data()?.assets.filter((asset) => asset.__typename === "Asset") ??
+      [],
   );
 
   return (

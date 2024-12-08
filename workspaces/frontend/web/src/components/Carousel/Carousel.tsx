@@ -11,32 +11,19 @@ import {
   onCleanup,
 } from "solid-js";
 
+const INITIAL_INDEX = 0;
+
 // TODO: add shadow/background to the buttons, indicators, and text
 // TODO: Make the image fit like "cover"
 // TODO: fix the aspect ratio of the carousel and pass through class and styles
-export const Carousel: Component<{ images: ImageFragment[] }> = ({
-  images,
-}) => {
+export const Carousel: Component<{ images: ImageFragment[] }> = (props) => {
   const [carouselElement, setCarouselElement] = createSignal<HTMLDivElement>();
-  const [currentIndex, setCurrentIndex] = createSignal<number>(0);
+  const [currentIndex, setCurrentIndex] = createSignal<number>(INITIAL_INDEX);
   const [carouselInstance, setCarouselInstance] =
     createSignal<BootstrapCarousel>();
 
   const onSlide = (event: Event) => {
     if ("to" in event) setCurrentIndex(Number(event.to));
-  };
-
-  const onRef = (element: HTMLDivElement) => {
-    setCarouselElement(element);
-
-    const carouselInstance = new BootstrapCarousel(element);
-    carouselInstance.to(currentIndex());
-
-    // We set the event listener here because we want to ignore the initial set
-    // above.
-    element.addEventListener("slide.bs.carousel", onSlide);
-
-    setCarouselInstance(carouselInstance);
   };
 
   onCleanup(() => {
@@ -45,11 +32,25 @@ export const Carousel: Component<{ images: ImageFragment[] }> = ({
   });
 
   return (
-    <Show when={images.length > 0}>
-      <div ref={onRef} class={"carousel slide"}>
-        <Show when={images.length > 1}>
+    <Show when={props.images.length > 0}>
+      <div
+        ref={(element: HTMLDivElement) => {
+          setCarouselElement(element);
+
+          const carouselInstance = new BootstrapCarousel(element);
+          carouselInstance.to(INITIAL_INDEX);
+
+          // We set the event listener here because we want to ignore the initial set
+          // above.
+          element.addEventListener("slide.bs.carousel", onSlide);
+
+          setCarouselInstance(carouselInstance);
+        }}
+        class={"carousel slide"}
+      >
+        <Show when={props.images.length > 1}>
           <div class={"carousel-indicators"}>
-            <For each={images}>
+            <For each={props.images}>
               {(_, index: Accessor<number>) => (
                 <button
                   data-bs-target
@@ -65,11 +66,13 @@ export const Carousel: Component<{ images: ImageFragment[] }> = ({
         </Show>
 
         <div class={"carousel-inner"}>
-          <For each={images}>
-            {(image: ImageFragment, index: Accessor<number>) => (
+          <For each={props.images}>
+            {(image, index) => (
               <CarouselSlide
                 image={image}
-                active={index() === currentIndex()}
+                classList={{
+                  active: index() === INITIAL_INDEX,
+                }}
               />
             )}
           </For>
@@ -90,7 +93,7 @@ export const Carousel: Component<{ images: ImageFragment[] }> = ({
         <button
           class={"carousel-control-next"}
           classList={{
-            "d-none": currentIndex() >= images.length - 1,
+            "d-none": currentIndex() >= props.images.length - 1,
           }}
           type={"button"}
           onClick={() => carouselInstance()?.next()}

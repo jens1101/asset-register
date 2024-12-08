@@ -1,10 +1,12 @@
 import eslint from "@eslint/js";
+import solid from "eslint-plugin-solid/configs/typescript";
 import tseslint from "typescript-eslint";
 
 const config = [
   eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   {
+    ...solid,
     languageOptions: {
       parserOptions: {
         projectService: true,

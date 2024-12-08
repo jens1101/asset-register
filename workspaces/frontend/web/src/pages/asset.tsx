@@ -3,9 +3,9 @@ import type { AssetFragment } from "../gql-client/types/graphql.js";
 import type { AssetData } from "./asset.data.js";
 import { type Accessor, type Component, Show, Suspense } from "solid-js";
 
-export const Asset: Component<{ data: AssetData }> = ({ data }) => {
+export const Asset: Component<{ data: AssetData }> = (props) => {
   const asset: Accessor<AssetFragment | null> = () => {
-    const asset = data()?.asset;
+    const asset = props.data()?.asset;
     return asset && asset.__typename === "Asset" ? asset : null;
   };
 
