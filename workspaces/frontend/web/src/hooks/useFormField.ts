@@ -348,8 +348,8 @@ export function useFormField<E extends FormFieldElement>({
 
     currentElement.value = "";
     setEmpty(true);
-    currentElement.setCustomValidity("");
-    setCustomErrorMessages([]);
+
+    onValidation(new Event("clear"));
   };
 
   /**
@@ -374,6 +374,10 @@ export function useFormField<E extends FormFieldElement>({
     formFieldElement.addEventListener("invalid", onInvalid);
     formFieldElement.addEventListener(touchedEventType, onTouched);
     formFieldElement.addEventListener("change", onEmpty);
+
+    // Validations are immediately run in order to prevent fields from initially
+    // being marked as valid and then beecoming invalid upon submission.
+    onValidation(new Event("initialised"));
   };
 
   onCleanup(() => {

@@ -1,11 +1,14 @@
 import { Feedback } from "../components/FormFieldFeedback/Feedback.jsx";
+import { ImageFormField } from "../components/ImageFormField/ImageFormField.jsx";
 import { MAX_FILE_SIZE } from "../config.js";
 import { useForm } from "../hooks/useForm.js";
 import { useFormField } from "../hooks/useFormField.js";
 import prettyBytes from "pretty-bytes";
-import { type Component, createUniqueId } from "solid-js";
+import { type Component, For, createSignal, createUniqueId } from "solid-js";
 
 export const Asset: Component = () => {
+  const [images, setImages] = createSignal<object[]>([]);
+
   // const [assetInput, setAssetInput] = createSignal<CreateAssetInput>();
   const { submit, previouslyFailedSubmission } = useForm({
     onSubmit: (formData: FormData) => {
@@ -133,6 +136,30 @@ export const Asset: Component = () => {
 
           <Feedback invalidFeedback={proofOfPurchaseErrors()} />
         </div>
+      </div>
+
+      <div class="d-flex flex-wrap align-items-center">
+        <h2 class="m-0 me-3">Images</h2>
+        <button
+          type="button"
+          class="btn btn-primary"
+          onClick={() => setImages([...images(), {}])}
+        >
+          Add
+        </button>
+      </div>
+      <div class="mb-3 row row-cols-1 row-cols-md-2 row-cols-xl-3">
+        <For each={images()}>
+          {(_, index) => (
+            <div class={"col py-2"}>
+              <ImageFormField
+                fieldNameCallback={(name) => `image[${index()}][${name}]`}
+                onDelete={() => setImages(images().toSpliced(index(), 1))}
+                showValidations={previouslyFailedSubmission()}
+              />
+            </div>
+          )}
+        </For>
       </div>
 
       <button type={"submit"} class={"btn btn-primary"}>

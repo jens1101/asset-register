@@ -6,9 +6,11 @@ import { onCleanup } from "solid-js";
  * object URL on cleanup.
  * @returns An accessor to the object URL.
  */
-export function useObjectUrl(file: FileFragment): string {
+export function useObjectUrl(source: FileFragment | Blob): string {
   const objectUrl = URL.createObjectURL(
-    new Blob([file.buffer], { type: file.mimeType }),
+    source instanceof Blob
+      ? source
+      : new Blob([source.buffer], { type: source.mimeType }),
   );
 
   onCleanup(() => {
