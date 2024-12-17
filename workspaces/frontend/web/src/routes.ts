@@ -17,7 +17,8 @@ export const routes: RouteDefinition<string | string[], any>[] = [
   {
     path: "/asset/create",
     component: lazy(async () => ({
-      default: (await import("./pages/createAsset.jsx")).Asset,
+      default: (await import("./pages/createAsset/CreateAsset.jsx"))
+        .CreateAsset,
     })),
   },
   {

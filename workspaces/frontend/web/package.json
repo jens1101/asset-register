@@ -24,6 +24,7 @@
     "@solidjs/router": "^0.15.0",
     "@urql/core": "^5.0.8",
     "bootstrap": "5.3.3",
+    "decode-formdata": "0.8.0",
     "effect": "3.10.16",
     "graphql": "^16.9.0",
     "graphql-ws": "^5.16.0",

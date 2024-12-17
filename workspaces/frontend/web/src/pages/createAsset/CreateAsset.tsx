@@ -1,19 +1,51 @@
-import { Feedback } from "../components/FormFieldFeedback/Feedback.jsx";
-import { ImageFormField } from "../components/ImageFormField/ImageFormField.jsx";
-import { MAX_FILE_SIZE } from "../config.js";
-import { useForm } from "../hooks/useForm.js";
-import { useFormField } from "../hooks/useFormField.js";
+import { Feedback } from "../../components/FormFieldFeedback/Feedback.jsx";
+import { ImageFormField } from "../../components/ImageFormField/ImageFormField.jsx";
+import { MAX_FILE_SIZE } from "../../config.js";
+import { client } from "../../gql-client/client.js";
+import {
+  CreateAssetDocument,
+  type CreateAssetInput,
+  type CreateAssetMutation,
+  type CreateAssetMutationVariables,
+} from "../../gql-client/types/graphql.js";
+import { useForm } from "../../hooks/useForm.js";
+import { useFormField } from "../../hooks/useFormField.js";
+import {
+  AssetFormFromFormData,
+  CreateAssetInputFromAssetForm,
+} from "./schemas.js";
+import { Effect, Schema, pipe } from "effect";
 import prettyBytes from "pretty-bytes";
-import { type Component, For, createSignal, createUniqueId } from "solid-js";
+import {
+  type Component,
+  For,
+  createEffect,
+  createResource,
+  createSignal,
+  createUniqueId,
+} from "solid-js";
 
-export const Asset: Component = () => {
+export const CreateAsset: Component = () => {
   const [images, setImages] = createSignal<object[]>([]);
 
-  // const [assetInput, setAssetInput] = createSignal<CreateAssetInput>();
+  const [assetInput] = createSignal<CreateAssetInput>();
   const { submit, previouslyFailedSubmission } = useForm({
     onSubmit: (formData: FormData) => {
-      // TODO: use effect schema to transform and validate this data
-      console.log(formData);
+      Effect.runPromise(
+        pipe(
+          formData,
+          Schema.decode(AssetFormFromFormData),
+          Effect.andThen(Schema.decode(CreateAssetInputFromAssetForm)),
+        ),
+      )
+        .then((foo) => {
+          // TODO: implement
+          console.log(foo);
+        })
+        .catch((foo: unknown) => {
+          // TODO: error handling
+          console.log(foo);
+        });
     },
   });
 
@@ -28,7 +60,10 @@ export const Asset: Component = () => {
       valueMissing: "Name is required",
     },
   });
+
   const descriptionId = createUniqueId();
+
+  const proofOfPurchaseId = createUniqueId();
   const {
     validation: proofOfPurchaseValidation,
     errors: proofOfPurchaseErrors,
@@ -45,21 +80,21 @@ export const Asset: Component = () => {
       ],
     },
   });
-  const proofOfPurchaseId = createUniqueId();
 
-  // const [asset] = createResource(
-  //   assetInput(),
-  //   async (data: CreateAssetInput) => {
-  //     const { data: result } = await client.mutation<
-  //       CreateAssetMutation,
-  //       CreateAssetMutationVariables
-  //     >(CreateAssetDocument, {
-  //       data,
-  //     });
+  const [asset] = createResource(assetInput, async (data: CreateAssetInput) => {
+    const { data: result } = await client.mutation<
+      CreateAssetMutation,
+      CreateAssetMutationVariables
+    >(CreateAssetDocument, {
+      data,
+    });
 
-  //     return result?.createAsset;
-  //   },
-  // );
+    return result?.createAsset;
+  });
+
+  createEffect(() => {
+    console.log(asset());
+  });
 
   return (
     <form ref={submit}>
@@ -72,7 +107,6 @@ export const Asset: Component = () => {
           ref={nameValidation}
           id={nameId}
           class={"form-control"}
-          // TODO: how can this classlist be made more compact?
           classList={{
             "is-valid":
               (previouslyFailedSubmission() || nameTouched()) &&
@@ -153,7 +187,7 @@ export const Asset: Component = () => {
           {(_, index) => (
             <div class={"col py-2"}>
               <ImageFormField
-                fieldNameCallback={(name) => `image[${index()}][${name}]`}
+                fieldNameCallback={(name) => `images.${index()}.${name}`}
                 onDelete={() => setImages(images().toSpliced(index(), 1))}
                 showValidations={previouslyFailedSubmission()}
               />
