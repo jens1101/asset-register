@@ -28,7 +28,7 @@ import {
 export const CreateAsset: Component = () => {
   const [images, setImages] = createSignal<object[]>([]);
 
-  const [assetInput] = createSignal<CreateAssetInput>();
+  const [assetInput, setAssetInput] = createSignal<CreateAssetInput>();
   const { submit, previouslyFailedSubmission } = useForm({
     onSubmit: (formData: FormData) => {
       Effect.runPromise(
@@ -38,9 +38,8 @@ export const CreateAsset: Component = () => {
           Effect.andThen(Schema.decode(CreateAssetInputFromAssetForm)),
         ),
       )
-        .then((foo) => {
-          // TODO: implement
-          console.log(foo);
+        .then((assetInput) => {
+          setAssetInput(assetInput);
         })
         .catch((foo: unknown) => {
           // TODO: error handling
@@ -82,17 +81,24 @@ export const CreateAsset: Component = () => {
   });
 
   const [asset] = createResource(assetInput, async (data: CreateAssetInput) => {
-    const { data: result } = await client.mutation<
+    const { data: result, error } = await client.mutation<
       CreateAssetMutation,
       CreateAssetMutationVariables
     >(CreateAssetDocument, {
       data,
     });
 
+    if (error) {
+      console.error(error);
+    }
+
+    // TODO: defect handling
     return result?.createAsset;
   });
 
   createEffect(() => {
+    // TODO: Handle errors and defects.
+    // TODO: On success show a message to the user and give him the option to add more or return home.
     console.log(asset());
   });
 
