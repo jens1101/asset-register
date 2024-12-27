@@ -10,7 +10,7 @@ export const Asset: Component<{ data: AssetData }> = (props) => {
   };
 
   return (
-    <section>
+    <section class="container">
       <Suspense fallback={<span>...</span>}>
         <Show when={asset()} keyed>
           {(asset) => (

@@ -103,108 +103,113 @@ export const CreateAsset: Component = () => {
   });
 
   return (
-    <form ref={submit}>
-      <div class="mb-3">
-        <label for={nameId} class={"form-label"}>
-          Name
-        </label>
+    <section class="container">
+      <h1>Create Asset</h1>
 
-        <input
-          ref={nameValidation}
-          id={nameId}
-          class={"form-control"}
-          classList={{
-            "is-valid":
-              (previouslyFailedSubmission() || nameTouched()) &&
-              nameErrors().length === 0,
-            "is-invalid":
-              (previouslyFailedSubmission() || nameTouched()) &&
-              nameErrors().length > 0,
-          }}
-          name={"name"}
-          required
-        />
+      <form ref={submit}>
+        <div class="mb-3">
+          <label for={nameId} class={"form-label"}>
+            Name
+          </label>
 
-        <Feedback invalidFeedback={nameErrors()} />
-      </div>
-
-      <div class={"mb-3"}>
-        <label for={descriptionId} class={"form-label"}>
-          Description
-        </label>
-
-        <textarea
-          id={descriptionId}
-          class={"form-control"}
-          name={"description"}
-        />
-      </div>
-
-      <div class={"mb-3"}>
-        <label for={proofOfPurchaseId} class={"form-label"}>
-          Proof of puchase
-        </label>
-
-        <div
-          class="input-group"
-          classList={{
-            "has-validation":
-              !proofOfPurchaseEmpty() && proofOfPurchaseErrors().length > 0,
-          }}
-        >
           <input
-            ref={proofOfPurchaseValidation}
-            id={proofOfPurchaseId}
+            ref={nameValidation}
+            id={nameId}
             class={"form-control"}
             classList={{
               "is-valid":
-                !proofOfPurchaseEmpty() && proofOfPurchaseErrors().length === 0,
+                (previouslyFailedSubmission() || nameTouched()) &&
+                nameErrors().length === 0,
               "is-invalid":
+                (previouslyFailedSubmission() || nameTouched()) &&
+                nameErrors().length > 0,
+            }}
+            name={"name"}
+            required
+          />
+
+          <Feedback invalidFeedback={nameErrors()} />
+        </div>
+
+        <div class={"mb-3"}>
+          <label for={descriptionId} class={"form-label"}>
+            Description
+          </label>
+
+          <textarea
+            id={descriptionId}
+            class={"form-control"}
+            name={"description"}
+          />
+        </div>
+
+        <div class={"mb-3"}>
+          <label for={proofOfPurchaseId} class={"form-label"}>
+            Proof of puchase
+          </label>
+
+          <div
+            class="input-group"
+            classList={{
+              "has-validation":
                 !proofOfPurchaseEmpty() && proofOfPurchaseErrors().length > 0,
             }}
-            type={"file"}
-            name={"proofOfPurchase"}
-          />
-          <button
-            class={"btn btn-outline-secondary"}
-            type={"button"}
-            disabled={proofOfPurchaseEmpty()}
-            onClick={proofOfPurchaseClear}
           >
-            Clear
-          </button>
+            <input
+              ref={proofOfPurchaseValidation}
+              id={proofOfPurchaseId}
+              class={"form-control"}
+              classList={{
+                "is-valid":
+                  !proofOfPurchaseEmpty() &&
+                  proofOfPurchaseErrors().length === 0,
+                "is-invalid":
+                  !proofOfPurchaseEmpty() && proofOfPurchaseErrors().length > 0,
+              }}
+              type={"file"}
+              name={"proofOfPurchase"}
+            />
+            <button
+              class={"btn btn-outline-secondary"}
+              type={"button"}
+              disabled={proofOfPurchaseEmpty()}
+              onClick={proofOfPurchaseClear}
+            >
+              Clear
+            </button>
 
-          <Feedback invalidFeedback={proofOfPurchaseErrors()} />
+            <Feedback invalidFeedback={proofOfPurchaseErrors()} />
+          </div>
         </div>
-      </div>
 
-      <div class="d-flex flex-wrap align-items-center">
-        <h2 class="m-0 me-3">Images</h2>
-        <button
-          type="button"
-          class="btn btn-primary"
-          onClick={() => setImages([...images(), {}])}
-        >
-          Add
+        <div class="d-flex flex-wrap align-items-center">
+          <h2 class="m-0 me-3">Images</h2>
+          <button
+            type="button"
+            class="btn btn-primary"
+            onClick={() => setImages([...images(), {}])}
+          >
+            Add
+          </button>
+        </div>
+        <div class="mb-3 row row-cols-1 row-cols-md-2 row-cols-xl-3">
+          <For each={images()}>
+            {(_, index) => (
+              <div class={"col py-2"}>
+                <ImageFormField
+                  fieldNameCallback={(name) => `images.${index()}.${name}`}
+                  onDelete={() => setImages(images().toSpliced(index(), 1))}
+                  showValidations={previouslyFailedSubmission()}
+                />
+              </div>
+            )}
+          </For>
+        </div>
+
+        <button type={"submit"} class={"btn btn-primary mt-3"}>
+          Submit
         </button>
-      </div>
-      <div class="mb-3 row row-cols-1 row-cols-md-2 row-cols-xl-3">
-        <For each={images()}>
-          {(_, index) => (
-            <div class={"col py-2"}>
-              <ImageFormField
-                fieldNameCallback={(name) => `images.${index()}.${name}`}
-                onDelete={() => setImages(images().toSpliced(index(), 1))}
-                showValidations={previouslyFailedSubmission()}
-              />
-            </div>
-          )}
-        </For>
-      </div>
-
-      <button type={"submit"} class={"btn btn-primary"}>
-        Submit
-      </button>
-    </form>
+      </form>
+    </section>
   );
 };
