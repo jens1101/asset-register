@@ -17,14 +17,20 @@ export const routes: RouteDefinition<string | string[], any>[] = [
   {
     path: "/asset/create",
     component: lazy(async () => ({
-      default: (await import("./pages/createAsset/CreateAsset.jsx"))
-        .CreateAsset,
+      default: (await import("./pages/CreateAsset.jsx")).CreateAsset,
     })),
   },
   {
     path: "/asset/:id",
     component: lazy(async () => ({
       default: (await import("./pages/asset.js")).Asset,
+    })),
+    preload: loadAsset,
+  } satisfies RouteDefinition<string, AssetData>,
+  {
+    path: "/asset/:id/edit",
+    component: lazy(async () => ({
+      default: (await import("./pages/EditAsset.jsx")).EditAsset,
     })),
     preload: loadAsset,
   } satisfies RouteDefinition<string, AssetData>,

@@ -1,10 +1,13 @@
-import type { ClassAttributes } from "../../common/types.js";
+import type { ClassAttributes, InitialValue } from "../../common/types.js";
 import { isImage } from "../../common/utils.js";
 import { MAX_FILE_SIZE } from "../../config.js";
+import type { ImageFragment } from "../../gql-client/types/graphql.js";
 import { useFormField } from "../../hooks/useFormField.js";
 import { useObjectUrl } from "../../hooks/useObjectUrl.js";
+import { CreateFileInputFromFile } from "../../schemas/CreateFileInput.js";
 import { Feedback } from "../FormFieldFeedback/Feedback.jsx";
 import "./styles.scss";
+import { Option, Schema } from "effect";
 import prettyBytes from "pretty-bytes";
 import {
   type Accessor,
@@ -15,25 +18,38 @@ import {
 } from "solid-js";
 
 const enum FieldName {
+  Id = "id",
   Name = "name",
   Description = "description",
   File = "file",
 }
 
 export const ImageFormField: Component<
-  ClassAttributes & {
-    /**
-     * Callback triggered for each form field in this component. This will allow
-     * mapping the field names to a custom format.
-     */
-    fieldNameCallback?: (name: FieldName) => string;
-    /** Callback triggered when the user presses the "Delete" button. */
-    onDelete?: EventListener;
-    /** Boolean to force all current validation messages to show. */
-    showValidations?: boolean;
-  }
+  ClassAttributes &
+    InitialValue<Partial<ImageFragment>> & {
+      /**
+       * Callback triggered for each form field in this component. This will allow
+       * mapping the field names to a custom format.
+       */
+      fieldNameCallback?: (name: FieldName) => string;
+      /** Callback triggered when the user presses the "Delete" button. */
+      onDelete?: EventListener;
+      /** Boolean to force all current validation messages to show. */
+      showValidations?: boolean;
+    }
 > = (props) => {
-  const [selectedFile, setSelectedFile] = createSignal<File>();
+  const initialId = props.initialValue?.id;
+  const initialName = props.initialValue?.name;
+  const initialDescription = props.initialValue?.description;
+  const initialFile = Option.getOrUndefined(
+    Schema.encodeUnknownOption(CreateFileInputFromFile)(
+      props.initialValue?.file,
+    ),
+  );
+
+  const [selectedFile, setSelectedFile] = createSignal<File | undefined>(
+    initialFile,
+  );
   const imagePreviewUrl: Accessor<string | undefined> = () => {
     const image = selectedFile();
     return image && isImage(image) ? useObjectUrl(image) : undefined;
@@ -45,12 +61,16 @@ export const ImageFormField: Component<
     errors: nameErrors,
     touched: nameTouched,
   } = useFormField<HTMLInputElement>({
+    initialValue: initialName,
     validationEventType: "input",
     validatonErrorMap: {
       valueMissing: "Name is required",
     },
   });
+
   const descriptionId = createUniqueId();
+
+  const imageId = createUniqueId();
   const {
     validation: imageValidation,
     errors: imageErrors,
@@ -58,6 +78,7 @@ export const ImageFormField: Component<
     empty: imageEmpty,
     clear: imageClear,
   } = useFormField<HTMLInputElement>({
+    initialValue: initialFile,
     customValidators: {
       isAsync: false,
       functions: [
@@ -75,7 +96,6 @@ export const ImageFormField: Component<
       valueMissing: "An image is required",
     },
   });
-  const imageId = createUniqueId();
 
   return (
     <fieldset class={`card ${props.class ?? ""}`} classList={props.classList}>
@@ -91,6 +111,14 @@ export const ImageFormField: Component<
       </Show>
 
       <div class={"card-body"}>
+        <Show when={initialId}>
+          <input
+            type={"hidden"}
+            name={props.fieldNameCallback?.(FieldName.Id) ?? FieldName.Id}
+            value={initialId}
+          />
+        </Show>
+
         <div class="mb-3">
           <label for={nameId} class={"form-label"}>
             Name
@@ -127,7 +155,9 @@ export const ImageFormField: Component<
               props.fieldNameCallback?.(FieldName.Description) ??
               FieldName.Description
             }
-          />
+          >
+            {initialDescription}
+          </textarea>
         </div>
 
         <div class={"mb-3"}>

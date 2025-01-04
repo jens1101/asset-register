@@ -1,0 +1,7 @@
+mutation UpdateAsset($data: UpdateAssetInput!) {
+  updateAsset(data: $data) {
+    ... on Asset {
+      ...asset
+    }
+  }
+}

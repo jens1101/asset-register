@@ -1,3 +1,5 @@
+import type { InitialValue } from "../common/types.js";
+import { setInputValue } from "../common/utils.js";
 import { type Accessor, createSignal, onCleanup } from "solid-js";
 
 /**
@@ -123,43 +125,45 @@ export function useFormField<E extends FormFieldElement>({
   stopOnFirstError = false,
   useDefaultErrorReporting = false,
   onValidationComplete,
-}: Partial<{
-  /** Which event will trigger validations */
-  validationEventType: string;
-  /** Which event will cause the form field to be marked as "touched" */
-  touchedEventType: string;
-  /** Map from validity state to display message */
-  validatonErrorMap: ValidityMessages;
-  /**
-   * All custom validators to be run on validation. Validators are run in
-   * sequential order.
-   */
-  customValidators: Validators<E>;
-  /**
-   * If true, will set the form field to an invalid state while async
-   * validations are run. Has no effect if only syncronous functions are used.
-   */
-  invalidUntilResolved: boolean;
-  /**
-   * If true, will stop running validators upon encountering the first
-   * validation error. This also takes into account native validations.
-   */
-  stopOnFirstError: boolean;
-  /**
-   * If false, will prevent the native UI from showing up on validation errors.
-   * When setting this to true also consider using the
-   * {@link onValidationComplete} callback to map the array of errors to a
-   * custom string.
-   */
-  useDefaultErrorReporting: boolean;
-  /**
-   * Run a custom function after validation checking has completed. This also
-   * allows for mapping the errors to a custom error message by returning a
-   * string. This is typically not necessary unless you use
-   * {@link useDefaultErrorReporting}
-   */
-  onValidationComplete: ValidationComplete;
-}> = {}): {
+  initialValue,
+}: InitialValue<string | File | File[]> &
+  Partial<{
+    /** Which event will trigger validations */
+    validationEventType: string;
+    /** Which event will cause the form field to be marked as "touched" */
+    touchedEventType: string;
+    /** Map from validity state to display message */
+    validatonErrorMap: ValidityMessages;
+    /**
+     * All custom validators to be run on validation. Validators are run in
+     * sequential order.
+     */
+    customValidators: Validators<E>;
+    /**
+     * If true, will set the form field to an invalid state while async
+     * validations are run. Has no effect if only syncronous functions are used.
+     */
+    invalidUntilResolved: boolean;
+    /**
+     * If true, will stop running validators upon encountering the first
+     * validation error. This also takes into account native validations.
+     */
+    stopOnFirstError: boolean;
+    /**
+     * If false, will prevent the native UI from showing up on validation errors.
+     * When setting this to true also consider using the
+     * {@link onValidationComplete} callback to map the array of errors to a
+     * custom string.
+     */
+    useDefaultErrorReporting: boolean;
+    /**
+     * Run a custom function after validation checking has completed. This also
+     * allows for mapping the errors to a custom error message by returning a
+     * string. This is typically not necessary unless you use
+     * {@link useDefaultErrorReporting}
+     */
+    onValidationComplete: ValidationComplete;
+  }> = {}): {
   /**
    * Directive or ref function that adds the necessary listeners to enable the
    * enhanced validation functionalities
@@ -370,6 +374,12 @@ export function useFormField<E extends FormFieldElement>({
     }
 
     setElement(() => formFieldElement);
+
+    if (initialValue) {
+      setInputValue(formFieldElement, initialValue);
+      setEmpty(!initialValue);
+    }
+
     formFieldElement.addEventListener(validationEventType, onValidation);
     formFieldElement.addEventListener("invalid", onInvalid);
     formFieldElement.addEventListener(touchedEventType, onTouched);

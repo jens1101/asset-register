@@ -1,16 +1,59 @@
 import type { CreateAssetInput as CreateAssetInputType } from "../gql-client/types/graphql.js";
+import { AssetFormValues } from "./AssetFormValues.js";
 import { CreateDocumentInput } from "./CreateDocumentInput.js";
+import { CreateFileInputFromFile } from "./CreateFileInput.js";
 import { CreateImageInput } from "./CreateImageInput.js";
 import { inputMaybe } from "./inputMaybe.js";
-import { Schema } from "effect";
+import { Effect, ParseResult, Schema } from "effect";
 
-export const CreateAssetInput: Schema.Schema<CreateAssetInputType> =
-  Schema.Struct({
-    name: Schema.NonEmptyString,
-    description: inputMaybe(Schema.NonEmptyString),
-    proofOfPurchase: inputMaybe(CreateDocumentInput),
-    images: inputMaybe(Schema.mutable(Schema.Array(CreateImageInput))),
-  }).annotations({
-    identifier: "CreateAssetInput",
-    name: "Create asset input",
-  });
+const CreateAssetInput: Schema.Schema<CreateAssetInputType> = Schema.Struct({
+  name: Schema.NonEmptyString,
+  description: inputMaybe(Schema.NonEmptyString),
+  proofOfPurchase: inputMaybe(CreateDocumentInput),
+  images: inputMaybe(Schema.mutable(Schema.Array(CreateImageInput))),
+}).annotations({
+  identifier: "CreateAssetInput",
+  name: "Create asset input",
+});
+
+export const CreateAssetInputFromAssetFormValues = Schema.transformOrFail(
+  AssetFormValues,
+  CreateAssetInput,
+  {
+    strict: true,
+    decode: (from, _options, ast) =>
+      Effect.mapError(
+        Effect.gen(function* () {
+          const images: typeof CreateAssetInput.Type.images = [];
+
+          for (const image of from.images) {
+            images.push(
+              yield* Schema.decode(CreateImageInput)({
+                name: image.name || null,
+                description: image.description || null,
+                file: yield* Schema.decode(CreateFileInputFromFile)(image.file),
+              }),
+            );
+          }
+
+          return {
+            name: from.name,
+            description: from.description || null,
+            images,
+            proofOfPurchase: !from.proofOfPurchase
+              ? null
+              : yield* Schema.decode(CreateDocumentInput)({
+                  file: yield* Schema.decode(CreateFileInputFromFile)(
+                    from.proofOfPurchase.file,
+                  ),
+                }),
+          };
+        }),
+        (error) => new ParseResult.Type(ast, from, error.message),
+      ),
+    encode: (to, _options, ast) =>
+      ParseResult.fail(
+        new ParseResult.Forbidden(ast, to, "Cannot encode to AssetForm"),
+      ),
+  },
+);

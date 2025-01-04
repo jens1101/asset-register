@@ -15,6 +15,7 @@ export const Asset: Component<{ data: AssetData }> = (props) => {
         <Show when={asset()} keyed>
           {(asset) => (
             <>
+              <a href={`/asset/${asset.id}/edit`}>Edit</a>
               <h1>{asset.name}</h1>
               <Show when={asset.description}>
                 <p>{asset.description}</p>

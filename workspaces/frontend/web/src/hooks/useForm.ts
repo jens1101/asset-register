@@ -26,7 +26,7 @@ export function useForm({
    * @param formData The from data taken from the form.
    * @param event The submission event
    */
-  onSubmit: (formData: FormData, event: Event) => void;
+  onSubmit: (formData: FormData, event: Event) => unknown;
   /**
    * Callback when the form failed validation.
    */

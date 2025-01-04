@@ -27,12 +27,18 @@ export const CreateFileInputFromFile = Schema.transformOrFail(
           new ParseResult.Type(
             ast,
             from,
-            `Failed to decode form data with error: ${String(error)}`,
+            `Failed to decode form File with error: ${String(error)}`,
           ),
       }),
     encode: (to, _options, ast) =>
-      ParseResult.fail(
-        new ParseResult.Forbidden(ast, to, "Cannot encode to AssetForm"),
-      ),
+      Effect.try({
+        try: () => new File([to.buffer], to.filename, { type: to.mimeType }),
+        catch: (error) =>
+          new ParseResult.Type(
+            ast,
+            to,
+            `Failed to encode to File with error: ${String(error)}`,
+          ),
+      }),
   },
 );
