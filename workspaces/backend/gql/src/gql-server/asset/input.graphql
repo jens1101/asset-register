@@ -9,4 +9,6 @@ input UpdateAssetInput {
   id: ID!
   name: String
   description: String
+  proofOfPurchase: MutateDocumentInput
+  images: [MutateImageInput!]
 }

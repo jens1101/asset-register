@@ -62,13 +62,20 @@ export type AssetError = Error & {
 export type AssetResponse = Asset | AssetError;
 
 export type CreateDocumentInput = {
-  file: CreeateFileInput;
+  file: CreateFileInput;
+};
+
+export type CreateFileInput = {
+  buffer: Scalars["Uint8Array"]["input"];
+  filename: Scalars["String"]["input"];
+  mimeType: Scalars["String"]["input"];
 };
 
 export type CreateImageInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
-  file: CreeateFileInput;
+  file: CreateFileInput;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  previousImageId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type CreeateAssetInput = {
@@ -78,10 +85,12 @@ export type CreeateAssetInput = {
   proofOfPurchase?: InputMaybe<CreateDocumentInput>;
 };
 
-export type CreeateFileInput = {
-  buffer: Scalars["Uint8Array"]["input"];
-  filename: Scalars["String"]["input"];
-  mimeType: Scalars["String"]["input"];
+export type DeleteDocumentInput = {
+  id: Scalars["ID"]["input"];
+};
+
+export type DeleteImageInput = {
+  id: Scalars["ID"]["input"];
 };
 
 export type Document = {
@@ -123,21 +132,20 @@ export type ImageError = Error & {
 
 export type ImageResponse = Image | ImageError;
 
+export type MutateDocumentInput =
+  | { delete: DeleteDocumentInput; update?: never }
+  | { delete?: never; update: UpdateDocumentInput };
+
+export type MutateImageInput =
+  | { create: CreateImageInput; delete?: never; update?: never }
+  | { create?: never; delete: DeleteImageInput; update?: never }
+  | { create?: never; delete?: never; update: UpdateImageInput };
+
 export type Mutation = {
   __typename?: "Mutation";
-  addAssetImages: AssetResponse;
   createAsset: AssetResponse;
   deleteAsset?: Maybe<Scalars["Void"]["output"]>;
-  deleteAssetImages: AssetResponse;
-  deleteProofOfPurchase: AssetResponse;
-  replaceProofOfPurchase: AssetResponse;
   updateAsset: AssetResponse;
-  updateImage: ImageResponse;
-};
-
-export type MutationaddAssetImagesArgs = {
-  id: Scalars["ID"]["input"];
-  images: Array<CreateImageInput>;
 };
 
 export type MutationcreateAssetArgs = {
@@ -148,26 +156,8 @@ export type MutationdeleteAssetArgs = {
   id: Scalars["ID"]["input"];
 };
 
-export type MutationdeleteAssetImagesArgs = {
-  id: Scalars["ID"]["input"];
-  imageIds?: InputMaybe<Array<Scalars["ID"]["input"]>>;
-};
-
-export type MutationdeleteProofOfPurchaseArgs = {
-  id: Scalars["ID"]["input"];
-};
-
-export type MutationreplaceProofOfPurchaseArgs = {
-  id: Scalars["ID"]["input"];
-  proofOfPurchase: CreateDocumentInput;
-};
-
 export type MutationupdateAssetArgs = {
   data: UpdateAssetInput;
-};
-
-export type MutationupdateImageArgs = {
-  data: UpdateImageInput;
 };
 
 export type Query = {
@@ -183,11 +173,18 @@ export type QueryassetArgs = {
 export type UpdateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   id: Scalars["ID"]["input"];
+  images?: InputMaybe<Array<MutateImageInput>>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  proofOfPurchase?: InputMaybe<MutateDocumentInput>;
+};
+
+export type UpdateDocumentInput = {
+  file: CreateFileInput;
 };
 
 export type UpdateImageInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
+  file?: InputMaybe<CreateFileInput>;
   id: Scalars["ID"]["input"];
   name?: InputMaybe<Scalars["String"]["input"]>;
   previousImageId?: InputMaybe<Scalars["ID"]["input"]>;
@@ -326,9 +323,11 @@ export type ResolversTypes = {
     ResolversUnionTypes<ResolversTypes>["AssetResponse"]
   >;
   CreateDocumentInput: CreateDocumentInput;
+  CreateFileInput: CreateFileInput;
   CreateImageInput: CreateImageInput;
   CreeateAssetInput: CreeateAssetInput;
-  CreeateFileInput: CreeateFileInput;
+  DeleteDocumentInput: DeleteDocumentInput;
+  DeleteImageInput: DeleteImageInput;
   Document: ResolverTypeWrapper<Document>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>["Error"]>;
   File: ResolverTypeWrapper<File>;
@@ -337,11 +336,14 @@ export type ResolversTypes = {
   ImageResponse: ResolverTypeWrapper<
     ResolversUnionTypes<ResolversTypes>["ImageResponse"]
   >;
+  MutateDocumentInput: MutateDocumentInput;
+  MutateImageInput: MutateImageInput;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   TemporalInstant: ResolverTypeWrapper<Scalars["TemporalInstant"]["output"]>;
   Uint8Array: ResolverTypeWrapper<Scalars["Uint8Array"]["output"]>;
   UpdateAssetInput: UpdateAssetInput;
+  UpdateDocumentInput: UpdateDocumentInput;
   UpdateImageInput: UpdateImageInput;
   Void: ResolverTypeWrapper<Scalars["Void"]["output"]>;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
@@ -355,20 +357,25 @@ export type ResolversParentTypes = {
   AssetError: AssetError;
   AssetResponse: ResolversUnionTypes<ResolversParentTypes>["AssetResponse"];
   CreateDocumentInput: CreateDocumentInput;
+  CreateFileInput: CreateFileInput;
   CreateImageInput: CreateImageInput;
   CreeateAssetInput: CreeateAssetInput;
-  CreeateFileInput: CreeateFileInput;
+  DeleteDocumentInput: DeleteDocumentInput;
+  DeleteImageInput: DeleteImageInput;
   Document: Document;
   Error: ResolversInterfaceTypes<ResolversParentTypes>["Error"];
   File: File;
   Image: Image;
   ImageError: ImageError;
   ImageResponse: ResolversUnionTypes<ResolversParentTypes>["ImageResponse"];
+  MutateDocumentInput: MutateDocumentInput;
+  MutateImageInput: MutateImageInput;
   Mutation: {};
   Query: {};
   TemporalInstant: Scalars["TemporalInstant"]["output"];
   Uint8Array: Scalars["Uint8Array"]["output"];
   UpdateAssetInput: UpdateAssetInput;
+  UpdateDocumentInput: UpdateDocumentInput;
   UpdateImageInput: UpdateImageInput;
   Void: Scalars["Void"]["output"];
   Boolean: Scalars["Boolean"]["output"];
@@ -525,12 +532,6 @@ export type MutationResolvers<
   ParentType extends
     ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"],
 > = {
-  addAssetImages?: Resolver<
-    ResolversTypes["AssetResponse"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationaddAssetImagesArgs, "id" | "images">
-  >;
   createAsset?: Resolver<
     ResolversTypes["AssetResponse"],
     ParentType,
@@ -543,35 +544,11 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationdeleteAssetArgs, "id">
   >;
-  deleteAssetImages?: Resolver<
-    ResolversTypes["AssetResponse"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationdeleteAssetImagesArgs, "id">
-  >;
-  deleteProofOfPurchase?: Resolver<
-    ResolversTypes["AssetResponse"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationdeleteProofOfPurchaseArgs, "id">
-  >;
-  replaceProofOfPurchase?: Resolver<
-    ResolversTypes["AssetResponse"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationreplaceProofOfPurchaseArgs, "id" | "proofOfPurchase">
-  >;
   updateAsset?: Resolver<
     ResolversTypes["AssetResponse"],
     ParentType,
     ContextType,
     RequireFields<MutationupdateAssetArgs, "data">
-  >;
-  updateImage?: Resolver<
-    ResolversTypes["ImageResponse"],
-    ParentType,
-    ContextType,
-    RequireFields<MutationupdateImageArgs, "data">
   >;
 };
 
