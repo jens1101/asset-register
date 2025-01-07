@@ -1,3 +1,16 @@
 input CreateDocumentInput {
   file: CreateFileInput!
 }
+
+input UpdateDocumentInput {
+  file: CreateFileInput!
+}
+
+input DeleteDocumentInput {
+  id: ID!
+}
+
+input MutateDocumentInput @oneOf {
+  update: UpdateDocumentInput
+  delete: DeleteDocumentInput
+}

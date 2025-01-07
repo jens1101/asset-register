@@ -78,6 +78,30 @@ export const typeDefs = {
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
           directives: [],
         },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "proofOfPurchase" },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "MutateDocumentInput" },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "images" },
+          type: {
+            kind: "ListType",
+            type: {
+              kind: "NonNullType",
+              type: {
+                kind: "NamedType",
+                name: { kind: "Name", value: "MutateImageInput" },
+              },
+            },
+          },
+          directives: [],
+        },
       ],
     },
     {
@@ -154,181 +178,6 @@ export const typeDefs = {
             },
           ],
           type: { kind: "NamedType", name: { kind: "Name", value: "Void" } },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "replaceProofOfPurchase" },
-          arguments: [
-            {
-              kind: "InputValueDefinition",
-              name: { kind: "Name", value: "id" },
-              type: {
-                kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "ID" },
-                },
-              },
-              directives: [],
-            },
-            {
-              kind: "InputValueDefinition",
-              name: { kind: "Name", value: "proofOfPurchase" },
-              type: {
-                kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "CreateDocumentInput" },
-                },
-              },
-              directives: [],
-            },
-          ],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "AssetResponse" },
-            },
-          },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "deleteProofOfPurchase" },
-          arguments: [
-            {
-              kind: "InputValueDefinition",
-              name: { kind: "Name", value: "id" },
-              type: {
-                kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "ID" },
-                },
-              },
-              directives: [],
-            },
-          ],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "AssetResponse" },
-            },
-          },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "addAssetImages" },
-          arguments: [
-            {
-              kind: "InputValueDefinition",
-              name: { kind: "Name", value: "id" },
-              type: {
-                kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "ID" },
-                },
-              },
-              directives: [],
-            },
-            {
-              kind: "InputValueDefinition",
-              name: { kind: "Name", value: "images" },
-              type: {
-                kind: "NonNullType",
-                type: {
-                  kind: "ListType",
-                  type: {
-                    kind: "NonNullType",
-                    type: {
-                      kind: "NamedType",
-                      name: { kind: "Name", value: "CreateImageInput" },
-                    },
-                  },
-                },
-              },
-              directives: [],
-            },
-          ],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "AssetResponse" },
-            },
-          },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "deleteAssetImages" },
-          arguments: [
-            {
-              kind: "InputValueDefinition",
-              name: { kind: "Name", value: "id" },
-              type: {
-                kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "ID" },
-                },
-              },
-              directives: [],
-            },
-            {
-              kind: "InputValueDefinition",
-              name: { kind: "Name", value: "imageIds" },
-              type: {
-                kind: "ListType",
-                type: {
-                  kind: "NonNullType",
-                  type: {
-                    kind: "NamedType",
-                    name: { kind: "Name", value: "ID" },
-                  },
-                },
-              },
-              directives: [],
-            },
-          ],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "AssetResponse" },
-            },
-          },
-          directives: [],
-        },
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "updateImage" },
-          arguments: [
-            {
-              kind: "InputValueDefinition",
-              name: { kind: "Name", value: "data" },
-              type: {
-                kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "UpdateImageInput" },
-                },
-              },
-              directives: [],
-            },
-          ],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "ImageResponse" },
-            },
-          },
           directives: [],
         },
       ],
@@ -569,6 +418,72 @@ export const typeDefs = {
       ],
     },
     {
+      kind: "InputObjectTypeDefinition",
+      name: { kind: "Name", value: "UpdateDocumentInput" },
+      directives: [],
+      fields: [
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "file" },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "CreateFileInput" },
+            },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "InputObjectTypeDefinition",
+      name: { kind: "Name", value: "DeleteDocumentInput" },
+      directives: [],
+      fields: [
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "id" },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "InputObjectTypeDefinition",
+      name: { kind: "Name", value: "MutateDocumentInput" },
+      directives: [
+        {
+          kind: "Directive",
+          name: { kind: "Name", value: "oneOf" },
+          arguments: [],
+        },
+      ],
+      fields: [
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "update" },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "UpdateDocumentInput" },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "delete" },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "DeleteDocumentInput" },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
       kind: "ObjectTypeDefinition",
       name: { kind: "Name", value: "Document" },
       interfaces: [],
@@ -761,6 +676,12 @@ export const typeDefs = {
           },
           directives: [],
         },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "previousImageId" },
+          type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          directives: [],
+        },
       ],
     },
     {
@@ -791,8 +712,73 @@ export const typeDefs = {
         },
         {
           kind: "InputValueDefinition",
+          name: { kind: "Name", value: "file" },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "CreateFileInput" },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
           name: { kind: "Name", value: "previousImageId" },
           type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "InputObjectTypeDefinition",
+      name: { kind: "Name", value: "DeleteImageInput" },
+      directives: [],
+      fields: [
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "id" },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "InputObjectTypeDefinition",
+      name: { kind: "Name", value: "MutateImageInput" },
+      directives: [
+        {
+          kind: "Directive",
+          name: { kind: "Name", value: "oneOf" },
+          arguments: [],
+        },
+      ],
+      fields: [
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "create" },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "CreateImageInput" },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "update" },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "UpdateImageInput" },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "delete" },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "DeleteImageInput" },
+          },
           directives: [],
         },
       ],
