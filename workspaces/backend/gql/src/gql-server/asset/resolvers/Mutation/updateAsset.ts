@@ -1,10 +1,10 @@
+import { dataSource } from "../../../../dataSource.js";
+import { AssetEntity } from "../../../../entities/index.js";
 import {
   getAsset,
   mutateImages,
   mutateProofOfPurchase,
-} from "../../../../common/index.js";
-import { dataSource } from "../../../../dataSource.js";
-import { AssetEntity } from "../../../../entities/index.js";
+} from "../../../../helpers/index.js";
 import {
   DataSourceService,
   EntityManagerService,
