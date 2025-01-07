@@ -73,6 +73,15 @@ export type CreateImageInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   file: CreateFileInput;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  previousImageId?: InputMaybe<Scalars["ID"]["input"]>;
+};
+
+export type DeleteDocumentInput = {
+  id: Scalars["ID"]["input"];
+};
+
+export type DeleteImageInput = {
+  id: Scalars["ID"]["input"];
 };
 
 export type Document = {
@@ -114,21 +123,20 @@ export type ImageError = Error & {
 
 export type ImageResponse = Image | ImageError;
 
+export type MutateDocumentInput =
+  | { delete: DeleteDocumentInput; update?: never }
+  | { delete?: never; update: UpdateDocumentInput };
+
+export type MutateImageInput =
+  | { create: CreateImageInput; delete?: never; update?: never }
+  | { create?: never; delete: DeleteImageInput; update?: never }
+  | { create?: never; delete?: never; update: UpdateImageInput };
+
 export type Mutation = {
   __typename?: "Mutation";
-  addAssetImages: AssetResponse;
   createAsset: AssetResponse;
   deleteAsset?: Maybe<Scalars["Void"]["output"]>;
-  deleteAssetImages: AssetResponse;
-  deleteProofOfPurchase: AssetResponse;
-  replaceProofOfPurchase: AssetResponse;
   updateAsset: AssetResponse;
-  updateImage: ImageResponse;
-};
-
-export type MutationAddAssetImagesArgs = {
-  id: Scalars["ID"]["input"];
-  images: Array<CreateImageInput>;
 };
 
 export type MutationCreateAssetArgs = {
@@ -139,26 +147,8 @@ export type MutationDeleteAssetArgs = {
   id: Scalars["ID"]["input"];
 };
 
-export type MutationDeleteAssetImagesArgs = {
-  id: Scalars["ID"]["input"];
-  imageIds?: InputMaybe<Array<Scalars["ID"]["input"]>>;
-};
-
-export type MutationDeleteProofOfPurchaseArgs = {
-  id: Scalars["ID"]["input"];
-};
-
-export type MutationReplaceProofOfPurchaseArgs = {
-  id: Scalars["ID"]["input"];
-  proofOfPurchase: CreateDocumentInput;
-};
-
 export type MutationUpdateAssetArgs = {
   data: UpdateAssetInput;
-};
-
-export type MutationUpdateImageArgs = {
-  data: UpdateImageInput;
 };
 
 export type Query = {
@@ -174,11 +164,18 @@ export type QueryAssetArgs = {
 export type UpdateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   id: Scalars["ID"]["input"];
+  images?: InputMaybe<Array<MutateImageInput>>;
   name?: InputMaybe<Scalars["String"]["input"]>;
+  proofOfPurchase?: InputMaybe<MutateDocumentInput>;
+};
+
+export type UpdateDocumentInput = {
+  file: CreateFileInput;
 };
 
 export type UpdateImageInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
+  file?: InputMaybe<CreateFileInput>;
   id: Scalars["ID"]["input"];
   name?: InputMaybe<Scalars["String"]["input"]>;
   previousImageId?: InputMaybe<Scalars["ID"]["input"]>;

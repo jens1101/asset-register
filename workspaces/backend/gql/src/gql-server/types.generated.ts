@@ -61,6 +61,13 @@ export type AssetError = Error & {
 
 export type AssetResponse = Asset | AssetError;
 
+export type CreateAssetInput = {
+  description?: InputMaybe<Scalars["String"]["input"]>;
+  images?: InputMaybe<Array<CreateImageInput>>;
+  name: Scalars["String"]["input"];
+  proofOfPurchase?: InputMaybe<CreateDocumentInput>;
+};
+
 export type CreateDocumentInput = {
   file: CreateFileInput;
 };
@@ -76,13 +83,6 @@ export type CreateImageInput = {
   file: CreateFileInput;
   name?: InputMaybe<Scalars["String"]["input"]>;
   previousImageId?: InputMaybe<Scalars["ID"]["input"]>;
-};
-
-export type CreeateAssetInput = {
-  description?: InputMaybe<Scalars["String"]["input"]>;
-  images?: InputMaybe<Array<CreateImageInput>>;
-  name: Scalars["String"]["input"];
-  proofOfPurchase?: InputMaybe<CreateDocumentInput>;
 };
 
 export type DeleteDocumentInput = {
@@ -149,7 +149,7 @@ export type Mutation = {
 };
 
 export type MutationcreateAssetArgs = {
-  data: CreeateAssetInput;
+  data: CreateAssetInput;
 };
 
 export type MutationdeleteAssetArgs = {
@@ -322,10 +322,10 @@ export type ResolversTypes = {
   AssetResponse: ResolverTypeWrapper<
     ResolversUnionTypes<ResolversTypes>["AssetResponse"]
   >;
+  CreateAssetInput: CreateAssetInput;
   CreateDocumentInput: CreateDocumentInput;
   CreateFileInput: CreateFileInput;
   CreateImageInput: CreateImageInput;
-  CreeateAssetInput: CreeateAssetInput;
   DeleteDocumentInput: DeleteDocumentInput;
   DeleteImageInput: DeleteImageInput;
   Document: ResolverTypeWrapper<Document>;
@@ -356,10 +356,10 @@ export type ResolversParentTypes = {
   ID: Scalars["ID"]["output"];
   AssetError: AssetError;
   AssetResponse: ResolversUnionTypes<ResolversParentTypes>["AssetResponse"];
+  CreateAssetInput: CreateAssetInput;
   CreateDocumentInput: CreateDocumentInput;
   CreateFileInput: CreateFileInput;
   CreateImageInput: CreateImageInput;
-  CreeateAssetInput: CreeateAssetInput;
   DeleteDocumentInput: DeleteDocumentInput;
   DeleteImageInput: DeleteImageInput;
   Document: Document;
