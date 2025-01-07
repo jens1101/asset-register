@@ -5,10 +5,10 @@ import {
   mutateImages,
   mutateProofOfPurchase,
 } from "../../../../helpers/index.js";
+import { withTransaction } from "../../../../scopes/index.js";
 import {
   DataSourceService,
   EntityManagerService,
-  useTransaction,
 } from "../../../../services/index.js";
 import type { MutationResolvers } from "./../../../types.generated.js";
 import { Cause, Effect, Exit, pipe } from "effect";
@@ -47,7 +47,7 @@ export const updateAsset: NonNullable<
           return yield* mutateImages(asset, images);
         }),
       ),
-      Effect.provideServiceEffect(EntityManagerService, useTransaction),
+      Effect.provideServiceEffect(EntityManagerService, withTransaction),
       Effect.provideService(DataSourceService, dataSource),
     ),
   );
