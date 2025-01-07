@@ -1,4 +1,4 @@
-input CreeateFileInput {
+input CreateFileInput {
   buffer: Uint8Array!
   filename: String!
   mimeType: String!

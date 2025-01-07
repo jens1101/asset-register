@@ -15,13 +15,20 @@ type AssetError implements Error {
 union AssetResponse = Asset | AssetError
 
 input CreateDocumentInput {
-  file: CreeateFileInput!
+  file: CreateFileInput!
+}
+
+input CreateFileInput {
+  buffer: Uint8Array!
+  filename: String!
+  mimeType: String!
 }
 
 input CreateImageInput {
   description: String
-  file: CreeateFileInput!
+  file: CreateFileInput!
   name: String
+  previousImageId: ID
 }
 
 input CreeateAssetInput {
@@ -31,10 +38,12 @@ input CreeateAssetInput {
   proofOfPurchase: CreateDocumentInput
 }
 
-input CreeateFileInput {
-  buffer: Uint8Array!
-  filename: String!
-  mimeType: String!
+input DeleteDocumentInput {
+  id: ID!
+}
+
+input DeleteImageInput {
+  id: ID!
 }
 
 type Document {
@@ -72,18 +81,21 @@ type ImageError implements Error {
 
 union ImageResponse = Image | ImageError
 
+input MutateDocumentInput @oneOf {
+  delete: DeleteDocumentInput
+  update: UpdateDocumentInput
+}
+
+input MutateImageInput @oneOf {
+  create: CreateImageInput
+  delete: DeleteImageInput
+  update: UpdateImageInput
+}
+
 type Mutation {
-  addAssetImages(id: ID!, images: [CreateImageInput!]!): AssetResponse!
   createAsset(data: CreeateAssetInput!): AssetResponse!
   deleteAsset(id: ID!): Void
-  deleteAssetImages(id: ID!, imageIds: [ID!]): AssetResponse!
-  deleteProofOfPurchase(id: ID!): AssetResponse!
-  replaceProofOfPurchase(
-    id: ID!
-    proofOfPurchase: CreateDocumentInput!
-  ): AssetResponse!
   updateAsset(data: UpdateAssetInput!): AssetResponse!
-  updateImage(data: UpdateImageInput!): ImageResponse!
 }
 
 type Query {
@@ -98,11 +110,18 @@ scalar Uint8Array
 input UpdateAssetInput {
   description: String
   id: ID!
+  images: [MutateImageInput!]
   name: String
+  proofOfPurchase: MutateDocumentInput
+}
+
+input UpdateDocumentInput {
+  file: CreateFileInput!
 }
 
 input UpdateImageInput {
   description: String
+  file: CreateFileInput
   id: ID!
   name: String
   previousImageId: ID

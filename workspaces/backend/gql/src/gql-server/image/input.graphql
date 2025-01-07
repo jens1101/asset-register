@@ -1,12 +1,24 @@
 input CreateImageInput {
   name: String
   description: String
-  file: CreeateFileInput!
+  file: CreateFileInput!
+  previousImageId: ID
 }
 
 input UpdateImageInput {
   id: ID!
   name: String
   description: String
+  file: CreateFileInput
   previousImageId: ID
+}
+
+input DeleteImageInput {
+  id: ID!
+}
+
+input MutateImageInput @oneOf {
+  create: CreateImageInput
+  update: UpdateImageInput
+  delete: DeleteImageInput
 }

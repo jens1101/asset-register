@@ -1,4 +1,4 @@
-import { EntityName } from "../enums/Entities.js";
+import { EntityName } from "../enums/entity.js";
 import type { Document } from "./Document.js";
 import type { Image } from "./Image.js";
 import { TemporalInstantTransformer } from "./transformers.js";
