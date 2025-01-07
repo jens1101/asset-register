@@ -40,7 +40,7 @@ export const CreateAssetInputFromAssetFormValues = Schema.transformOrFail(
             name: from.name,
             description: from.description || null,
             images,
-            proofOfPurchase: !from.proofOfPurchase
+            proofOfPurchase: !from.proofOfPurchase?.file
               ? null
               : yield* Schema.decode(CreateDocumentInput)({
                   file: yield* Schema.decode(CreateFileInputFromFile)(

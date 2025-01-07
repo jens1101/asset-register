@@ -8,7 +8,7 @@ export const AssetFormValues = Schema.Struct({
   proofOfPurchase: Schema.optional(
     Schema.Struct({
       id: Schema.optional(Schema.NonEmptyString),
-      file: Schema.instanceOf(File),
+      file: Schema.optional(Schema.instanceOf(File)),
     }),
   ),
   images: Schema.Array(

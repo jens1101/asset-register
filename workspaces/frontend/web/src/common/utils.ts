@@ -1,7 +1,24 @@
+import type { FileFragment } from "../gql-client/types/graphql.js";
+import { Equivalence } from "effect";
+
 /** Tests if the specified file is an image by checking the mime type. */
 export function isImage(file: File): boolean {
   return file.type.startsWith("image/");
 }
+
+/**
+ * Equivalence to test if two files are equal.
+ */
+export const FileEquivalence = Equivalence.make<
+  Pick<FileFragment, "filename" | "mimeType" | "buffer">
+>(
+  (self, that) =>
+    self.filename === that.filename &&
+    self.mimeType === that.mimeType &&
+    // We use this IndexedDB function, because it's the only built-in browser
+    // function that can compare two byte arrays.
+    indexedDB.cmp(self.buffer, that.buffer) === 0,
+);
 
 /**
  * Sets the value of an input element. This also allows setting the files
