@@ -11,7 +11,7 @@
     "lint": "prettier --check ."
   },
   "devDependencies": {
-    "@tsconfig/node-lts": "22.0.0",
+    "@tsconfig/node-lts": "22.0.1",
     "@tsconfig/strictest": "^2.0.5",
     "prettier": "^3.3.3"
   }
