@@ -3,6 +3,7 @@ import { AssetForm } from "../components/AssetForm/AssetForm.jsx";
 import { client } from "../gql-client/client.js";
 import {
   type AssetFragment,
+  type CreateImageInput,
   type MutateDocumentInput,
   type MutateImageInput,
   UpdateAssetDocument,
@@ -35,7 +36,7 @@ function updateAssset(
     );
 
     const imagesInput = pipe(
-      getImagesInput(asset, formValues),
+      yield* getImagesInput(asset, formValues),
       Option.map((images) => ({ images })),
       Option.getOrElse(() => ({})),
     );
@@ -109,24 +110,47 @@ const getProofOfPurchaseInput = (
 const getImagesInput = (
   asset: AssetFragment,
   formValues: typeof AssetFormValues.Type,
-): Option.Option<MutateImageInput[]> => {
-  const inputs: MutateImageInput[] = [];
+): Effect.Effect<Option.Option<MutateImageInput[]>, Error> =>
+  Effect.gen(function* () {
+    const inputs: MutateImageInput[] = [];
 
-  const currentImageIds = new Set(asset.images.map((image) => image.id));
-  const newImageIds = new Set(
-    formValues.images
-      .map((image) => image.id)
-      .filter((id): id is string => !!id),
-  );
+    const currentImageIds = new Set(asset.images.map((image) => image.id));
+    const newImageIds = new Set();
 
-  inputs.push(
-    ...Array.from(currentImageIds.difference(newImageIds), (id) => ({
-      delete: { id },
-    })),
-  );
+    let previousImageId: string | null = null;
+    let createImageInputs: CreateImageInput[] = [];
 
-  return Option.filter(Option.some(inputs), isNonEmptyArray);
-};
+    for (const newImage of formValues.images) {
+      if (!newImage.id) {
+        createImageInputs.unshift({
+          file: yield* Schema.decode(CreateFileInputFromFile)(newImage.file),
+          name: newImage.name,
+          description: newImage.description,
+          previousImageId,
+        });
+
+        continue;
+      }
+
+      inputs.push(...createImageInputs.map((create) => ({ create })));
+      createImageInputs = [];
+
+      // TODO: handle edited images
+
+      newImageIds.add(newImage.id);
+      previousImageId = newImage.id;
+    }
+
+    inputs.push(
+      ...createImageInputs.map((create) => ({ create })),
+      // TODO: I don't like this duplication here...
+      ...Array.from(currentImageIds.difference(newImageIds), (id) => ({
+        delete: { id },
+      })),
+    );
+
+    return Option.filter(Option.some(inputs), isNonEmptyArray);
+  });
 
 export const EditAsset: Component<{ data: AssetData }> = (props) => {
   const formId = createUniqueId();
