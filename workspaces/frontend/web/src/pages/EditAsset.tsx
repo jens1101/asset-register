@@ -10,6 +10,7 @@ import {
   type UpdateAssetInput,
   type UpdateAssetMutation,
   type UpdateAssetMutationVariables,
+  type UpdateImageInput,
 } from "../gql-client/types/graphql.js";
 import type { AssetFormValues } from "../schemas/AssetFormValues.js";
 import { CreateFileInputFromFile } from "../schemas/CreateFileInput.js";
@@ -135,7 +136,31 @@ const getImagesInput = (
       inputs.push(...createImageInputs.map((create) => ({ create })));
       createImageInputs = [];
 
-      // TODO: handle edited images
+      const currentImage = asset.images.find(
+        (image) => image.id === newImage.id,
+      );
+
+      if (!currentImage) {
+        yield* Effect.fail(new Error(`Invalid image ID ${newImage.id}`));
+        break;
+      }
+
+      const newFile = yield* Schema.decode(CreateFileInputFromFile)(
+        newImage.file,
+      );
+
+      const updateInput: UpdateImageInput = {
+        id: currentImage.id,
+        ...(newImage.name !== currentImage.name && { name: newImage.name }),
+        ...(newImage.description !== currentImage.description && {
+          description: newImage.description,
+        }),
+        ...(!FileEquivalence(newFile, currentImage.file) && { file: newFile }),
+      };
+
+      if (Object.keys(updateInput).filter((key) => key !== "id").length > 0) {
+        inputs.push({ update: updateInput });
+      }
 
       newImageIds.add(newImage.id);
       previousImageId = newImage.id;
@@ -143,7 +168,6 @@ const getImagesInput = (
 
     inputs.push(
       ...createImageInputs.map((create) => ({ create })),
-      // TODO: I don't like this duplication here...
       ...Array.from(currentImageIds.difference(newImageIds), (id) => ({
         delete: { id },
       })),
@@ -154,41 +178,44 @@ const getImagesInput = (
 
 export const EditAsset: Component<{ data: AssetData }> = (props) => {
   const formId = createUniqueId();
-
-  // TODO: handle case when this is not an asset fragment
-  const [asset, setAsset] = createSignal<AssetFragment>();
+  const [initialAsset, setInitialAsset] = createSignal<AssetFragment>();
+  const [currentAsset, setCurrentAsset] = createSignal<AssetFragment>();
 
   const onSubmit = async (formValues: typeof AssetFormValues.Type) => {
-    const currentAsset = asset();
+    const asset = currentAsset();
 
-    if (!currentAsset) return;
+    if (!asset) return;
 
-    Exit.match(
-      await Effect.runPromiseExit(updateAssset(currentAsset, formValues)),
-      {
-        onSuccess: (asset) => setAsset(asset),
-        onFailure(cause) {
-          // TODO: error handling
-          console.error(cause);
-        },
+    Exit.match(await Effect.runPromiseExit(updateAssset(asset, formValues)), {
+      onSuccess: (asset) => setCurrentAsset(asset),
+      onFailure(cause) {
+        // TODO: error handling
+        console.error(cause);
       },
-    );
+    });
   };
 
-  // Keep the asset signal synced with the asset prop.
+  // Keep the asset signals synced with the asset prop.
   createEffect(() => {
-    const asset = props.data()?.asset;
-    setAsset(asset && asset.__typename === "Asset" ? asset : undefined);
+    const data = props.data()?.asset;
+    // TODO: error handling
+    const asset = data?.__typename === "Asset" ? data : undefined;
+    setInitialAsset(asset);
+    setCurrentAsset(asset);
   });
 
   return (
     <section class="container">
       <h1>Edit Asset</h1>
 
-      <Show when={asset()} keyed>
-        {(asset) => (
+      <Show when={initialAsset()} keyed>
+        {(initialAsset) => (
           <>
-            <AssetForm onSubmit={onSubmit} initialValue={asset} id={formId} />
+            <AssetForm
+              onSubmit={onSubmit}
+              initialValue={initialAsset}
+              id={formId}
+            />
 
             <button
               type={"submit"}
