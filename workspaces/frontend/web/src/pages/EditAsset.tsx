@@ -4,6 +4,7 @@ import { client } from "../gql-client/client.js";
 import {
   type AssetFragment,
   type MutateDocumentInput,
+  type MutateImageInput,
   UpdateAssetDocument,
   type UpdateAssetInput,
   type UpdateAssetMutation,
@@ -13,6 +14,7 @@ import type { AssetFormValues } from "../schemas/AssetFormValues.js";
 import { CreateFileInputFromFile } from "../schemas/CreateFileInput.js";
 import type { AssetData } from "./asset.data.js";
 import { Effect, Exit, Option, Schema, pipe } from "effect";
+import { isNonEmptyArray } from "effect/Array";
 import {
   type Component,
   Show,
@@ -32,6 +34,12 @@ function updateAssset(
       Option.getOrElse(() => ({})),
     );
 
+    const imagesInput = pipe(
+      getImagesInput(asset, formValues),
+      Option.map((images) => ({ images })),
+      Option.getOrElse(() => ({})),
+    );
+
     const updateAssetInput: UpdateAssetInput = {
       id: asset.id,
       ...(formValues.name !== asset.name && { name: formValues.name }),
@@ -39,6 +47,7 @@ function updateAssset(
         description: formValues.description,
       }),
       ...proofOfPurchaseInput,
+      ...imagesInput,
     };
 
     if (
@@ -96,6 +105,28 @@ const getProofOfPurchaseInput = (
         Option.map(newFile, (newFile) => ({ update: { file: newFile } })),
     });
   });
+
+const getImagesInput = (
+  asset: AssetFragment,
+  formValues: typeof AssetFormValues.Type,
+): Option.Option<MutateImageInput[]> => {
+  const inputs: MutateImageInput[] = [];
+
+  const currentImageIds = new Set(asset.images.map((image) => image.id));
+  const newImageIds = new Set(
+    formValues.images
+      .map((image) => image.id)
+      .filter((id): id is string => !!id),
+  );
+
+  inputs.push(
+    ...Array.from(currentImageIds.difference(newImageIds), (id) => ({
+      delete: { id },
+    })),
+  );
+
+  return Option.filter(Option.some(inputs), isNonEmptyArray);
+};
 
 export const EditAsset: Component<{ data: AssetData }> = (props) => {
   const formId = createUniqueId();
