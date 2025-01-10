@@ -14,7 +14,7 @@ export const AssetFormValues = Schema.Struct({
   images: Schema.Array(
     Schema.Struct({
       id: Schema.optional(Schema.NonEmptyString),
-      name: Schema.NonEmptyString,
+      name: Schema.String,
       description: Schema.String,
       file: Schema.instanceOf(File),
     }),

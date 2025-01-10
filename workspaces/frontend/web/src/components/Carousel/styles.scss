@@ -1,4 +1,7 @@
-.carousel-caption--card {
-  background: rgba(var(--bs-body-bg-rgb), 0.5);
-  color: var(--bs-body-color);
+.carousel-caption {
+  color: var(--bs-white);
+}
+
+.carousel-indicators [data-bs-target] {
+  background-color: var(--bs-white);
 }

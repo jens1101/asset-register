@@ -1,6 +1,6 @@
 import { App } from "./app.js";
 import { routes } from "./routes.js";
-import "./styles.scss";
+import "./styles/index.scss";
 import { Router } from "@solidjs/router";
 import { render } from "solid-js/web";
 

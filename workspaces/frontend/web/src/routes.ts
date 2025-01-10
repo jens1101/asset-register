@@ -23,7 +23,7 @@ export const routes: RouteDefinition<string | string[], any>[] = [
   {
     path: "/asset/:id",
     component: lazy(async () => ({
-      default: (await import("./pages/asset.js")).Asset,
+      default: (await import("./pages/ViewAsset/ViewAsset.jsx")).ViewAsset,
     })),
     preload: loadAsset,
   } satisfies RouteDefinition<string, AssetData>,

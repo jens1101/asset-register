@@ -137,7 +137,6 @@ export const ImageFormField: Component<
                 nameErrors().length > 0,
             }}
             name={props.fieldNameCallback?.(FieldName.Name) ?? FieldName.Name}
-            required
           />
 
           <Feedback invalidFeedback={nameErrors()} />

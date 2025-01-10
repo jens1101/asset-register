@@ -1,3 +1,4 @@
+import type { ClassAttributes } from "../../common/types.js";
 import type { ImageFragment } from "../../gql-client/types/graphql.js";
 import { CarouselSlide } from "./CarouselSlide.jsx";
 import "./styles.scss";
@@ -13,10 +14,9 @@ import {
 
 const INITIAL_INDEX = 0;
 
-// TODO: add shadow/background to the buttons, indicators, and text
-// TODO: Make the image fit like "cover"
-// TODO: fix the aspect ratio of the carousel and pass through class and styles
-export const Carousel: Component<{ images: ImageFragment[] }> = (props) => {
+export const Carousel: Component<
+  ClassAttributes & { images: ImageFragment[] }
+> = (props) => {
   const [carouselElement, setCarouselElement] = createSignal<HTMLDivElement>();
   const [currentIndex, setCurrentIndex] = createSignal<number>(INITIAL_INDEX);
   const [carouselInstance, setCarouselInstance] =
@@ -46,7 +46,8 @@ export const Carousel: Component<{ images: ImageFragment[] }> = (props) => {
 
           setCarouselInstance(carouselInstance);
         }}
-        class={"carousel slide"}
+        class={`carousel slide ${props.class ?? ""}`}
+        classList={props.classList}
       >
         <Show when={props.images.length > 1}>
           <div class={"carousel-indicators"}>
@@ -65,7 +66,7 @@ export const Carousel: Component<{ images: ImageFragment[] }> = (props) => {
           </div>
         </Show>
 
-        <div class={"carousel-inner"}>
+        <div class={"carousel-inner h-100"}>
           <For each={props.images}>
             {(image, index) => (
               <CarouselSlide
@@ -79,7 +80,7 @@ export const Carousel: Component<{ images: ImageFragment[] }> = (props) => {
         </div>
 
         <button
-          class={"carousel-control-prev"}
+          class={"carousel-control-prev drop-shadow-1 opacity-100"}
           classList={{
             "d-none": currentIndex() <= 0,
           }}
@@ -91,7 +92,7 @@ export const Carousel: Component<{ images: ImageFragment[] }> = (props) => {
         </button>
 
         <button
-          class={"carousel-control-next"}
+          class={"carousel-control-next drop-shadow-1 opacity-100"}
           classList={{
             "d-none": currentIndex() >= props.images.length - 1,
           }}

@@ -46,3 +46,12 @@ export function setInputValue(
     element.files = container.files;
   }
 }
+
+/**
+ * The default formatter that should be used to format date-time values for
+ * display
+ */
+export const defaultDateTimeFormatter = new Intl.DateTimeFormat(undefined, {
+  timeStyle: "medium",
+  dateStyle: "medium",
+});
