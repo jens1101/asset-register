@@ -1,5 +1,6 @@
 import { defaultDateTimeFormatter } from "../../common/utils.js";
 import { Carousel } from "../../components/Carousel/Carousel.jsx";
+import { useDropdown } from "../../hooks/useDropdown.js";
 import { useObjectUrl } from "../../hooks/useObjectUrl.js";
 import type { AssetData } from "../asset.data.js";
 import "./styles.scss";
@@ -7,6 +8,8 @@ import { Option, pipe } from "effect";
 import { type Component, Show, Suspense } from "solid-js";
 
 export const ViewAsset: Component<{ data: AssetData }> = (props) => {
+  const { dropdownToggleRef } = useDropdown();
+
   const asset = () =>
     pipe(
       Option.fromNullable(props.data()?.asset),
@@ -31,8 +34,33 @@ export const ViewAsset: Component<{ data: AssetData }> = (props) => {
           <Show when={Option.getOrNull(asset())} keyed>
             {(asset) => (
               <>
-                <a href={`/asset/${asset.id}/edit`}>Edit</a>
-                <h1>{asset.name}</h1>
+                <div class={"d-flex"}>
+                  <h1 class={"flex-grow-1"}>{asset.name}</h1>
+                  <div class={"dropdown"}>
+                    <button
+                      class={"btn btn-secondary dropdown-toggle"}
+                      type={"button"}
+                      ref={dropdownToggleRef}
+                    >
+                      Options
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li>
+                        <a
+                          class="dropdown-item"
+                          href={`/asset/${asset.id}/edit`}
+                        >
+                          Edit
+                        </a>
+                      </li>
+                      <li>
+                        <button class="dropdown-item text-danger" type="button">
+                          Delete
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
 
                 <Show when={asset.description}>
                   <p class={"lead"}>{asset.description}</p>

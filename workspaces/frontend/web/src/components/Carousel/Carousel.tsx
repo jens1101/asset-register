@@ -40,8 +40,8 @@ export const Carousel: Component<
           const carouselInstance = new BootstrapCarousel(element);
           carouselInstance.to(INITIAL_INDEX);
 
-          // We set the event listener here because we want to ignore the initial set
-          // above.
+          // We set the event listener here because we want to ignore the
+          // initial set above.
           element.addEventListener("slide.bs.carousel", onSlide);
 
           setCarouselInstance(carouselInstance);

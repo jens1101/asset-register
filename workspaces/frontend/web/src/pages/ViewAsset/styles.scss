@@ -1,5 +1,14 @@
+@use "bootstrap";
+
 .carousel__view-asset {
-  min-height: 250px;
-  max-height: 500px;
-  aspect-ratio: 16/9;
+  height: 350px;
+  width: auto;
+
+  @include bootstrap.media-breakpoint-up(sm) {
+    height: unset;
+    width: unset;
+    min-height: 250px;
+    max-height: 500px;
+    aspect-ratio: 16/9;
+  }
 }
