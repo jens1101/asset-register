@@ -15,15 +15,10 @@ import {
 import type { AssetFormValues } from "../schemas/AssetFormValues.js";
 import { CreateFileInputFromFile } from "../schemas/CreateFileInput.js";
 import type { AssetData } from "./asset.data.js";
+import { useNavigate } from "@solidjs/router";
 import { Effect, Exit, Option, Schema, pipe } from "effect";
 import { isNonEmptyArray } from "effect/Array";
-import {
-  type Component,
-  Show,
-  createEffect,
-  createSignal,
-  createUniqueId,
-} from "solid-js";
+import { type Accessor, type Component, Show, createUniqueId } from "solid-js";
 
 function updateAssset(
   asset: AssetFragment,
@@ -177,38 +172,37 @@ const getImagesInput = (
   });
 
 export const EditAsset: Component<{ data: AssetData }> = (props) => {
+  const initialAsset: Accessor<Option.Option<AssetFragment>> = () =>
+    Option.fromNullable(props.data()?.asset).pipe(
+      Option.filter((data) => data.__typename === "Asset"),
+    );
   const formId = createUniqueId();
-  const [initialAsset, setInitialAsset] = createSignal<AssetFragment>();
-  const [currentAsset, setCurrentAsset] = createSignal<AssetFragment>();
+  const navigate = useNavigate();
 
   const onSubmit = async (formValues: typeof AssetFormValues.Type) => {
-    const asset = currentAsset();
+    const asset = initialAsset();
 
-    if (!asset) return;
+    if (Option.isNone(asset)) return;
 
-    Exit.match(await Effect.runPromiseExit(updateAssset(asset, formValues)), {
-      onSuccess: (asset) => setCurrentAsset(asset),
-      onFailure(cause) {
-        // TODO: error handling
-        console.error(cause);
+    Exit.match(
+      await Effect.runPromiseExit(updateAssset(asset.value, formValues)),
+      {
+        onSuccess(asset) {
+          navigate(`/asset/${asset.id}`);
+        },
+        onFailure(cause) {
+          // TODO: error handling
+          console.error(cause);
+        },
       },
-    });
+    );
   };
-
-  // Keep the asset signals synced with the asset prop.
-  createEffect(() => {
-    const data = props.data()?.asset;
-    // TODO: error handling
-    const asset = data?.__typename === "Asset" ? data : undefined;
-    setInitialAsset(asset);
-    setCurrentAsset(asset);
-  });
 
   return (
     <section class="container">
       <h1>Edit Asset</h1>
 
-      <Show when={initialAsset()} keyed>
+      <Show when={Option.getOrUndefined(initialAsset())} keyed>
         {(initialAsset) => (
           <>
             <AssetForm
