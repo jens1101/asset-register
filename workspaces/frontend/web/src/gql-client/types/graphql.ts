@@ -331,6 +331,15 @@ export type CreateAssetMutation = {
     | { __typename?: "AssetError" };
 };
 
+export type DeleteAssetMutationVariables = Exact<{
+  id: Scalars["ID"]["input"];
+}>;
+
+export type DeleteAssetMutation = {
+  __typename?: "Mutation";
+  deleteAsset?: void | null;
+};
+
 export type UpdateAssetMutationVariables = Exact<{
   data: UpdateAssetInput;
 }>;
@@ -997,6 +1006,45 @@ export const CreateAssetDocument = {
     },
   ],
 } as unknown as DocumentNode<CreateAssetMutation, CreateAssetMutationVariables>;
+export const DeleteAssetDocument = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "OperationDefinition",
+      operation: "mutation",
+      name: { kind: "Name", value: "DeleteAsset" },
+      variableDefinitions: [
+        {
+          kind: "VariableDefinition",
+          variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "ID" } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "deleteAsset" },
+            arguments: [
+              {
+                kind: "Argument",
+                name: { kind: "Name", value: "id" },
+                value: {
+                  kind: "Variable",
+                  name: { kind: "Name", value: "id" },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DeleteAssetMutation, DeleteAssetMutationVariables>;
 export const UpdateAssetDocument = {
   kind: "Document",
   definitions: [

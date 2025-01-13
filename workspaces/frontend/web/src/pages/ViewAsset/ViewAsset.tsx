@@ -1,14 +1,24 @@
 import { defaultDateTimeFormatter } from "../../common/utils.js";
 import { Carousel } from "../../components/Carousel/Carousel.jsx";
+import { client } from "../../gql-client/client.js";
+import {
+  DeleteAssetDocument,
+  type DeleteAssetMutation,
+  type DeleteAssetMutationVariables,
+} from "../../gql-client/types/graphql.js";
 import { useDropdown } from "../../hooks/useDropdown.js";
+import { useModal } from "../../hooks/useModal.jsx";
 import { useObjectUrl } from "../../hooks/useObjectUrl.js";
 import type { AssetData } from "../asset.data.js";
 import "./styles.scss";
+import { useNavigate } from "@solidjs/router";
 import { Option, pipe } from "effect";
 import { type Component, Show, Suspense } from "solid-js";
 
 export const ViewAsset: Component<{ data: AssetData }> = (props) => {
   const { dropdownToggleRef } = useDropdown();
+  const { showPromptModal } = useModal();
+  const navigate = useNavigate();
 
   const asset = () =>
     pipe(
@@ -26,6 +36,37 @@ export const ViewAsset: Component<{ data: AssetData }> = (props) => {
         url: useObjectUrl(file),
       })),
     );
+
+  const onDelete = () => {
+    const assetId = Option.map(asset(), (asset) => asset.id);
+
+    if (Option.isNone(assetId)) return;
+
+    showPromptModal({
+      title: "Delete asset",
+      body: "Do you want to delete this asset?",
+      okay: "Yes",
+      cancel: "No",
+      onOkay: () => {
+        client
+          .mutation<DeleteAssetMutation, DeleteAssetMutationVariables>(
+            DeleteAssetDocument,
+            {
+              id: assetId.value,
+            },
+          )
+          .then(({ error }) => {
+            // TODO: error handling
+            if (error) {
+              console.log(error);
+              return;
+            }
+
+            navigate("/");
+          });
+      },
+    });
+  };
 
   return (
     <>
@@ -54,7 +95,11 @@ export const ViewAsset: Component<{ data: AssetData }> = (props) => {
                         </a>
                       </li>
                       <li>
-                        <button class="dropdown-item text-danger" type="button">
+                        <button
+                          class="dropdown-item text-danger"
+                          type="button"
+                          onClick={onDelete}
+                        >
                           Delete
                         </button>
                       </li>
@@ -93,11 +138,13 @@ export const ViewAsset: Component<{ data: AssetData }> = (props) => {
                   )}
                 </Show>
 
-                <h3>Images</h3>
-                <Carousel
-                  images={asset.images}
-                  class={"carousel__view-asset"}
-                />
+                <Show when={asset.images.length > 0}>
+                  <h3>Images</h3>
+                  <Carousel
+                    images={asset.images}
+                    class={"carousel__view-asset"}
+                  />
+                </Show>
               </>
             )}
           </Show>

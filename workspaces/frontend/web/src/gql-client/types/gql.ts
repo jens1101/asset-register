@@ -26,6 +26,8 @@ const documents = {
     types.ImageFragmentDoc,
   "mutation CreateAsset($data: CreateAssetInput!) {\n  createAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n  }\n}":
     types.CreateAssetDocument,
+  "mutation DeleteAsset($id: ID!) {\n  deleteAsset(id: $id)\n}":
+    types.DeleteAssetDocument,
   "mutation UpdateAsset($data: UpdateAssetInput!) {\n  updateAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n  }\n}":
     types.UpdateAssetDocument,
   "query Asset($id: ID!) {\n  asset(id: $id) {\n    ... on Asset {\n      ...asset\n    }\n  }\n}":
@@ -84,6 +86,12 @@ export function graphql(
 export function graphql(
   source: "mutation CreateAsset($data: CreateAssetInput!) {\n  createAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n  }\n}",
 ): (typeof documents)["mutation CreateAsset($data: CreateAssetInput!) {\n  createAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n  }\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "mutation DeleteAsset($id: ID!) {\n  deleteAsset(id: $id)\n}",
+): (typeof documents)["mutation DeleteAsset($id: ID!) {\n  deleteAsset(id: $id)\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
