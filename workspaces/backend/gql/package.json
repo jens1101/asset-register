@@ -34,7 +34,7 @@
   "dependencies": {
     "@app/common": "^1.0.0",
     "decimal.js": "10.4.3",
-    "effect": "3.10.16",
+    "effect": "3.12.1",
     "graphql": "^16.9.0",
     "graphql-ws": "^5.16.0",
     "graphql-yoga": "^5.8.0",

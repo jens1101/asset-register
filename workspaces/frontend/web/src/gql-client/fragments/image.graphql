@@ -1,4 +1,5 @@
 fragment image on Image {
+  __typename
   id
   name
   description

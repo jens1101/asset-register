@@ -1,22 +1,12 @@
-import { A } from "@solidjs/router";
+import { MainNav } from "./components/MainNav/MainNav.jsx";
 import type { ParentComponent } from "solid-js";
 
-export const App: ParentComponent = ({ children }) => {
+export const App: ParentComponent = (props) => {
   return (
     <>
-      <nav class="nav">
-        <A activeClass="nav-link active" inactiveClass="nav-link" href="/">
-          Home
-        </A>
-        <A activeClass="nav-link active" inactiveClass="nav-link" href="/about">
-          About
-        </A>
-        <A activeClass="nav-link active" inactiveClass="nav-link" href="/error">
-          Error
-        </A>
-      </nav>
+      <MainNav />
 
-      <main>{children}</main>
+      <main class="my-4">{props.children}</main>
     </>
   );
 };

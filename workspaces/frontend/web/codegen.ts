@@ -7,6 +7,9 @@ const config: CodegenConfig = {
       schema: "../../backend/gql/src/gql-server/schema.graphql",
       documents: "src/gql-client/!(types)/*.graphql",
       preset: "client",
+      presetConfig: {
+        fragmentMasking: false,
+      },
       plugins: [
         {
           add: {

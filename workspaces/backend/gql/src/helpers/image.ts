@@ -1,5 +1,6 @@
 import {
   type Asset,
+  type File,
   FileEntity,
   type Image,
   ImageEntity,
@@ -12,7 +13,7 @@ import type {
 } from "../gql-server/types.generated.js";
 import { EntityManagerService } from "../services/index.js";
 import { Decimal } from "decimal.js";
-import { Effect } from "effect";
+import { Effect, Option } from "effect";
 
 export const mutateImages = (
   asset: Asset,
@@ -65,11 +66,13 @@ const updateImage = (
 ): Effect.Effect<Asset, Error, EntityManagerService> =>
   Effect.gen(function* () {
     const image = asset.images.find((image) => image.id === Number(input.id));
+    let oldFile: Option.Option<File> = Option.none();
 
-    if (!image)
+    if (!image) {
       return yield* Effect.fail(
         new Error(`Image with ID ${input.id} not found in asset`),
       );
+    }
 
     const manager = yield* EntityManagerService;
 
@@ -88,6 +91,7 @@ const updateImage = (
 
     if (input.file) {
       const newFile = input.file;
+      oldFile = Option.some(image.file);
       image.file = yield* Effect.tryPromise({
         try: () => manager.save(FileEntity, newFile),
         catch: (error) => new Error(String(error)),
@@ -101,9 +105,9 @@ const updateImage = (
 
     // Note: We can only remove the old file once the image changes have been
     // persisted to the DB. Otherwise the FK constraint will throw an error.
-    if (input.file) {
+    if (Option.isSome(oldFile)) {
       yield* Effect.tryPromise({
-        try: () => manager.remove(FileEntity, image.file),
+        try: () => manager.remove(FileEntity, oldFile.value),
         catch: (error) => new Error(String(error)),
       });
     }

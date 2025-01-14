@@ -1,4 +1,4 @@
-mutation CreateAsset($data: CreeateAssetInput!) {
+mutation CreateAsset($data: CreateAssetInput!) {
   createAsset(data: $data) {
     ... on Asset {
       ...asset

@@ -1,10 +1,12 @@
 import eslint from "@eslint/js";
+import solid from "eslint-plugin-solid/configs/typescript";
 import tseslint from "typescript-eslint";
 
 const config = [
   eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   {
+    ...solid,
     languageOptions: {
       parserOptions: {
         projectService: true,
@@ -32,6 +34,14 @@ const config = [
       "@typescript-eslint/no-unused-expressions": [
         "error",
         { allowShortCircuit: true, allowTernary: true },
+      ],
+      "@typescript-eslint/no-misused-promises": [
+        "error",
+        {
+          checksVoidReturn: {
+            attributes: false,
+          },
+        },
       ],
     },
   },
