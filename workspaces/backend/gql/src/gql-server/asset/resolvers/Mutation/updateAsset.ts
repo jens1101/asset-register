@@ -1,69 +1,58 @@
 import { dataSource } from "../../../../dataSource.js";
-import { AssetEntity } from "../../../../entities/index.js";
 import {
-  getAsset,
-  mutateImages,
-  mutateProofOfPurchase,
+  readAsset,
+  updateAsset as updateAssetHelper,
 } from "../../../../helpers/index.js";
 import { withTransaction } from "../../../../scopes/index.js";
 import {
   DataSourceService,
   EntityManagerService,
 } from "../../../../services/index.js";
-import type { MutationResolvers } from "./../../../types.generated.js";
-import { Cause, Effect, Exit, pipe } from "effect";
+import type {
+  MutationResolvers,
+  ResolversTypes,
+} from "./../../../types.generated.js";
+import { Effect, pipe } from "effect";
 
 export const updateAsset: NonNullable<
   MutationResolvers["updateAsset"]
-> = async (
-  _parent,
-  { data: { id, name, description, proofOfPurchase, images } },
-  _ctx,
-) => {
-  const program = Effect.scoped(
-    pipe(
-      Effect.gen(function* () {
-        const manager = yield* EntityManagerService;
-        const asset = yield* getAsset(Number(id), {
-          relations: { images: true, proofOfPurchase: true },
-        });
-
-        if (name != null) asset.name = name;
-        if (description != null) asset.description = description;
-
-        return yield* Effect.promise(() => manager.save(AssetEntity, asset));
-      }),
-      Effect.flatMap((asset) =>
-        Effect.gen(function* () {
-          if (!proofOfPurchase) return asset;
-
-          return yield* mutateProofOfPurchase(asset, proofOfPurchase);
-        }),
+> = async (_parent, { data }, _ctx) => {
+  const program = pipe(
+    readAsset(Number(data.id), {
+      relations: { images: true, proofOfPurchase: true },
+    }),
+    Effect.andThen((asset) => updateAssetHelper(asset, data)),
+    Effect.provideServiceEffect(EntityManagerService, withTransaction),
+    Effect.provideService(DataSourceService, dataSource),
+    Effect.scoped,
+    Effect.andThen(
+      (asset) =>
+        ({
+          ...asset,
+          __typename: "Asset",
+        }) as ResolversTypes["AssetResponse"],
+    ),
+    Effect.catchIf(
+      (error) => "_tag" in error,
+      (error) =>
+        pipe(
+          Effect.logWarning("Failed to update asset", error),
+          Effect.as({
+            __typename: "AssetError",
+            message: error.message,
+          } as ResolversTypes["AssetResponse"]),
+        ),
+    ),
+    Effect.catchAllCause((cause) =>
+      pipe(
+        Effect.logError("Failed to update asset", cause),
+        Effect.as({
+          __typename: "AssetError",
+          message: "Failed to update asset",
+        } as ResolversTypes["AssetResponse"]),
       ),
-      Effect.flatMap((asset) =>
-        Effect.gen(function* () {
-          if (!images || images.length <= 0) return asset;
-
-          return yield* mutateImages(asset, images);
-        }),
-      ),
-      Effect.provideServiceEffect(EntityManagerService, withTransaction),
-      Effect.provideService(DataSourceService, dataSource),
     ),
   );
 
-  return Exit.match(await Effect.runPromiseExit(program), {
-    onSuccess(asset) {
-      return {
-        ...asset,
-        __typename: "Asset",
-      };
-    },
-    onFailure(cause) {
-      return {
-        __typename: "AssetError",
-        message: Cause.pretty(cause),
-      };
-    },
-  });
+  return Effect.runPromise(program);
 };

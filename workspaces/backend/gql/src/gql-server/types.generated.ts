@@ -1,5 +1,3 @@
-import type { TemporalInstantScalar } from "@app/common/scalars/TemporalInstant";
-import type { Uint8ArrayScalar } from "@app/common/scalars/Uint8Array";
 import type {
   GraphQLResolveInfo,
   GraphQLScalarType,
@@ -30,7 +28,6 @@ export type Incremental<T> =
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
-
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string | number };
@@ -38,8 +35,8 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
-  TemporalInstant: { input: TemporalInstantScalar; output: Temporal.Instant };
-  Uint8Array: { input: Uint8ArrayScalar; output: Uint8Array };
+  TemporalInstant: { input: Temporal.Instant; output: Temporal.Instant };
+  Uint8Array: { input: Uint8Array; output: Uint8Array };
   Void: { input: void; output: void };
 };
 

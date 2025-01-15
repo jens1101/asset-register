@@ -1,77 +1,45 @@
-import { type Asset, DocumentEntity, FileEntity } from "../entities/index.js";
+import { type Asset } from "../entities/index.js";
+import { DeleteDocumentError } from "../errors/DeleteDocumentError.js";
 import type {
   DeleteDocumentInput,
   MutateDocumentInput,
   UpdateDocumentInput,
 } from "../gql-server/types.generated.js";
-import { EntityManagerService } from "../services/index.js";
+import { deleteDocument, saveDocument } from "./document.js";
+import { saveFile } from "./file.js";
 import { Effect } from "effect";
 
 export const mutateProofOfPurchase = (
   asset: Asset,
   input: MutateDocumentInput,
-): Effect.Effect<Asset, Error, EntityManagerService> =>
+) =>
   Effect.gen(function* () {
     if (input.update) return yield* updateProofOfPurchase(asset, input.update);
     return yield* deleteProofOfPurchase(asset, input.delete);
   });
 
-const updateProofOfPurchase = (
-  asset: Asset,
-  input: UpdateDocumentInput,
-): Effect.Effect<Asset, Error, EntityManagerService> =>
+const updateProofOfPurchase = (asset: Asset, input: UpdateDocumentInput) =>
   Effect.gen(function* () {
-    const manager = yield* EntityManagerService;
+    if (asset.proofOfPurchase) yield* deleteDocument(asset.proofOfPurchase);
 
-    if (asset.proofOfPurchase) {
-      const proofOfPurchase = asset.proofOfPurchase;
-
-      yield* Effect.tryPromise({
-        try: async () => {
-          await manager.remove(DocumentEntity, proofOfPurchase);
-          await manager.remove(FileEntity, proofOfPurchase.file);
-        },
-        catch: (error) => new Error(String(error)),
-      });
-    }
-
-    asset.proofOfPurchase = yield* Effect.tryPromise({
-      try: async () =>
-        manager.save(DocumentEntity, {
-          asset,
-          file: await manager.save(FileEntity, input.file),
-        }),
-      catch: (error) => new Error(String(error)),
+    asset.proofOfPurchase = yield* saveDocument({
+      asset,
+      file: yield* saveFile(input.file),
     });
 
     return asset;
   });
 
-const deleteProofOfPurchase = (
-  asset: Asset,
-  input: DeleteDocumentInput,
-): Effect.Effect<Asset, Error, EntityManagerService> =>
+const deleteProofOfPurchase = (asset: Asset, input: DeleteDocumentInput) =>
   Effect.gen(function* () {
-    if (
-      !asset.proofOfPurchase?.id ||
-      Number(input.id) !== asset.proofOfPurchase.id
-    ) {
-      return yield* Effect.fail(
-        new Error(`Proof of purchase with ID ${input.id} not found in asset`),
-      );
+    if (Number(input.id) !== asset.proofOfPurchase?.id) {
+      return yield* new DeleteDocumentError({
+        message: "Proof of purchase not found in asset",
+        options: { input },
+      });
     }
 
-    const manager = yield* EntityManagerService;
-    const proofOfPurchase = asset.proofOfPurchase;
-
-    yield* Effect.tryPromise({
-      try: async () => {
-        await manager.remove(DocumentEntity, proofOfPurchase);
-        await manager.remove(FileEntity, proofOfPurchase.file);
-      },
-      catch: (error) => new Error(String(error)),
-    });
-
+    yield* deleteDocument(asset.proofOfPurchase);
     asset.proofOfPurchase = null;
     return asset;
   });

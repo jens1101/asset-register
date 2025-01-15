@@ -1,4 +1,4 @@
-import { ServiceName } from "../enums/service.js";
+import { ServiceName } from "../enums/ServiceName.js";
 import { Context } from "effect";
 import type { QueryRunner } from "typeorm";
 
