@@ -1,37 +1,39 @@
 import { dataSource } from "../../../../dataSource.js";
 import {
-  AssetEntity,
-  DocumentEntity,
-  FileEntity,
-  ImageEntity,
-} from "../../../../entities/index.js";
-import type { MutationResolvers } from "./../../../types.generated.js";
+  deleteAsset as deleteAssetHelper,
+  readAsset,
+} from "../../../../helpers/index.js";
+import { withTransaction } from "../../../../scopes/index.js";
+import {
+  DataSourceService,
+  EntityManagerService,
+} from "../../../../services/index.js";
+import type {
+  MutationResolvers,
+  ResolversTypes,
+} from "./../../../types.generated.js";
+import { Effect, pipe } from "effect";
 
 export const deleteAsset: NonNullable<
   MutationResolvers["deleteAsset"]
-> = async (_parent, { id }, _ctx) => {
-  await dataSource.transaction(async (manager) => {
-    const asset = await manager.findOneOrFail(AssetEntity, {
-      where: {
-        id: Number(id),
-      },
-      relations: {
-        images: true,
-        proofOfPurchase: true,
-      },
-    });
+> = async (_parent, data, _ctx) => {
+  const program = pipe(
+    readAsset(Number(data.id)),
+    Effect.andThen((asset) => deleteAssetHelper(asset)),
+    Effect.provideServiceEffect(EntityManagerService, withTransaction),
+    Effect.provideService(DataSourceService, dataSource),
+    Effect.scoped,
+    Effect.as(null),
+    Effect.catchAllCause((cause) =>
+      pipe(
+        Effect.logError("Failed to update asset", cause),
+        Effect.as({
+          __typename: "AssetError",
+          message: "Failed to update asset",
+        } as ResolversTypes["AssetError"]),
+      ),
+    ),
+  );
 
-    await manager.remove(ImageEntity, asset.images);
-    await manager.remove(
-      FileEntity,
-      asset.images.map((image) => image.file),
-    );
-
-    if (asset.proofOfPurchase) {
-      await manager.remove(DocumentEntity, asset.proofOfPurchase);
-      await manager.remove(FileEntity, asset.proofOfPurchase.file);
-    }
-
-    await manager.remove(AssetEntity, asset);
-  });
+  return Effect.runPromise(program);
 };

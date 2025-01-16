@@ -141,7 +141,7 @@ export type MutateImageInput =
 export type Mutation = {
   __typename?: "Mutation";
   createAsset: AssetResponse;
-  deleteAsset?: Maybe<Scalars["Void"]["output"]>;
+  deleteAsset?: Maybe<AssetError>;
   updateAsset: AssetResponse;
 };
 
@@ -536,7 +536,7 @@ export type MutationResolvers<
     RequireFields<MutationcreateAssetArgs, "data">
   >;
   deleteAsset?: Resolver<
-    Maybe<ResolversTypes["Void"]>,
+    Maybe<ResolversTypes["AssetError"]>,
     ParentType,
     ContextType,
     RequireFields<MutationdeleteAssetArgs, "id">

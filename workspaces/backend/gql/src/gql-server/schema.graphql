@@ -94,7 +94,7 @@ input MutateImageInput @oneOf {
 
 type Mutation {
   createAsset(data: CreateAssetInput!): AssetResponse!
-  deleteAsset(id: ID!): Void
+  deleteAsset(id: ID!): AssetError
   updateAsset(data: UpdateAssetInput!): AssetResponse!
 }
 

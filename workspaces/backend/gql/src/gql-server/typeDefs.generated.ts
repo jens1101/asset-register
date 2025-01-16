@@ -177,7 +177,10 @@ export const typeDefs = {
               directives: [],
             },
           ],
-          type: { kind: "NamedType", name: { kind: "Name", value: "Void" } },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "AssetError" },
+          },
           directives: [],
         },
       ],

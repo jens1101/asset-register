@@ -1,4 +1,5 @@
 import { type Asset, AssetEntity } from "../entities/index.js";
+import { DeleteAssetError } from "../errors/DeleteAssetError.js";
 import { ReadAssetError } from "../errors/ReadAssetError.js";
 import { SaveAssetError } from "../errors/SaveAssetError.js";
 import type {
@@ -108,3 +109,17 @@ export const updateAsset = (asset: Asset, input: UpdateAssetInput) =>
       ),
     ),
   );
+
+export const deleteAsset = (input: Asset) =>
+  Effect.gen(function* () {
+    const manager = yield* EntityManagerService;
+
+    yield* Effect.tryPromise({
+      try: async () => manager.remove(AssetEntity, input),
+      catch: (cause) =>
+        new DeleteAssetError({
+          message: "Failed to delete asset",
+          options: { cause, input },
+        }),
+    });
+  });
