@@ -56,7 +56,7 @@ const deleteImage = (input: Image) =>
     yield* deleteFile(input.file);
   });
 
-const createImage = (asset: Asset, input: CreateImageInput) =>
+export const createImage = (asset: Asset, input: CreateImageInput) =>
   Effect.gen(function* () {
     const image = yield* saveImage({
       asset,

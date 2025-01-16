@@ -1,10 +1,16 @@
 import { type Asset, AssetEntity } from "../entities/index.js";
 import { ReadAssetError } from "../errors/ReadAssetError.js";
 import { SaveAssetError } from "../errors/SaveAssetError.js";
-import type { UpdateAssetInput } from "../gql-server/types.generated.js";
+import type {
+  CreateAssetInput,
+  UpdateAssetInput,
+} from "../gql-server/types.generated.js";
 import { EntityManagerService } from "../services/index.js";
-import { mutateImages } from "./image.js";
-import { mutateProofOfPurchase } from "./proofOfPurchase.js";
+import { createImage, mutateImages } from "./image.js";
+import {
+  mutateProofOfPurchase,
+  updateProofOfPurchase,
+} from "./proofOfPurchase.js";
 import { Array, Effect, Option, pipe } from "effect";
 import type { FindOptionsRelations } from "typeorm";
 
@@ -36,22 +42,54 @@ export const readAsset = (
     });
   });
 
+const saveAsset = (input: Partial<Asset>) =>
+  Effect.gen(function* () {
+    const manager = yield* EntityManagerService;
+
+    return yield* Effect.tryPromise({
+      try: async () => (await manager.save(AssetEntity, input)) as Asset,
+      catch: (cause) =>
+        new SaveAssetError({
+          message: "Failed to save asset",
+          options: { cause, input },
+        }),
+    });
+  });
+
+export const createAsset = (input: CreateAssetInput) =>
+  pipe(
+    saveAsset({
+      name: input.name,
+      description: input.description,
+    }),
+    Effect.andThen((asset) =>
+      Option.match(Option.fromNullable(input.proofOfPurchase), {
+        onSome: (proofOfPurchase) =>
+          updateProofOfPurchase(asset, proofOfPurchase),
+        onNone: () => Effect.succeed(asset),
+      }),
+    ),
+    Effect.andThen((asset) =>
+      Option.match(
+        Option.filter(Option.fromNullable(input.images), Array.isNonEmptyArray),
+        {
+          onSome: (images) =>
+            Effect.reduce(Array.reverse(images), asset, (asset, image) =>
+              createImage(asset, image),
+            ),
+          onNone: () => Effect.succeed(asset),
+        },
+      ),
+    ),
+  );
+
 export const updateAsset = (asset: Asset, input: UpdateAssetInput) =>
   pipe(
     Effect.gen(function* () {
-      const manager = yield* EntityManagerService;
-
       if (input.name != null) asset.name = input.name;
       if (input.description != null) asset.description = input.description;
 
-      return yield* Effect.tryPromise({
-        try: async () => await manager.save(AssetEntity, asset),
-        catch: (cause) =>
-          new SaveAssetError({
-            message: "Failed to save document",
-            options: { cause, input },
-          }),
-      });
+      return yield* saveAsset(asset);
     }),
     Effect.andThen((asset) =>
       Option.match(Option.fromNullable(input.proofOfPurchase), {

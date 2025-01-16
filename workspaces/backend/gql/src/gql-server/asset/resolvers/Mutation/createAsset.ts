@@ -1,58 +1,41 @@
 import { dataSource } from "../../../../dataSource.js";
+import { createAsset as createAssetHelper } from "../../../../helpers/asset.js";
+import { withTransaction } from "../../../../scopes/index.js";
 import {
-  type Asset,
-  AssetEntity,
-  type Document,
-  DocumentEntity,
-  FileEntity,
-  type Image,
-  ImageEntity,
-} from "../../../../entities/index.js";
-import type { MutationResolvers } from "./../../../types.generated.js";
-import type { Maybe } from "@app/common";
-import { Decimal } from "decimal.js";
+  DataSourceService,
+  EntityManagerService,
+} from "../../../../services/index.js";
+import type {
+  MutationResolvers,
+  ResolversTypes,
+} from "./../../../types.generated.js";
+import { Effect, pipe } from "effect";
 
 export const createAsset: NonNullable<
   MutationResolvers["createAsset"]
 > = async (_parent, { data }, _ctx) => {
-  const asset = await dataSource.transaction<Asset>(async (manager) => {
-    const asset = await manager.save(AssetEntity, {
-      name: data.name,
-      description: data.description,
-      images: [],
-    });
+  const program = pipe(
+    createAssetHelper(data),
+    Effect.provideServiceEffect(EntityManagerService, withTransaction),
+    Effect.provideService(DataSourceService, dataSource),
+    Effect.scoped,
+    Effect.andThen(
+      (asset) =>
+        ({
+          ...asset,
+          __typename: "Asset",
+        }) as ResolversTypes["AssetResponse"],
+    ),
+    Effect.catchAllCause((cause) =>
+      pipe(
+        Effect.logError("Failed to create asset", cause),
+        Effect.as({
+          __typename: "AssetError",
+          message: "Failed to create asset",
+        } as ResolversTypes["AssetResponse"]),
+      ),
+    ),
+  );
 
-    const images: Image[] = data.images
-      ? await manager.save(
-          ImageEntity,
-          await Promise.all(
-            data.images.map(async (image, index) => ({
-              ...image,
-              asset,
-              position: new Decimal(index),
-              file: await manager.save(FileEntity, image.file),
-            })),
-          ),
-        )
-      : [];
-
-    const proofOfPurchase: Maybe<Document> =
-      data.proofOfPurchase &&
-      (await manager.save(DocumentEntity, {
-        ...data.proofOfPurchase,
-        asset,
-        file: await manager.save(FileEntity, data.proofOfPurchase.file),
-      }));
-
-    return {
-      ...asset,
-      proofOfPurchase,
-      images,
-    } satisfies Asset;
-  });
-
-  return {
-    ...asset,
-    __typename: "Asset",
-  };
+  return Effect.runPromise(program);
 };

@@ -18,7 +18,10 @@ export const mutateProofOfPurchase = (
     return yield* deleteProofOfPurchase(asset, input.delete);
   });
 
-const updateProofOfPurchase = (asset: Asset, input: UpdateDocumentInput) =>
+export const updateProofOfPurchase = (
+  asset: Asset,
+  input: UpdateDocumentInput,
+) =>
   Effect.gen(function* () {
     if (asset.proofOfPurchase) yield* deleteDocument(asset.proofOfPurchase);
 

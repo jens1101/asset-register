@@ -32,17 +32,6 @@ export const updateAsset: NonNullable<
           __typename: "Asset",
         }) as ResolversTypes["AssetResponse"],
     ),
-    Effect.catchIf(
-      (error) => "_tag" in error,
-      (error) =>
-        pipe(
-          Effect.logWarning("Failed to update asset", error),
-          Effect.as({
-            __typename: "AssetError",
-            message: error.message,
-          } as ResolversTypes["AssetResponse"]),
-        ),
-    ),
     Effect.catchAllCause((cause) =>
       pipe(
         Effect.logError("Failed to update asset", cause),
