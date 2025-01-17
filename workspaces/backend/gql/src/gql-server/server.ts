@@ -32,9 +32,9 @@ export function initServer(port: string) {
         // This means that the initial context needs to be manually created below.
 
         // Construct a standard request object from the Node.js request. In the
-        //  future, a
-        //  [built-in function](https://github.com/nodejs/node/issues/42529)
-        //  could make this easier.
+        // future, a
+        // [built-in function](https://github.com/nodejs/node/issues/42529)
+        // could make this easier.
         const initialRequest = context.extra.request;
         const headers = new Headers({
           ...(message.payload.extensions?.["headers"] as Record<

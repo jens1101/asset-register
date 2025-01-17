@@ -16,9 +16,9 @@ import { Effect, pipe } from "effect";
 
 export const deleteAsset: NonNullable<
   MutationResolvers["deleteAsset"]
-> = async (_parent, data, _ctx) => {
+> = async (_parent, { id }, _ctx) => {
   const program = pipe(
-    readAsset(Number(data.id)),
+    readAsset(Number(id)),
     Effect.andThen((asset) => deleteAssetHelper(asset)),
     Effect.provideServiceEffect(EntityManagerService, withTransaction),
     Effect.provideService(DataSourceService, dataSource),

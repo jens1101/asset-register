@@ -43,6 +43,28 @@ export const readAsset = (
     });
   });
 
+export const readAssets = ({
+  relations,
+}: {
+  relations?: FindOptionsRelations<Asset>;
+} = {}) =>
+  Effect.gen(function* () {
+    const manager = yield* EntityManagerService;
+
+    return yield* Effect.tryPromise({
+      try: async () =>
+        manager.find(AssetEntity, {
+          ...(relations && { relations }),
+          ...(relations?.images && { order: { images: { position: "ASC" } } }),
+        }),
+      catch: (cause) =>
+        new ReadAssetError({
+          message: "Unable to read assets",
+          options: { cause },
+        }),
+    });
+  });
+
 const saveAsset = (input: Partial<Asset>) =>
   Effect.gen(function* () {
     const manager = yield* EntityManagerService;
