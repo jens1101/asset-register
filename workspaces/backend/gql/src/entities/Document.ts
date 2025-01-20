@@ -1,18 +1,30 @@
 import { EntityName } from "../enums/EntityName.js";
 import type { Asset } from "./Asset.js";
 import type { File } from "./File.js";
+import type {
+  ChosenRelations,
+  RelationOptions,
+  Relations,
+} from "./relation.js";
 import { TemporalInstantTransformer } from "./transformers.js";
 import type { Temporal } from "temporal-polyfill";
 import { EntitySchema } from "typeorm";
 
-export interface Document {
+type DocumentRelations = Relations<{
+  asset: Asset<{ images: false; proofOfPurchase: false }>;
+  file: File;
+}>;
+
+type DocumentRelationOptions = RelationOptions<DocumentRelations>;
+
+export type Document<O extends DocumentRelationOptions> = {
   id: number;
   createdAt: Temporal.Instant;
-  file: File;
-  asset: Asset;
-}
+} & ChosenRelations<DocumentRelations, O>;
 
-export const DocumentEntity = new EntitySchema<Document>({
+export const DocumentEntity = new EntitySchema<
+  Document<{ asset: true; file: true }>
+>({
   name: EntityName.Document,
   columns: {
     id: {

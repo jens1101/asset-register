@@ -1,22 +1,34 @@
 import { EntityName } from "../enums/EntityName.js";
 import type { Document } from "./Document.js";
 import type { Image } from "./Image.js";
+import type {
+  ChosenRelations,
+  RelationOptions,
+  Relations,
+} from "./relation.js";
 import { TemporalInstantTransformer } from "./transformers.js";
 import type { Maybe } from "@app/common";
 import { Temporal } from "temporal-polyfill";
 import { EntitySchema } from "typeorm";
 
-export interface Asset {
+type AssetRelations = Relations<{
+  images: Image<{ file: true}>[];
+  proofOfPurchase: Maybe<Document<{ file: true }>>;
+}>;
+
+export type AssetRelationOptions = RelationOptions<AssetRelations>;
+
+export type Asset<O extends AssetRelationOptions> = {
   id: number;
   name: string;
   description: Maybe<string>;
-  images: Image[];
-  proofOfPurchase: Maybe<Document>;
   createdAt: Temporal.Instant;
   updatedAt: Temporal.Instant;
-}
+} & ChosenRelations<AssetRelations, O>;
 
-export const AssetEntity = new EntitySchema<Asset>({
+export const AssetEntity = new EntitySchema<
+  Asset<{ images: true; proofOfPurchase: true }>
+>({
   name: EntityName.Asset,
   columns: {
     id: {

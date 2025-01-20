@@ -1,4 +1,8 @@
-import { type Asset, type Image, ImageEntity } from "../entities/index.js";
+import {
+  type Asset,
+  type Image,
+  ImageEntity,
+} from "../entities/index.js";
 import { DeleteImageError } from "../errors/DeleteImageError.js";
 import { ImageNotFoundError } from "../errors/ImageNotFoundError.js";
 import { SaveImageError } from "../errors/SaveImageError.js";
@@ -12,7 +16,10 @@ import { deleteFile, saveFile } from "./file.js";
 import { Decimal } from "decimal.js";
 import { Array, Effect, Option, pipe } from "effect";
 
-export const mutateImages = (asset: Asset, inputs: MutateImageInput[]) =>
+export const mutateImages = (
+  asset: Asset<{images: true}>,
+  inputs: MutateImageInput[],
+) =>
   Effect.reduce(inputs, asset, (asset, input) =>
     Effect.gen(function* () {
       if (input.create) return yield* createImage(asset, input.create);
@@ -40,7 +47,7 @@ const saveImage = (input: Partial<Image>) =>
     });
   });
 
-const deleteImage = (input: Image) =>
+export const deleteImage = (input: Image) =>
   Effect.gen(function* () {
     const manager = yield* EntityManagerService;
 
@@ -56,7 +63,7 @@ const deleteImage = (input: Image) =>
     yield* deleteFile(input.file);
   });
 
-export const createImage = (asset: Asset, input: CreateImageInput) =>
+export const createImage = (asset: AssetWithImages, input: CreateImageInput) =>
   Effect.gen(function* () {
     const image = yield* saveImage({
       asset,
@@ -79,7 +86,7 @@ export const createImage = (asset: Asset, input: CreateImageInput) =>
     return asset;
   });
 
-const updateImage = (asset: Asset, input: UpdateImageInput) =>
+const updateImage = (asset: AssetWithImages, input: UpdateImageInput) =>
   Effect.gen(function* () {
     const image = yield* findImage(asset.images, Number(input.id));
     const oldFile = Option.filter(Option.some(image.file), () => !!input.file);

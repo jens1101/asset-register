@@ -1,3 +1,4 @@
+import type { AssetRelationOptions } from "../entities/Asset.js";
 import { type Asset, AssetEntity } from "../entities/index.js";
 import { DeleteAssetError } from "../errors/DeleteAssetError.js";
 import { ReadAssetError } from "../errors/ReadAssetError.js";
@@ -7,21 +8,17 @@ import type {
   UpdateAssetInput,
 } from "../gql-server/types.generated.js";
 import { EntityManagerService } from "../services/index.js";
-import { createImage, mutateImages } from "./image.js";
+import { deleteDocument } from "./document.js";
+import { createImage, deleteImage, mutateImages } from "./image.js";
 import {
   mutateProofOfPurchase,
   updateProofOfPurchase,
 } from "./proofOfPurchase.js";
 import { Array, Effect, Option, pipe } from "effect";
-import type { FindOptionsRelations } from "typeorm";
 
-export const readAsset = (
+export const readAsset = <O extends AssetRelationOptions>(
   id: number,
-  {
-    relations,
-  }: {
-    relations?: FindOptionsRelations<Asset>;
-  } = {},
+  relations?: O,
 ) =>
   Effect.gen(function* () {
     const manager = yield* EntityManagerService;
@@ -34,7 +31,7 @@ export const readAsset = (
           },
           ...(relations && { relations }),
           ...(relations?.images && { order: { images: { position: "ASC" } } }),
-        }),
+        }) as Promise<Asset<O>>,
       catch: (cause) =>
         new ReadAssetError({
           message: "Unable to read asset",
@@ -43,11 +40,7 @@ export const readAsset = (
     });
   });
 
-export const readAssets = ({
-  relations,
-}: {
-  relations?: FindOptionsRelations<Asset>;
-} = {}) =>
+export const readAssets = <O extends AssetRelationOptions>(relations?: O) =>
   Effect.gen(function* () {
     const manager = yield* EntityManagerService;
 
@@ -56,7 +49,7 @@ export const readAssets = ({
         manager.find(AssetEntity, {
           ...(relations && { relations }),
           ...(relations?.images && { order: { images: { position: "ASC" } } }),
-        }),
+        }) as Promise<Asset<O>[]>,
       catch: (cause) =>
         new ReadAssetError({
           message: "Unable to read assets",
@@ -65,12 +58,14 @@ export const readAssets = ({
     });
   });
 
-const saveAsset = (input: Partial<Asset>) =>
+const saveAsset = <O extends AssetRelationOptions, A extends Partial<Asset<O>>>(
+  input: A,
+) =>
   Effect.gen(function* () {
     const manager = yield* EntityManagerService;
 
     return yield* Effect.tryPromise({
-      try: async () => (await manager.save(AssetEntity, input)) as Asset,
+      try: () => manager.save(AssetEntity, input) as Promise<A & Asset<O>>,
       catch: (cause) =>
         new SaveAssetError({
           message: "Failed to save asset",
@@ -106,7 +101,10 @@ export const createAsset = (input: CreateAssetInput) =>
     ),
   );
 
-export const updateAsset = (asset: Asset, input: UpdateAssetInput) =>
+export const updateAsset = (
+  asset: Asset<{ images: true; proofOfPurchase: true }>,
+  input: UpdateAssetInput,
+) =>
   pipe(
     Effect.gen(function* () {
       if (input.name != null) asset.name = input.name;
@@ -132,9 +130,14 @@ export const updateAsset = (asset: Asset, input: UpdateAssetInput) =>
     ),
   );
 
-export const deleteAsset = (input: Asset) =>
+export const deleteAsset = (
+  input: Asset<{ images: true; proofOfPurchase: true }>,
+) =>
   Effect.gen(function* () {
     const manager = yield* EntityManagerService;
+
+    if (input.proofOfPurchase) yield* deleteDocument(input.proofOfPurchase);
+    for (const image of input.images) yield* deleteImage(image)
 
     yield* Effect.tryPromise({
       try: async () => manager.remove(AssetEntity, input),

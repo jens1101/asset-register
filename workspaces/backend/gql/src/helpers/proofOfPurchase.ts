@@ -33,7 +33,7 @@ export const updateProofOfPurchase = (
     return asset;
   });
 
-const deleteProofOfPurchase = (asset: Asset, input: DeleteDocumentInput) =>
+const deleteProofOfPurchase = <A extends Asset>(asset: A, input: DeleteDocumentInput) =>
   Effect.gen(function* () {
     if (Number(input.id) !== asset.proofOfPurchase?.id) {
       return yield* new DeleteDocumentError({
