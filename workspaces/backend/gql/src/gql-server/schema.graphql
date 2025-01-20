@@ -126,5 +126,3 @@ input UpdateImageInput {
   name: String
   previousImageId: ID
 }
-
-scalar Void

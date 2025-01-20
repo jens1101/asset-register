@@ -37,7 +37,6 @@ export type Scalars = {
   Float: { input: number; output: number };
   TemporalInstant: { input: Temporal.Instant; output: Temporal.Instant };
   Uint8Array: { input: Uint8Array; output: Uint8Array };
-  Void: { input: void; output: void };
 };
 
 export type Asset = {
@@ -340,7 +339,6 @@ export type ResolversTypes = {
   UpdateAssetInput: UpdateAssetInput;
   UpdateDocumentInput: UpdateDocumentInput;
   UpdateImageInput: UpdateImageInput;
-  Void: ResolverTypeWrapper<Scalars["Void"]["output"]>;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
 };
 
@@ -372,7 +370,6 @@ export type ResolversParentTypes = {
   UpdateAssetInput: UpdateAssetInput;
   UpdateDocumentInput: UpdateDocumentInput;
   UpdateImageInput: UpdateImageInput;
-  Void: Scalars["Void"]["output"];
   Boolean: Scalars["Boolean"]["output"];
 };
 
@@ -567,11 +564,6 @@ export interface Uint8ArrayScalarConfig
   name: "Uint8Array";
 }
 
-export interface VoidScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes["Void"], any> {
-  name: "Void";
-}
-
 export type Resolvers<ContextType = any> = {
   Asset?: AssetResolvers<ContextType>;
   AssetError?: AssetErrorResolvers<ContextType>;
@@ -586,5 +578,4 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   TemporalInstant?: GraphQLScalarType;
   Uint8Array?: GraphQLScalarType;
-  Void?: GraphQLScalarType;
 };

@@ -13,9 +13,6 @@ const config: CodegenConfig = {
           strictScalars: true,
         },
         scalarsOverrides: {
-          Void: {
-            type: "void",
-          },
           TemporalInstant: {
             type: "Temporal.Instant",
           },

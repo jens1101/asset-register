@@ -9,7 +9,6 @@ import { asset as Query_asset } from "./asset/resolvers/Query/asset.js";
 import { assets as Query_assets } from "./asset/resolvers/Query/assets.js";
 import { TemporalInstant } from "./base/resolvers/TemporalInstant.js";
 import { Uint8Array } from "./base/resolvers/Uint8Array.js";
-import { Void } from "./base/resolvers/Void.js";
 import { Document } from "./document/resolvers/Document.js";
 import { File } from "./file/resolvers/File.js";
 import { Image } from "./image/resolvers/Image.js";
@@ -31,5 +30,4 @@ export const resolvers: Resolvers = {
   Image: Image,
   TemporalInstant: TemporalInstant,
   Uint8Array: Uint8Array,
-  Void: Void,
 };

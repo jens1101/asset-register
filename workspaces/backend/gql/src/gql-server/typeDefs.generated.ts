@@ -406,11 +406,6 @@ export const typeDefs = {
       directives: [],
     },
     {
-      kind: "ScalarTypeDefinition",
-      name: { kind: "Name", value: "Void" },
-      directives: [],
-    },
-    {
       kind: "InterfaceTypeDefinition",
       name: { kind: "Name", value: "Error" },
       interfaces: [],
