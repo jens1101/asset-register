@@ -1,5 +1,3 @@
-import type { TemporalInstantScalar } from "@app/common/scalars/TemporalInstant";
-import type { Uint8ArrayScalar } from "@app/common/scalars/Uint8Array";
 import type {
   GraphQLResolveInfo,
   GraphQLScalarType,
@@ -30,7 +28,6 @@ export type Incremental<T> =
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
   [P in K]-?: NonNullable<T[P]>;
 };
-
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string | number };
@@ -38,9 +35,8 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
-  TemporalInstant: { input: TemporalInstantScalar; output: Temporal.Instant };
-  Uint8Array: { input: Uint8ArrayScalar; output: Uint8Array };
-  Void: { input: void; output: void };
+  TemporalInstant: { input: Temporal.Instant; output: Temporal.Instant };
+  Uint8Array: { input: Uint8Array; output: Uint8Array };
 };
 
 export type Asset = {
@@ -60,6 +56,13 @@ export type AssetError = Error & {
 };
 
 export type AssetResponse = Asset | AssetError;
+
+export type Assets = {
+  __typename?: "Assets";
+  value: Array<Asset>;
+};
+
+export type AssetsResponse = AssetError | Assets;
 
 export type CreateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
@@ -125,13 +128,6 @@ export type Image = {
   updatedAt: Scalars["TemporalInstant"]["output"];
 };
 
-export type ImageError = Error & {
-  __typename?: "ImageError";
-  message: Scalars["String"]["output"];
-};
-
-export type ImageResponse = Image | ImageError;
-
 export type MutateDocumentInput =
   | { delete: DeleteDocumentInput; update?: never }
   | { delete?: never; update: UpdateDocumentInput };
@@ -144,7 +140,7 @@ export type MutateImageInput =
 export type Mutation = {
   __typename?: "Mutation";
   createAsset: AssetResponse;
-  deleteAsset?: Maybe<Scalars["Void"]["output"]>;
+  deleteAsset?: Maybe<AssetError>;
   updateAsset: AssetResponse;
 };
 
@@ -163,7 +159,7 @@ export type MutationupdateAssetArgs = {
 export type Query = {
   __typename?: "Query";
   asset: AssetResponse;
-  assets: Array<AssetResponse>;
+  assets: AssetsResponse;
 };
 
 export type QueryassetArgs = {
@@ -300,17 +296,15 @@ export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
   AssetResponse:
     | (Asset & { __typename: "Asset" })
     | (AssetError & { __typename: "AssetError" });
-  ImageResponse:
-    | (Image & { __typename: "Image" })
-    | (ImageError & { __typename: "ImageError" });
+  AssetsResponse:
+    | (AssetError & { __typename: "AssetError" })
+    | (Assets & { __typename: "Assets" });
 };
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
   {
-    Error:
-      | (AssetError & { __typename: "AssetError" })
-      | (ImageError & { __typename: "ImageError" });
+    Error: AssetError & { __typename: "AssetError" };
   };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -322,6 +316,10 @@ export type ResolversTypes = {
   AssetResponse: ResolverTypeWrapper<
     ResolversUnionTypes<ResolversTypes>["AssetResponse"]
   >;
+  Assets: ResolverTypeWrapper<Assets>;
+  AssetsResponse: ResolverTypeWrapper<
+    ResolversUnionTypes<ResolversTypes>["AssetsResponse"]
+  >;
   CreateAssetInput: CreateAssetInput;
   CreateDocumentInput: CreateDocumentInput;
   CreateFileInput: CreateFileInput;
@@ -332,10 +330,6 @@ export type ResolversTypes = {
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>["Error"]>;
   File: ResolverTypeWrapper<File>;
   Image: ResolverTypeWrapper<Image>;
-  ImageError: ResolverTypeWrapper<ImageError>;
-  ImageResponse: ResolverTypeWrapper<
-    ResolversUnionTypes<ResolversTypes>["ImageResponse"]
-  >;
   MutateDocumentInput: MutateDocumentInput;
   MutateImageInput: MutateImageInput;
   Mutation: ResolverTypeWrapper<{}>;
@@ -345,7 +339,6 @@ export type ResolversTypes = {
   UpdateAssetInput: UpdateAssetInput;
   UpdateDocumentInput: UpdateDocumentInput;
   UpdateImageInput: UpdateImageInput;
-  Void: ResolverTypeWrapper<Scalars["Void"]["output"]>;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
 };
 
@@ -356,6 +349,8 @@ export type ResolversParentTypes = {
   ID: Scalars["ID"]["output"];
   AssetError: AssetError;
   AssetResponse: ResolversUnionTypes<ResolversParentTypes>["AssetResponse"];
+  Assets: Assets;
+  AssetsResponse: ResolversUnionTypes<ResolversParentTypes>["AssetsResponse"];
   CreateAssetInput: CreateAssetInput;
   CreateDocumentInput: CreateDocumentInput;
   CreateFileInput: CreateFileInput;
@@ -366,8 +361,6 @@ export type ResolversParentTypes = {
   Error: ResolversInterfaceTypes<ResolversParentTypes>["Error"];
   File: File;
   Image: Image;
-  ImageError: ImageError;
-  ImageResponse: ResolversUnionTypes<ResolversParentTypes>["ImageResponse"];
   MutateDocumentInput: MutateDocumentInput;
   MutateImageInput: MutateImageInput;
   Mutation: {};
@@ -377,7 +370,6 @@ export type ResolversParentTypes = {
   UpdateAssetInput: UpdateAssetInput;
   UpdateDocumentInput: UpdateDocumentInput;
   UpdateImageInput: UpdateImageInput;
-  Void: Scalars["Void"]["output"];
   Boolean: Scalars["Boolean"]["output"];
 };
 
@@ -433,6 +425,27 @@ export type AssetResponseResolvers<
   >;
 };
 
+export type AssetsResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["Assets"] = ResolversParentTypes["Assets"],
+> = {
+  value?: Resolver<Array<ResolversTypes["Asset"]>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AssetsResponseResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["AssetsResponse"] = ResolversParentTypes["AssetsResponse"],
+> = {
+  __resolveType?: TypeResolveFn<
+    "AssetError" | "Assets",
+    ParentType,
+    ContextType
+  >;
+};
+
 export type DocumentResolvers<
   ContextType = any,
   ParentType extends
@@ -454,11 +467,7 @@ export type ErrorResolvers<
   ParentType extends
     ResolversParentTypes["Error"] = ResolversParentTypes["Error"],
 > = {
-  __resolveType?: TypeResolveFn<
-    "AssetError" | "ImageError",
-    ParentType,
-    ContextType
-  >;
+  __resolveType?: TypeResolveFn<"AssetError", ParentType, ContextType>;
   message?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
 };
 
@@ -506,27 +515,6 @@ export type ImageResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ImageErrorResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes["ImageError"] = ResolversParentTypes["ImageError"],
-> = {
-  message?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ImageResponseResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes["ImageResponse"] = ResolversParentTypes["ImageResponse"],
-> = {
-  __resolveType?: TypeResolveFn<
-    "Image" | "ImageError",
-    ParentType,
-    ContextType
-  >;
-};
-
 export type MutationResolvers<
   ContextType = any,
   ParentType extends
@@ -539,7 +527,7 @@ export type MutationResolvers<
     RequireFields<MutationcreateAssetArgs, "data">
   >;
   deleteAsset?: Resolver<
-    Maybe<ResolversTypes["Void"]>,
+    Maybe<ResolversTypes["AssetError"]>,
     ParentType,
     ContextType,
     RequireFields<MutationdeleteAssetArgs, "id">
@@ -563,11 +551,7 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryassetArgs, "id">
   >;
-  assets?: Resolver<
-    Array<ResolversTypes["AssetResponse"]>,
-    ParentType,
-    ContextType
-  >;
+  assets?: Resolver<ResolversTypes["AssetsResponse"], ParentType, ContextType>;
 };
 
 export interface TemporalInstantScalarConfig
@@ -580,24 +564,18 @@ export interface Uint8ArrayScalarConfig
   name: "Uint8Array";
 }
 
-export interface VoidScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes["Void"], any> {
-  name: "Void";
-}
-
 export type Resolvers<ContextType = any> = {
   Asset?: AssetResolvers<ContextType>;
   AssetError?: AssetErrorResolvers<ContextType>;
   AssetResponse?: AssetResponseResolvers<ContextType>;
+  Assets?: AssetsResolvers<ContextType>;
+  AssetsResponse?: AssetsResponseResolvers<ContextType>;
   Document?: DocumentResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
   File?: FileResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
-  ImageError?: ImageErrorResolvers<ContextType>;
-  ImageResponse?: ImageResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   TemporalInstant?: GraphQLScalarType;
   Uint8Array?: GraphQLScalarType;
-  Void?: GraphQLScalarType;
 };

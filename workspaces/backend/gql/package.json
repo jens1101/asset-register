@@ -39,7 +39,6 @@
     "graphql-ws": "^5.16.0",
     "graphql-yoga": "^5.8.0",
     "pg": "8.13.1",
-    "reflect-metadata": "^0.2.2",
     "retry": "^0.13.1",
     "temporal-polyfill": "0.2.5",
     "typeorm": "^0.3.20",

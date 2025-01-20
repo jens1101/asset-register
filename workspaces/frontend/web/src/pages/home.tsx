@@ -10,11 +10,10 @@ import {
 } from "solid-js";
 
 export const Home: Component<{ data: HomeData }> = (props) => {
-  const assets: Accessor<AssetFragment[]> = createMemo(
-    () =>
-      props.data()?.assets.filter((asset) => asset.__typename === "Asset") ??
-      [],
-  );
+  const assets: Accessor<AssetFragment[]> = createMemo(() => {
+    const result = props.data()?.assets;
+    return result?.__typename === "Assets" ? result.value : [];
+  });
 
   return (
     <section class={"container"}>

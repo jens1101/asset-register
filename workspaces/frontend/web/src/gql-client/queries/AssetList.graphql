@@ -1,7 +1,10 @@
 query AssetList {
   assets {
-    ... on Asset {
-      ...assetListItem
+    ... on Assets {
+      ...assets
+    }
+    ... on AssetError {
+      ...assetError
     }
   }
 }

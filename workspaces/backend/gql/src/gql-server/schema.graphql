@@ -14,6 +14,12 @@ type AssetError implements Error {
 
 union AssetResponse = Asset | AssetError
 
+type Assets {
+  value: [Asset!]!
+}
+
+union AssetsResponse = AssetError | Assets
+
 input CreateAssetInput {
   description: String
   images: [CreateImageInput!]
@@ -75,12 +81,6 @@ type Image {
   updatedAt: TemporalInstant!
 }
 
-type ImageError implements Error {
-  message: String!
-}
-
-union ImageResponse = Image | ImageError
-
 input MutateDocumentInput @oneOf {
   delete: DeleteDocumentInput
   update: UpdateDocumentInput
@@ -94,13 +94,13 @@ input MutateImageInput @oneOf {
 
 type Mutation {
   createAsset(data: CreateAssetInput!): AssetResponse!
-  deleteAsset(id: ID!): Void
+  deleteAsset(id: ID!): AssetError
   updateAsset(data: UpdateAssetInput!): AssetResponse!
 }
 
 type Query {
   asset(id: ID!): AssetResponse!
-  assets: [AssetResponse!]!
+  assets: AssetsResponse!
 }
 
 scalar TemporalInstant
@@ -126,5 +126,3 @@ input UpdateImageInput {
   name: String
   previousImageId: ID
 }
-
-scalar Void

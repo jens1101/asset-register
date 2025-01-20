@@ -16,23 +16,27 @@ import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-
 const documents = {
   "fragment asset on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  updatedAt\n  proofOfPurchase {\n    ...document\n  }\n  images {\n    ...image\n  }\n}":
     types.AssetFragmentDoc,
+  "fragment assetError on AssetError {\n  __typename\n  message\n}":
+    types.AssetErrorFragmentDoc,
   "fragment assetListItem on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  updatedAt\n  images {\n    ...image\n  }\n}":
     types.AssetListItemFragmentDoc,
+  "fragment assets on Assets {\n  __typename\n  value {\n    ...asset\n  }\n}":
+    types.AssetsFragmentDoc,
   "fragment document on Document {\n  __typename\n  id\n  file {\n    ...file\n  }\n  createdAt\n}":
     types.DocumentFragmentDoc,
   "fragment file on File {\n  __typename\n  id\n  buffer\n  filename\n  mimeType\n  createdAt\n}":
     types.FileFragmentDoc,
   "fragment image on Image {\n  __typename\n  id\n  name\n  description\n  file {\n    ...file\n  }\n  createdAt\n  updatedAt\n}":
     types.ImageFragmentDoc,
-  "mutation CreateAsset($data: CreateAssetInput!) {\n  createAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n  }\n}":
+  "mutation CreateAsset($data: CreateAssetInput!) {\n  createAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}":
     types.CreateAssetDocument,
-  "mutation DeleteAsset($id: ID!) {\n  deleteAsset(id: $id)\n}":
+  "mutation DeleteAsset($id: ID!) {\n  deleteAsset(id: $id) {\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}":
     types.DeleteAssetDocument,
-  "mutation UpdateAsset($data: UpdateAssetInput!) {\n  updateAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n  }\n}":
+  "mutation UpdateAsset($data: UpdateAssetInput!) {\n  updateAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}":
     types.UpdateAssetDocument,
-  "query Asset($id: ID!) {\n  asset(id: $id) {\n    ... on Asset {\n      ...asset\n    }\n  }\n}":
+  "query Asset($id: ID!) {\n  asset(id: $id) {\n    ... on Asset {\n      ...asset\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}":
     types.AssetDocument,
-  "query AssetList {\n  assets {\n    ... on Asset {\n      ...assetListItem\n    }\n  }\n}":
+  "query AssetList {\n  assets {\n    ... on Assets {\n      ...assets\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}":
     types.AssetListDocument,
 };
 
@@ -60,8 +64,20 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
+  source: "fragment assetError on AssetError {\n  __typename\n  message\n}",
+): (typeof documents)["fragment assetError on AssetError {\n  __typename\n  message\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
   source: "fragment assetListItem on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  updatedAt\n  images {\n    ...image\n  }\n}",
 ): (typeof documents)["fragment assetListItem on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  updatedAt\n  images {\n    ...image\n  }\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "fragment assets on Assets {\n  __typename\n  value {\n    ...asset\n  }\n}",
+): (typeof documents)["fragment assets on Assets {\n  __typename\n  value {\n    ...asset\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -84,32 +100,32 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "mutation CreateAsset($data: CreateAssetInput!) {\n  createAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n  }\n}",
-): (typeof documents)["mutation CreateAsset($data: CreateAssetInput!) {\n  createAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n  }\n}"];
+  source: "mutation CreateAsset($data: CreateAssetInput!) {\n  createAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}",
+): (typeof documents)["mutation CreateAsset($data: CreateAssetInput!) {\n  createAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "mutation DeleteAsset($id: ID!) {\n  deleteAsset(id: $id)\n}",
-): (typeof documents)["mutation DeleteAsset($id: ID!) {\n  deleteAsset(id: $id)\n}"];
+  source: "mutation DeleteAsset($id: ID!) {\n  deleteAsset(id: $id) {\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}",
+): (typeof documents)["mutation DeleteAsset($id: ID!) {\n  deleteAsset(id: $id) {\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "mutation UpdateAsset($data: UpdateAssetInput!) {\n  updateAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n  }\n}",
-): (typeof documents)["mutation UpdateAsset($data: UpdateAssetInput!) {\n  updateAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n  }\n}"];
+  source: "mutation UpdateAsset($data: UpdateAssetInput!) {\n  updateAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}",
+): (typeof documents)["mutation UpdateAsset($data: UpdateAssetInput!) {\n  updateAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "query Asset($id: ID!) {\n  asset(id: $id) {\n    ... on Asset {\n      ...asset\n    }\n  }\n}",
-): (typeof documents)["query Asset($id: ID!) {\n  asset(id: $id) {\n    ... on Asset {\n      ...asset\n    }\n  }\n}"];
+  source: "query Asset($id: ID!) {\n  asset(id: $id) {\n    ... on Asset {\n      ...asset\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}",
+): (typeof documents)["query Asset($id: ID!) {\n  asset(id: $id) {\n    ... on Asset {\n      ...asset\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "query AssetList {\n  assets {\n    ... on Asset {\n      ...assetListItem\n    }\n  }\n}",
-): (typeof documents)["query AssetList {\n  assets {\n    ... on Asset {\n      ...assetListItem\n    }\n  }\n}"];
+  source: "query AssetList {\n  assets {\n    ... on Assets {\n      ...assets\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}",
+): (typeof documents)["query AssetList {\n  assets {\n    ... on Assets {\n      ...assets\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

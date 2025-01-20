@@ -13,32 +13,16 @@ const config: CodegenConfig = {
           strictScalars: true,
         },
         scalarsOverrides: {
-          Void: {
-            type: "void",
-          },
           TemporalInstant: {
-            type: {
-              input: "TemporalInstantScalar",
-              output: "Temporal.Instant",
-            },
+            type: "Temporal.Instant",
           },
           Uint8Array: {
-            type: {
-              input: "Uint8ArrayScalar",
-              output: "Uint8Array",
-            },
+            type: "Uint8Array",
           },
         },
         add: {
           "./types.generated.ts": {
-            content: `
-              import type {
-                TemporalInstantScalar,
-              } from "@app/common/scalars/TemporalInstant";
-              import type {
-                Uint8ArrayScalar,
-              } from "@app/common/scalars/Uint8Array";
-              import type { Temporal } from "temporal-polyfill";`,
+            content: 'import type { Temporal } from "temporal-polyfill";',
           },
         },
       },

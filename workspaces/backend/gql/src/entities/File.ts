@@ -1,4 +1,4 @@
-import { EntityName } from "../enums/entity.js";
+import { EntityName } from "../enums/EntityName.js";
 import { TemporalInstantTransformer } from "./transformers.js";
 import type { Temporal } from "temporal-polyfill";
 import { EntitySchema } from "typeorm";

@@ -6,8 +6,6 @@ scalar TemporalInstant
 
 scalar Uint8Array
 
-scalar Void
-
 interface Error {
   message: String!
 }
