@@ -26,10 +26,10 @@ export const deleteAsset: NonNullable<
     Effect.as(null),
     Effect.catchAllCause((cause) =>
       pipe(
-        Effect.logError("Failed to update asset", cause),
+        Effect.logError("Failed to delete asset", cause),
         Effect.as({
           __typename: "AssetError",
-          message: "Failed to update asset",
+          message: "Failed to delete asset",
         } as ResolversTypes["AssetError"]),
       ),
     ),
