@@ -1,0 +1,6 @@
+fragment assets on Assets {
+  __typename
+  value {
+    ...asset
+  }
+}

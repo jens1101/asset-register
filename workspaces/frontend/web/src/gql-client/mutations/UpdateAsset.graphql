@@ -3,5 +3,8 @@ mutation UpdateAsset($data: UpdateAssetInput!) {
     ... on Asset {
       ...asset
     }
+    ... on AssetError {
+      ...assetError
+    }
   }
 }
