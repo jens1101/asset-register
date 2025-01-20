@@ -13,7 +13,6 @@ import { Void } from "./base/resolvers/Void.js";
 import { Document } from "./document/resolvers/Document.js";
 import { File } from "./file/resolvers/File.js";
 import { Image } from "./image/resolvers/Image.js";
-import { ImageError } from "./image/resolvers/ImageError.js";
 import type { Resolvers } from "./types.generated.js";
 
 export const resolvers: Resolvers = {
@@ -30,7 +29,6 @@ export const resolvers: Resolvers = {
   Document: Document,
   File: File,
   Image: Image,
-  ImageError: ImageError,
   TemporalInstant: TemporalInstant,
   Uint8Array: Uint8Array,
   Void: Void,

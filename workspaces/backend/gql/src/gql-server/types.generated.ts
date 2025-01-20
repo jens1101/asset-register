@@ -129,13 +129,6 @@ export type Image = {
   updatedAt: Scalars["TemporalInstant"]["output"];
 };
 
-export type ImageError = Error & {
-  __typename?: "ImageError";
-  message: Scalars["String"]["output"];
-};
-
-export type ImageResponse = Image | ImageError;
-
 export type MutateDocumentInput =
   | { delete: DeleteDocumentInput; update?: never }
   | { delete?: never; update: UpdateDocumentInput };
@@ -307,17 +300,12 @@ export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
   AssetsResponse:
     | (AssetError & { __typename: "AssetError" })
     | (Assets & { __typename: "Assets" });
-  ImageResponse:
-    | (Image & { __typename: "Image" })
-    | (ImageError & { __typename: "ImageError" });
 };
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
   {
-    Error:
-      | (AssetError & { __typename: "AssetError" })
-      | (ImageError & { __typename: "ImageError" });
+    Error: AssetError & { __typename: "AssetError" };
   };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -343,10 +331,6 @@ export type ResolversTypes = {
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>["Error"]>;
   File: ResolverTypeWrapper<File>;
   Image: ResolverTypeWrapper<Image>;
-  ImageError: ResolverTypeWrapper<ImageError>;
-  ImageResponse: ResolverTypeWrapper<
-    ResolversUnionTypes<ResolversTypes>["ImageResponse"]
-  >;
   MutateDocumentInput: MutateDocumentInput;
   MutateImageInput: MutateImageInput;
   Mutation: ResolverTypeWrapper<{}>;
@@ -379,8 +363,6 @@ export type ResolversParentTypes = {
   Error: ResolversInterfaceTypes<ResolversParentTypes>["Error"];
   File: File;
   Image: Image;
-  ImageError: ImageError;
-  ImageResponse: ResolversUnionTypes<ResolversParentTypes>["ImageResponse"];
   MutateDocumentInput: MutateDocumentInput;
   MutateImageInput: MutateImageInput;
   Mutation: {};
@@ -488,11 +470,7 @@ export type ErrorResolvers<
   ParentType extends
     ResolversParentTypes["Error"] = ResolversParentTypes["Error"],
 > = {
-  __resolveType?: TypeResolveFn<
-    "AssetError" | "ImageError",
-    ParentType,
-    ContextType
-  >;
+  __resolveType?: TypeResolveFn<"AssetError", ParentType, ContextType>;
   message?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
 };
 
@@ -538,27 +516,6 @@ export type ImageResolvers<
     ContextType
   >;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ImageErrorResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes["ImageError"] = ResolversParentTypes["ImageError"],
-> = {
-  message?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ImageResponseResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes["ImageResponse"] = ResolversParentTypes["ImageResponse"],
-> = {
-  __resolveType?: TypeResolveFn<
-    "Image" | "ImageError",
-    ParentType,
-    ContextType
-  >;
 };
 
 export type MutationResolvers<
@@ -625,8 +582,6 @@ export type Resolvers<ContextType = any> = {
   Error?: ErrorResolvers<ContextType>;
   File?: FileResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
-  ImageError?: ImageErrorResolvers<ContextType>;
-  ImageResponse?: ImageResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   TemporalInstant?: GraphQLScalarType;

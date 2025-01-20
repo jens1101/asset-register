@@ -817,38 +817,6 @@ export const typeDefs = {
       ],
     },
     {
-      kind: "UnionTypeDefinition",
-      name: { kind: "Name", value: "ImageResponse" },
-      directives: [],
-      types: [
-        { kind: "NamedType", name: { kind: "Name", value: "Image" } },
-        { kind: "NamedType", name: { kind: "Name", value: "ImageError" } },
-      ],
-    },
-    {
-      kind: "ObjectTypeDefinition",
-      name: { kind: "Name", value: "ImageError" },
-      interfaces: [
-        { kind: "NamedType", name: { kind: "Name", value: "Error" } },
-      ],
-      directives: [],
-      fields: [
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "message" },
-          arguments: [],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
-          },
-          directives: [],
-        },
-      ],
-    },
-    {
       kind: "ObjectTypeDefinition",
       name: { kind: "Name", value: "Image" },
       interfaces: [],

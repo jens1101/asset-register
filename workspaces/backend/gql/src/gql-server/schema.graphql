@@ -81,12 +81,6 @@ type Image {
   updatedAt: TemporalInstant!
 }
 
-type ImageError implements Error {
-  message: String!
-}
-
-union ImageResponse = Image | ImageError
-
 input MutateDocumentInput @oneOf {
   delete: DeleteDocumentInput
   update: UpdateDocumentInput
