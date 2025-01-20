@@ -16,5 +16,5 @@ type Asset {
 }
 
 type Assets {
-  values: [Asset!]!
+  value: [Asset!]!
 }

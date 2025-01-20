@@ -376,7 +376,7 @@ export const typeDefs = {
       fields: [
         {
           kind: "FieldDefinition",
-          name: { kind: "Name", value: "values" },
+          name: { kind: "Name", value: "value" },
           arguments: [],
           type: {
             kind: "NonNullType",

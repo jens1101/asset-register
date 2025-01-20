@@ -22,10 +22,10 @@ export const assets: NonNullable<QueryResolvers["assets"]> = async (
     Effect.provideService(DataSourceService, dataSource),
     Effect.scoped,
     Effect.andThen(
-      (values) =>
+      (value) =>
         ({
           __typename: "Assets",
-          values,
+          value,
         }) as ResolversTypes["AssetsResponse"],
     ),
     Effect.catchAllCause((cause) =>

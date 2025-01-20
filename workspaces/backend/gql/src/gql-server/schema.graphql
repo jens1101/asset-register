@@ -15,7 +15,7 @@ type AssetError implements Error {
 union AssetResponse = Asset | AssetError
 
 type Assets {
-  values: [Asset!]!
+  value: [Asset!]!
 }
 
 union AssetsResponse = AssetError | Assets

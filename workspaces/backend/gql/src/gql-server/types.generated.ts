@@ -60,7 +60,7 @@ export type AssetResponse = Asset | AssetError;
 
 export type Assets = {
   __typename?: "Assets";
-  values: Array<Asset>;
+  value: Array<Asset>;
 };
 
 export type AssetsResponse = AssetError | Assets;
@@ -433,7 +433,7 @@ export type AssetsResolvers<
   ParentType extends
     ResolversParentTypes["Assets"] = ResolversParentTypes["Assets"],
 > = {
-  values?: Resolver<Array<ResolversTypes["Asset"]>, ParentType, ContextType>;
+  value?: Resolver<Array<ResolversTypes["Asset"]>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
