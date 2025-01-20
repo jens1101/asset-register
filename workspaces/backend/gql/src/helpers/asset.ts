@@ -84,6 +84,7 @@ export const createAsset = (input: CreateAssetInput) =>
     saveAsset({
       name: input.name,
       description: input.description,
+      images: [],
     }),
     Effect.andThen((asset) =>
       Option.match(Option.fromNullable(input.proofOfPurchase), {
