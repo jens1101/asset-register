@@ -3,6 +3,8 @@ import type { ImageFragment } from "../../gql-client/types/graphql.js";
 import { CarouselSlide } from "./CarouselSlide.jsx";
 import "./styles.scss";
 import { Carousel as BootstrapCarousel } from "bootstrap";
+import PreviousIcon from "bootstrap-icons/icons/chevron-compact-left.svg";
+import NextIcon from "bootstrap-icons/icons/chevron-compact-right.svg";
 import {
   type Accessor,
   type Component,
@@ -80,26 +82,26 @@ export const Carousel: Component<
         </div>
 
         <button
-          class={"carousel-control-prev drop-shadow-1 opacity-100"}
+          class={"carousel-control-prev drop-shadow-1 fs-2"}
           classList={{
             "d-none": currentIndex() <= 0,
           }}
           type={"button"}
           onClick={() => carouselInstance()?.prev()}
         >
-          <span class={"carousel-control-prev-icon"} aria-hidden="true" />
+          <PreviousIcon aria-hidden="true" />
           <span class={"visually-hidden"}>Previous</span>
         </button>
 
         <button
-          class={"carousel-control-next drop-shadow-1 opacity-100"}
+          class={"carousel-control-next drop-shadow-1 fs-2"}
           classList={{
             "d-none": currentIndex() >= props.images.length - 1,
           }}
           type={"button"}
           onClick={() => carouselInstance()?.next()}
         >
-          <span class={"carousel-control-next-icon"} aria-hidden={"true"} />
+          <NextIcon aria-hidden="true" />
           <span class={"visually-hidden"}>Next</span>
         </button>
       </div>

@@ -1,41 +1,15 @@
 @use "variables";
+@use "bootstrap";
+@use "common";
 
-@layer bootstrap;
-@import url("bootstrap/scss/bootstrap.scss") layer(bootstrap);
+@include bootstrap.bootstrap-layer;
 
 :root {
   --bg-blur: #{variables.$bg-blur};
 }
 
-@for $i from 1 through 3 {
-  .text-line-clamp-#{$i} {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: $i;
-    line-clamp: $i;
-    overflow: hidden;
-  }
-}
-
-.text-shadow-1 {
-  text-shadow:
-    rgba(var(--bs-black-rgb), variables.$shadow-umbra-opacity) 0px 3px 5px,
-    rgba(var(--bs-black-rgb), variables.$shadow-penumbra-opacity) 0px 6px 10px,
-    rgba(var(--bs-black-rgb), variables.$shadow-ambient-opacity) 0px 1px 18px;
-}
-
-.drop-shadow-1 {
-  filter: drop-shadow(
-      rgba(var(--bs-black-rgb), variables.$shadow-umbra-opacity) 0px 3px 5px
-    )
-    drop-shadow(
-      rgba(var(--bs-black-rgb), variables.$shadow-penumbra-opacity) 0px 6px 10px
-    )
-    drop-shadow(
-      rgba(var(--bs-black-rgb), variables.$shadow-ambient-opacity) 0px 1px 18px
-    );
-}
-
-.bg-blur {
-  backdrop-filter: blur(var(--bg-blur));
+// Sets the default icon size to match the current text size
+.bi {
+  width: 1em;
+  height: 1em;
 }

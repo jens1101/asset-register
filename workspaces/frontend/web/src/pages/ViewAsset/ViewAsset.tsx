@@ -1,5 +1,6 @@
 import { defaultDateTimeFormatter } from "../../common/utils.js";
 import { Carousel } from "../../components/Carousel/Carousel.jsx";
+import { DropdownCaret } from "../../components/Dropdown/DropdownCaret.jsx";
 import { client } from "../../gql-client/client.js";
 import {
   DeleteAssetDocument,
@@ -12,11 +13,12 @@ import { useObjectUrl } from "../../hooks/useObjectUrl.js";
 import type { AssetData } from "../asset.data.js";
 import "./styles.scss";
 import { useNavigate } from "@solidjs/router";
+import OptionsIcon from "bootstrap-icons/icons/gear-fill.svg";
 import { Option, pipe } from "effect";
 import { type Component, Show, Suspense } from "solid-js";
 
 export const ViewAsset: Component<{ data: AssetData }> = (props) => {
-  const { dropdownToggleRef } = useDropdown();
+  const { dropdownToggleRef, isVisible } = useDropdown();
   const { showPromptModal } = useModal();
   const navigate = useNavigate();
 
@@ -79,11 +81,18 @@ export const ViewAsset: Component<{ data: AssetData }> = (props) => {
                   <h1 class={"flex-grow-1"}>{asset.name}</h1>
                   <div class={"dropdown"}>
                     <button
-                      class={"btn btn-secondary dropdown-toggle"}
+                      class={"btn btn-secondary"}
                       type={"button"}
                       ref={dropdownToggleRef}
                     >
-                      Options
+                      <OptionsIcon
+                        class={"bi options-icon"}
+                        classList={{ active: isVisible() }}
+                        aria-hidden="true"
+                      />
+                      <span class={"visually-hidden"}>Options</span>
+
+                      <DropdownCaret active={isVisible()} class="ms-2" />
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                       <li>

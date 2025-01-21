@@ -1,0 +1,17 @@
+@use "sass:meta";
+
+// This is a re-implementation of the main `bootstrap.scss` file, but the actual
+// CSS content is renderd in a layer via a mixin. This controls exactly where
+// the CSS content is rendered and also controls specificity.
+
+@mixin bootstrap-layer {
+  @layer bootstrap {
+    @include meta.load-css("bootstrap/scss/bootstrap");
+  }
+}
+
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";

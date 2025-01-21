@@ -1,0 +1,35 @@
+@use "variables";
+@use "sass:map";
+
+@for $i from 1 through 3 {
+  .text-line-clamp-#{$i} {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: $i;
+    line-clamp: $i;
+    overflow: hidden;
+  }
+}
+
+.text-shadow-1 {
+  text-shadow:
+    rgba(var(--bs-black-rgb), variables.$shadow-umbra-opacity) 0px 3px 5px,
+    rgba(var(--bs-black-rgb), variables.$shadow-penumbra-opacity) 0px 6px 10px,
+    rgba(var(--bs-black-rgb), variables.$shadow-ambient-opacity) 0px 1px 18px;
+}
+
+.drop-shadow-1 {
+  filter: drop-shadow(
+      rgba(var(--bs-black-rgb), variables.$shadow-umbra-opacity) 0px 3px 5px
+    )
+    drop-shadow(
+      rgba(var(--bs-black-rgb), variables.$shadow-penumbra-opacity) 0px 6px 10px
+    )
+    drop-shadow(
+      rgba(var(--bs-black-rgb), variables.$shadow-ambient-opacity) 0px 1px 18px
+    );
+}
+
+.bg-blur {
+  backdrop-filter: blur(var(--bg-blur));
+}
