@@ -1,4 +1,6 @@
-@use "bootstrap";
+@use "../../styles/bootstrap";
+@use "../../styles/variables";
+@use "sass:map";
 
 .carousel__view-asset {
   height: 350px;
@@ -11,4 +13,14 @@
     max-height: 500px;
     aspect-ratio: 16/9;
   }
+}
+
+.options-icon {
+  transition: transform map.get(variables.$animation-duration, "standard")
+    ease-in-out;
+  transform: rotate(0deg);
+}
+
+.options-icon.active {
+  transform: rotate(45deg);
 }

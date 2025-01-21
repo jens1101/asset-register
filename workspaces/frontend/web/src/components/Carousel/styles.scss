@@ -5,3 +5,9 @@
 .carousel-indicators [data-bs-target] {
   background-color: var(--bs-white);
 }
+
+.carousel-control-prev,
+.carousel-control-next {
+  opacity: 1;
+  color: var(--bs-white);
+}
