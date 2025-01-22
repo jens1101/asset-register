@@ -3,6 +3,7 @@ type Asset {
   description: String
   id: ID!
   images: [Image!]!
+  mainImage: Image
   name: String!
   proofOfPurchase: Document
   updatedAt: TemporalInstant!

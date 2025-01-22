@@ -12,6 +12,26 @@ import { deleteFile, saveFile } from "./file.js";
 import { Decimal } from "decimal.js";
 import { Array, Effect, Option, pipe } from "effect";
 
+export const readMainImage = (assetId: number) =>
+  pipe(
+    EntityManagerService,
+    Effect.andThen((manager) =>
+      Effect.promise(() =>
+        manager.findOne(ImageEntity, {
+          where: {
+            asset: {
+              id: assetId,
+            },
+          },
+          order: {
+            position: "ASC",
+          },
+        }),
+      ),
+    ),
+    Effect.map((mainImage) => Option.fromNullable(mainImage)),
+  );
+
 export const mutateImages = (asset: Asset, inputs: MutateImageInput[]) =>
   Effect.reduce(inputs, asset, (asset, input) =>
     Effect.gen(function* () {
