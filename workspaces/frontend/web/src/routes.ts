@@ -1,6 +1,10 @@
-import { type AssetData, loadAsset } from "./pages/asset.data.js";
-import { type HomeData, loadHome } from "./pages/home.data.js";
-import { Home } from "./pages/home.js";
+import {
+  type AssetListResource,
+  type AssetResource,
+  loadAsset,
+  loadAssetList,
+} from "./data/index.js";
+import { Home } from "./pages/Home.jsx";
 import type { RouteDefinition } from "@solidjs/router";
 import { lazy } from "solid-js";
 
@@ -12,8 +16,8 @@ export const routes: RouteDefinition<string | string[], any>[] = [
   {
     path: "/",
     component: Home,
-    preload: loadHome,
-  } satisfies RouteDefinition<string, HomeData>,
+    preload: loadAssetList,
+  } satisfies RouteDefinition<string, AssetListResource>,
   {
     path: "/asset/create",
     component: lazy(async () => ({
@@ -26,14 +30,14 @@ export const routes: RouteDefinition<string | string[], any>[] = [
       default: (await import("./pages/ViewAsset/ViewAsset.jsx")).ViewAsset,
     })),
     preload: loadAsset,
-  } satisfies RouteDefinition<string, AssetData>,
+  } satisfies RouteDefinition<string, AssetResource>,
   {
     path: "/asset/:id/edit",
     component: lazy(async () => ({
       default: (await import("./pages/EditAsset.jsx")).EditAsset,
     })),
     preload: loadAsset,
-  } satisfies RouteDefinition<string, AssetData>,
+  } satisfies RouteDefinition<string, AssetResource>,
   {
     path: "**",
     component: lazy(async () => ({
