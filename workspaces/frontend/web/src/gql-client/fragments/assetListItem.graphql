@@ -3,10 +3,7 @@ fragment assetListItem on Asset {
   id
   name
   description
-  createdAt
-  updatedAt
-  # TODO: use main/thumbnail image when that's implemented
-  images {
+  mainImage {
     ...image
   }
 }

@@ -1,6 +1,6 @@
 import { AssetListItem } from "../components/AssetListItem/AssetListItem.jsx";
-import type { AssetFragment } from "../gql-client/types/graphql.js";
-import type { HomeData } from "./home.data.js";
+import type { AssetListResource } from "../data/index.js";
+import type { AssetListItemFragment } from "../gql-client/types/graphql.js";
 import {
   type Accessor,
   type Component,
@@ -9,8 +9,8 @@ import {
   createMemo,
 } from "solid-js";
 
-export const Home: Component<{ data: HomeData }> = (props) => {
-  const assets: Accessor<AssetFragment[]> = createMemo(() => {
+export const Home: Component<{ data: AssetListResource }> = (props) => {
+  const assets: Accessor<AssetListItemFragment[]> = createMemo(() => {
     const result = props.data()?.assets;
     return result?.__typename === "Assets" ? result.value : [];
   });

@@ -45,6 +45,7 @@ export type Asset = {
   description?: Maybe<Scalars["String"]["output"]>;
   id: Scalars["ID"]["output"];
   images: Array<Image>;
+  mainImage?: Maybe<Image>;
   name: Scalars["String"]["output"];
   proofOfPurchase?: Maybe<Document>;
   updatedAt: Scalars["TemporalInstant"]["output"];
@@ -390,6 +391,7 @@ export type AssetResolvers<
   >;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   images?: Resolver<Array<ResolversTypes["Image"]>, ParentType, ContextType>;
+  mainImage?: Resolver<Maybe<ResolversTypes["Image"]>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
   proofOfPurchase?: Resolver<
     Maybe<ResolversTypes["Document"]>,

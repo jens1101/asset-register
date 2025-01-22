@@ -313,6 +313,13 @@ export const typeDefs = {
         },
         {
           kind: "FieldDefinition",
+          name: { kind: "Name", value: "mainImage" },
+          arguments: [],
+          type: { kind: "NamedType", name: { kind: "Name", value: "Image" } },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
           name: { kind: "Name", value: "images" },
           arguments: [],
           type: {

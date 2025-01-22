@@ -1,5 +1,6 @@
 import { FileEquivalence } from "../common/utils.js";
 import { AssetForm } from "../components/AssetForm/AssetForm.jsx";
+import type { AssetResource } from "../data/index.js";
 import { client } from "../gql-client/client.js";
 import {
   type AssetFragment,
@@ -14,7 +15,6 @@ import {
 } from "../gql-client/types/graphql.js";
 import type { AssetFormValues } from "../schemas/AssetFormValues.js";
 import { CreateFileInputFromFile } from "../schemas/CreateFileInput.js";
-import type { AssetData } from "./asset.data.js";
 import { useNavigate } from "@solidjs/router";
 import { Effect, Exit, Option, Schema, pipe } from "effect";
 import { isNonEmptyArray } from "effect/Array";
@@ -171,7 +171,7 @@ const getImagesInput = (
     return Option.filter(Option.some(inputs), isNonEmptyArray);
   });
 
-export const EditAsset: Component<{ data: AssetData }> = (props) => {
+export const EditAsset: Component<{ data: AssetResource }> = (props) => {
   const initialAsset: Accessor<Option.Option<AssetFragment>> = () =>
     Option.fromNullable(props.data()?.asset).pipe(
       Option.filter((data) => data.__typename === "Asset"),

@@ -9,6 +9,7 @@ type Asset {
   id: ID!
   name: String!
   description: String
+  mainImage: Image
   images: [Image!]!
   proofOfPurchase: Document
   createdAt: TemporalInstant!

@@ -1,6 +1,7 @@
 import { defaultDateTimeFormatter } from "../../common/utils.js";
 import { Carousel } from "../../components/Carousel/Carousel.jsx";
 import { DropdownCaret } from "../../components/Dropdown/DropdownCaret.jsx";
+import type { AssetResource } from "../../data/index.js";
 import { client } from "../../gql-client/client.js";
 import {
   DeleteAssetDocument,
@@ -10,14 +11,13 @@ import {
 import { useDropdown } from "../../hooks/useDropdown.js";
 import { useModal } from "../../hooks/useModal.jsx";
 import { useObjectUrl } from "../../hooks/useObjectUrl.js";
-import type { AssetData } from "../asset.data.js";
 import "./styles.scss";
 import { useNavigate } from "@solidjs/router";
 import OptionsIcon from "bootstrap-icons/icons/gear-fill.svg";
 import { Option, pipe } from "effect";
 import { type Component, Show, Suspense } from "solid-js";
 
-export const ViewAsset: Component<{ data: AssetData }> = (props) => {
+export const ViewAsset: Component<{ data: AssetResource }> = (props) => {
   const { dropdownToggleRef, isVisible } = useDropdown();
   const { showPromptModal } = useModal();
   const navigate = useNavigate();

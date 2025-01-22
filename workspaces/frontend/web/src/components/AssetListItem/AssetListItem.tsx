@@ -11,7 +11,7 @@ export const AssetListItem: Component<{ asset: AssetListItemFragment }> = (
   props,
 ) => {
   const objectUrl: Accessor<string | undefined> = () => {
-    const image: FileFragment | undefined = props.asset.images[0]?.file;
+    const image: FileFragment | undefined = props.asset.mainImage?.file;
     return image ? useObjectUrl(image) : undefined;
   };
 

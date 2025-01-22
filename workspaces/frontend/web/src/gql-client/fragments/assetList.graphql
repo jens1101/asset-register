@@ -1,0 +1,6 @@
+fragment assetList on Assets {
+  __typename
+  value {
+    ...assetListItem
+  }
+}
