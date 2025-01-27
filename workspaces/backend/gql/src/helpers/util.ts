@@ -13,7 +13,6 @@ export const entityManagerWapper = <A, E, R, B = never>({
   onError,
 }: {
   evaluate: (manager: EntityManager) => PromiseLike<A>;
-  // TODO: somehow default this to an Effect.die. Maybe use a function overload
   onError: (error: unknown) => Effect.Effect<B, E, R>;
 }) =>
   pipe(
