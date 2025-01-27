@@ -1,10 +1,7 @@
-import { dataSource } from "../../../../dataSource.js";
-import { readAsset } from "../../../../helpers/index.js";
+import { ErrorTags } from "../../../../enums/ErrorTags.js";
+import { readAsset } from "../../../../helpers/asset.js";
+import { resolverWrapper } from "../../../../helpers/util.js";
 import { withTransaction } from "../../../../scopes/index.js";
-import {
-  DataSourceService,
-  EntityManagerService,
-} from "../../../../services/index.js";
 import type {
   QueryResolvers,
   ResolversTypes,
@@ -15,31 +12,27 @@ export const asset: NonNullable<QueryResolvers["asset"]> = async (
   _parent,
   { id },
   _ctx,
-) => {
-  const program = pipe(
-    readAsset(Number(id), {
-      relations: { images: true, proofOfPurchase: true },
-    }),
-    Effect.provideServiceEffect(EntityManagerService, withTransaction),
-    Effect.provideService(DataSourceService, dataSource),
-    Effect.scoped,
-    Effect.andThen(
-      (asset) =>
-        ({
-          ...asset,
-          __typename: "Asset",
-        }) as ResolversTypes["AssetResponse"],
-    ),
-    Effect.catchAllCause((cause) =>
-      pipe(
-        Effect.logError("Failed to read asset", cause),
-        Effect.as({
-          __typename: "AssetError",
-          message: "Failed to read asset",
-        } as ResolversTypes["AssetResponse"]),
+) =>
+  resolverWrapper(
+    pipe(
+      readAsset({ where: { id: Number(id) } }),
+      withTransaction,
+      Effect.andThen(
+        (asset) =>
+          ({
+            ...asset,
+            __typename: "Asset",
+          }) as ResolversTypes["AssetResponse"],
+      ),
+      Effect.catchTag(ErrorTags.ReadAsset, (error) =>
+        pipe(
+          Effect.logWarning(error),
+          Effect.as({
+            __typename: "AssetError",
+            message: "Asset not found",
+          } as ResolversTypes["AssetResponse"]),
+        ),
       ),
     ),
+    "Failed to read asset",
   );
-
-  return Effect.runPromise(program);
-};

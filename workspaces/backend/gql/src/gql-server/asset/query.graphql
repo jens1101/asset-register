@@ -1,4 +1,4 @@
 extend type Query {
   asset(id: ID!): AssetResponse!
-  assets: AssetsResponse!
+  assets: [Asset!]!
 }

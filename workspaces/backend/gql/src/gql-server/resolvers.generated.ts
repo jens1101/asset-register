@@ -1,7 +1,6 @@
 /* This file was automatically generated. DO NOT UPDATE MANUALLY. */
 import { Asset } from "./asset/resolvers/Asset.js";
 import { AssetError } from "./asset/resolvers/AssetError.js";
-import { Assets } from "./asset/resolvers/Assets.js";
 import { createAsset as Mutation_createAsset } from "./asset/resolvers/Mutation/createAsset.js";
 import { deleteAsset as Mutation_deleteAsset } from "./asset/resolvers/Mutation/deleteAsset.js";
 import { updateAsset as Mutation_updateAsset } from "./asset/resolvers/Mutation/updateAsset.js";
@@ -24,7 +23,6 @@ export const resolvers: Resolvers = {
 
   Asset: Asset,
   AssetError: AssetError,
-  Assets: Assets,
   Document: Document,
   File: File,
   Image: Image,

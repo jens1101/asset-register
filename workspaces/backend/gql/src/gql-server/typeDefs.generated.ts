@@ -224,8 +224,14 @@ export const typeDefs = {
           type: {
             kind: "NonNullType",
             type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "AssetsResponse" },
+              kind: "ListType",
+              type: {
+                kind: "NonNullType",
+                type: {
+                  kind: "NamedType",
+                  name: { kind: "Name", value: "Asset" },
+                },
+              },
             },
           },
           directives: [],
@@ -240,15 +246,6 @@ export const typeDefs = {
       directives: [],
       types: [
         { kind: "NamedType", name: { kind: "Name", value: "Asset" } },
-        { kind: "NamedType", name: { kind: "Name", value: "AssetError" } },
-      ],
-    },
-    {
-      kind: "UnionTypeDefinition",
-      name: { kind: "Name", value: "AssetsResponse" },
-      directives: [],
-      types: [
-        { kind: "NamedType", name: { kind: "Name", value: "Assets" } },
         { kind: "NamedType", name: { kind: "Name", value: "AssetError" } },
       ],
     },
@@ -369,33 +366,6 @@ export const typeDefs = {
             type: {
               kind: "NamedType",
               name: { kind: "Name", value: "TemporalInstant" },
-            },
-          },
-          directives: [],
-        },
-      ],
-    },
-    {
-      kind: "ObjectTypeDefinition",
-      name: { kind: "Name", value: "Assets" },
-      interfaces: [],
-      directives: [],
-      fields: [
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "value" },
-          arguments: [],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "ListType",
-              type: {
-                kind: "NonNullType",
-                type: {
-                  kind: "NamedType",
-                  name: { kind: "Name", value: "Asset" },
-                },
-              },
             },
           },
           directives: [],

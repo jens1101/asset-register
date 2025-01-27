@@ -1,36 +1,44 @@
 import { type Asset, type Image, ImageEntity } from "../entities/index.js";
-import { DeleteImageError } from "../errors/DeleteImageError.js";
 import { ImageNotFoundError } from "../errors/ImageNotFoundError.js";
-import { SaveImageError } from "../errors/SaveImageError.js";
 import type {
   CreateImageInput,
   MutateImageInput,
   UpdateImageInput,
 } from "../gql-server/types.generated.js";
-import { EntityManagerService } from "../services/index.js";
 import { deleteFile, saveFile } from "./file.js";
+import { entityManagerWapper } from "./util.js";
 import { Decimal } from "decimal.js";
 import { Array, Effect, Option, pipe } from "effect";
+import type { FindOptionsRelations, FindOptionsWhere } from "typeorm";
 
-export const readMainImage = (assetId: number) =>
+export const readMainImage = ({ where }: { where: FindOptionsWhere<Image> }) =>
   pipe(
-    EntityManagerService,
-    Effect.andThen((manager) =>
-      Effect.promise(() =>
+    entityManagerWapper({
+      evaluate: (manager) =>
         manager.findOne(ImageEntity, {
-          where: {
-            asset: {
-              id: assetId,
-            },
-          },
-          order: {
-            position: "ASC",
-          },
+          where,
+          order: { position: "ASC" },
         }),
-      ),
-    ),
-    Effect.map((mainImage) => Option.fromNullable(mainImage)),
+      onError: (error) => Effect.die(error),
+    }),
+    Effect.map(Option.fromNullable),
   );
+
+export const readImages = ({
+  where,
+  relations,
+}: {
+  where: FindOptionsWhere<Image>;
+  relations?: FindOptionsRelations<Image>;
+}) =>
+  entityManagerWapper({
+    evaluate: (manager) =>
+      manager.find(ImageEntity, {
+        where,
+        ...(relations && { relations }),
+      }),
+    onError: (error) => Effect.die(error),
+  });
 
 export const mutateImages = (asset: Asset, inputs: MutateImageInput[]) =>
   Effect.reduce(inputs, asset, (asset, input) =>
@@ -47,33 +55,15 @@ export const mutateImages = (asset: Asset, inputs: MutateImageInput[]) =>
   );
 
 const saveImage = (input: Partial<Image>) =>
-  Effect.gen(function* () {
-    const manager = yield* EntityManagerService;
-
-    return yield* Effect.tryPromise({
-      try: async () => (await manager.save(ImageEntity, input)) as Image,
-      catch: (cause) =>
-        new SaveImageError({
-          message: "Failed to save document",
-          options: { cause, input },
-        }),
-    });
+  entityManagerWapper({
+    evaluate: (manager) => manager.save(ImageEntity, input) as Promise<Image>,
+    onError: (error) => Effect.die(error),
   });
 
 const deleteImage = (input: Image) =>
-  Effect.gen(function* () {
-    const manager = yield* EntityManagerService;
-
-    yield* Effect.tryPromise({
-      try: async () => manager.remove(ImageEntity, input),
-      catch: (cause) =>
-        new DeleteImageError({
-          message: "Failed to delete image",
-          options: { cause, input },
-        }),
-    });
-
-    yield* deleteFile(input.file);
+  entityManagerWapper({
+    evaluate: (manager) => manager.remove(ImageEntity, input),
+    onError: (error) => Effect.die(error),
   });
 
 export const createImage = (asset: Asset, input: CreateImageInput) =>
@@ -110,7 +100,10 @@ const updateImage = (asset: Asset, input: UpdateImageInput) =>
     if (input.previousImageId || input.previousImageId === null) {
       image.position = yield* getNewImagePosition(
         asset.images,
-        Option.filter(Option.some(Number(input.previousImageId)), Number.isNaN),
+        Option.filter(
+          Option.some(Number(input.previousImageId)),
+          (value) => !Number.isNaN(value),
+        ),
       );
 
       asset.images.sort((a, b) => a.position.comparedTo(b.position));

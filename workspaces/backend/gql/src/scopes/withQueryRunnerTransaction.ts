@@ -1,29 +1,32 @@
 import { QueryRunnerService } from "../services/index.js";
-import { Effect, Exit } from "effect";
+import { Effect, Exit, pipe } from "effect";
 
 export const withQueryRunnerTransaction = Effect.acquireRelease(
-  Effect.gen(function* () {
-    const queryRunner = yield* QueryRunnerService;
-
-    yield* Effect.tryPromise({
-      try: () => queryRunner.startTransaction(),
-      // TODO: error handling
-      catch: (error) => new Error(String(error)),
-    });
-
-    return queryRunner;
-  }),
+  pipe(
+    QueryRunnerService,
+    Effect.andThen((queryRunner) =>
+      Effect.tryPromise(async () => {
+        await queryRunner.startTransaction();
+        return queryRunner;
+      }),
+    ),
+    Effect.orDieWith(
+      (error) => new Error("Failed to start transaction", { cause: error }),
+    ),
+  ),
   (queryRunner, exit) =>
     Exit.matchEffect(exit, {
       onSuccess: () =>
-        Effect.orElse(
-          Effect.tryPromise(async () => queryRunner.commitTransaction()),
-          Effect.log,
+        Effect.orDieWith(
+          Effect.tryPromise(() => queryRunner.commitTransaction()),
+          (error) =>
+            new Error("Failed to commit transaction", { cause: error }),
         ),
       onFailure: () =>
-        Effect.orElse(
-          Effect.tryPromise(async () => queryRunner.rollbackTransaction()),
-          Effect.log,
+        Effect.orDieWith(
+          Effect.tryPromise(() => queryRunner.rollbackTransaction()),
+          (error) =>
+            new Error("Failed to roll back transaction", { cause: error }),
         ),
     }),
 );

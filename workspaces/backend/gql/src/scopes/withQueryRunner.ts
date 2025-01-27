@@ -1,23 +1,23 @@
 import { DataSourceService } from "../services/index.js";
-import { Effect } from "effect";
+import { Effect, pipe } from "effect";
 
 export const withQueryRunner = Effect.acquireRelease(
-  Effect.gen(function* () {
-    const dataSource = yield* DataSourceService;
-
-    return yield* Effect.tryPromise({
-      async try() {
+  pipe(
+    DataSourceService,
+    Effect.andThen((dataSource) =>
+      Effect.tryPromise(async () => {
         const queryRunner = dataSource.createQueryRunner();
         await queryRunner.connect();
         return queryRunner;
-      },
-      // TODO: error handling
-      catch: (error) => new Error(String(error)),
-    });
-  }),
+      }),
+    ),
+    Effect.orDieWith(
+      (error) => new Error("Failed to acquire query runner", { cause: error }),
+    ),
+  ),
   (queryRunner) =>
-    Effect.orElse(
-      Effect.tryPromise(async () => queryRunner.release()),
-      Effect.log,
+    Effect.orDieWith(
+      Effect.tryPromise(() => queryRunner.release()),
+      (error) => new Error("Failed to release query runner", { cause: error }),
     ),
 );
