@@ -3,6 +3,4 @@ export const enum ErrorTags {
   DeleteDocument = "DeleteDocumentError",
   ImageNotFound = "ImageNotFoundError",
   ReadAsset = "ReadAssetError",
-  ReadDocument = "ReadDocumentError",
-  ReadImage = "ReadImageError",
 }

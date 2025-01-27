@@ -1,36 +1,15 @@
 import { type Asset, type Image, ImageEntity } from "../entities/index.js";
 import { ImageNotFoundError } from "../errors/ImageNotFoundError.js";
-import { ReadImageError } from "../errors/ReadImageError.js";
 import type {
   CreateImageInput,
   MutateImageInput,
   UpdateImageInput,
 } from "../gql-server/types.generated.js";
 import { deleteFile, saveFile } from "./file.js";
-import { entityManagerWapper, findOneOrFailWrapper } from "./util.js";
+import { entityManagerWapper } from "./util.js";
 import { Decimal } from "decimal.js";
 import { Array, Effect, Option, pipe } from "effect";
 import type { FindOptionsRelations, FindOptionsWhere } from "typeorm";
-
-export const readImage = ({
-  where,
-  relations,
-}: {
-  where: FindOptionsWhere<Image>;
-  relations?: FindOptionsRelations<Image>;
-}) =>
-  findOneOrFailWrapper({
-    evaluate: (manager) =>
-      manager.findOneOrFail(ImageEntity, {
-        where,
-        ...(relations && { relations }),
-      }),
-    onError: (cause) =>
-      new ReadImageError({
-        message: "Unable to read image",
-        options: { cause },
-      }),
-  });
 
 export const readMainImage = ({ where }: { where: FindOptionsWhere<Image> }) =>
   pipe(
