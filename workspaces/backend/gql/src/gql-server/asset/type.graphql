@@ -1,5 +1,4 @@
 union AssetResponse = Asset | AssetError
-union AssetsResponse = Assets | AssetError
 
 type AssetError implements Error {
   message: String!
@@ -14,8 +13,4 @@ type Asset {
   proofOfPurchase: Document
   createdAt: TemporalInstant!
   updatedAt: TemporalInstant!
-}
-
-type Assets {
-  value: [Asset!]!
 }

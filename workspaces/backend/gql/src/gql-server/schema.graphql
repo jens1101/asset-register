@@ -15,12 +15,6 @@ type AssetError implements Error {
 
 union AssetResponse = Asset | AssetError
 
-type Assets {
-  value: [Asset!]!
-}
-
-union AssetsResponse = AssetError | Assets
-
 input CreateAssetInput {
   description: String
   images: [CreateImageInput!]
@@ -101,7 +95,7 @@ type Mutation {
 
 type Query {
   asset(id: ID!): AssetResponse!
-  assets: AssetsResponse!
+  assets: [Asset!]!
 }
 
 scalar TemporalInstant

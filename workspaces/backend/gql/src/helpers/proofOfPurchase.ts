@@ -1,4 +1,8 @@
-import { type Asset } from "../entities/index.js";
+import {
+  type Asset,
+  type Document,
+  DocumentEntity,
+} from "../entities/index.js";
 import { DeleteDocumentError } from "../errors/DeleteDocumentError.js";
 import type {
   DeleteDocumentInput,
@@ -7,7 +11,22 @@ import type {
 } from "../gql-server/types.generated.js";
 import { deleteDocument, saveDocument } from "./document.js";
 import { saveFile } from "./file.js";
-import { Effect } from "effect";
+import { entityManagerWapper } from "./util.js";
+import { Effect, Option, pipe } from "effect";
+import type { FindOptionsWhere } from "typeorm";
+
+export const readProofOfPurchase = ({
+  where,
+}: {
+  where: FindOptionsWhere<Document> | FindOptionsWhere<Document>[];
+}) =>
+  pipe(
+    entityManagerWapper({
+      evaluate: (manager) => manager.findOne(DocumentEntity, { where }),
+      onError: (error) => Effect.die(error),
+    }),
+    Effect.map(Option.fromNullable),
+  );
 
 export const mutateProofOfPurchase = (
   asset: Asset,

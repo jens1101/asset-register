@@ -18,8 +18,6 @@ const documents = {
     types.AssetFragmentDoc,
   "fragment assetError on AssetError {\n  __typename\n  message\n}":
     types.AssetErrorFragmentDoc,
-  "fragment assetList on Assets {\n  __typename\n  value {\n    ...assetListItem\n  }\n}":
-    types.AssetListFragmentDoc,
   "fragment assetListItem on Asset {\n  __typename\n  id\n  name\n  description\n  mainImage {\n    ...image\n  }\n}":
     types.AssetListItemFragmentDoc,
   "fragment document on Document {\n  __typename\n  id\n  file {\n    ...file\n  }\n  createdAt\n}":
@@ -36,7 +34,7 @@ const documents = {
     types.UpdateAssetDocument,
   "query Asset($id: ID!) {\n  asset(id: $id) {\n    ... on Asset {\n      ...asset\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}":
     types.AssetDocument,
-  "query AssetList {\n  assets {\n    ... on Assets {\n      ...assetList\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}":
+  "query AssetList {\n  assets {\n    ...assetListItem\n  }\n}":
     types.AssetListDocument,
 };
 
@@ -66,12 +64,6 @@ export function graphql(
 export function graphql(
   source: "fragment assetError on AssetError {\n  __typename\n  message\n}",
 ): (typeof documents)["fragment assetError on AssetError {\n  __typename\n  message\n}"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: "fragment assetList on Assets {\n  __typename\n  value {\n    ...assetListItem\n  }\n}",
-): (typeof documents)["fragment assetList on Assets {\n  __typename\n  value {\n    ...assetListItem\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -124,8 +116,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "query AssetList {\n  assets {\n    ... on Assets {\n      ...assetList\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}",
-): (typeof documents)["query AssetList {\n  assets {\n    ... on Assets {\n      ...assetList\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}"];
+  source: "query AssetList {\n  assets {\n    ...assetListItem\n  }\n}",
+): (typeof documents)["query AssetList {\n  assets {\n    ...assetListItem\n  }\n}"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

@@ -1,13 +1,10 @@
-import { dataSource } from "../../../../dataSource.js";
+import { ErrorTags } from "../../../../enums/ErrorTags.js";
 import {
   readAsset,
   updateAsset as updateAssetHelper,
-} from "../../../../helpers/index.js";
+} from "../../../../helpers/asset.js";
+import { resolverWrapper } from "../../../../helpers/util.js";
 import { withTransaction } from "../../../../scopes/index.js";
-import {
-  DataSourceService,
-  EntityManagerService,
-} from "../../../../services/index.js";
 import type {
   MutationResolvers,
   ResolversTypes,
@@ -16,32 +13,49 @@ import { Effect, pipe } from "effect";
 
 export const updateAsset: NonNullable<
   MutationResolvers["updateAsset"]
-> = async (_parent, { data }, _ctx) => {
-  const program = pipe(
-    readAsset(Number(data.id), {
-      relations: { images: true, proofOfPurchase: true },
-    }),
-    Effect.andThen((asset) => updateAssetHelper(asset, data)),
-    Effect.provideServiceEffect(EntityManagerService, withTransaction),
-    Effect.provideService(DataSourceService, dataSource),
-    Effect.scoped,
-    Effect.andThen(
-      (asset) =>
-        ({
-          ...asset,
-          __typename: "Asset",
-        }) as ResolversTypes["AssetResponse"],
-    ),
-    Effect.catchAllCause((cause) =>
-      pipe(
-        Effect.logError("Failed to update asset", cause),
-        Effect.as({
-          __typename: "AssetError",
-          message: "Failed to update asset",
-        } as ResolversTypes["AssetResponse"]),
+> = async (_parent, { data }, _ctx) =>
+  resolverWrapper(
+    pipe(
+      readAsset({
+        where: { id: Number(data.id) },
+        relations: { images: true, proofOfPurchase: true },
+      }),
+      Effect.andThen((asset) => updateAssetHelper(asset, data)),
+      withTransaction,
+      Effect.andThen(
+        (asset) =>
+          ({
+            ...asset,
+            __typename: "Asset",
+          }) as ResolversTypes["AssetResponse"],
+      ),
+      Effect.catchTag(ErrorTags.ReadAsset, (error) =>
+        pipe(
+          Effect.logWarning(error),
+          Effect.as({
+            __typename: "AssetError",
+            message: "Asset not found",
+          } as ResolversTypes["AssetResponse"]),
+        ),
+      ),
+      Effect.catchTag(ErrorTags.DeleteDocument, (error) =>
+        pipe(
+          Effect.logWarning(error),
+          Effect.as({
+            __typename: "AssetError",
+            message: "Proof of purchase document not found in asset",
+          } as ResolversTypes["AssetResponse"]),
+        ),
+      ),
+      Effect.catchTag(ErrorTags.ImageNotFound, (error) =>
+        pipe(
+          Effect.logWarning(error),
+          Effect.as({
+            __typename: "AssetError",
+            message: "Image(s) not found in asset",
+          } as ResolversTypes["AssetResponse"]),
+        ),
       ),
     ),
+    "Failed to update asset",
   );
-
-  return Effect.runPromise(program);
-};

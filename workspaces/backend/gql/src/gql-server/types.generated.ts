@@ -58,13 +58,6 @@ export type AssetError = Error & {
 
 export type AssetResponse = Asset | AssetError;
 
-export type Assets = {
-  __typename?: "Assets";
-  value: Array<Asset>;
-};
-
-export type AssetsResponse = AssetError | Assets;
-
 export type CreateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   images?: InputMaybe<Array<CreateImageInput>>;
@@ -160,7 +153,7 @@ export type MutationupdateAssetArgs = {
 export type Query = {
   __typename?: "Query";
   asset: AssetResponse;
-  assets: AssetsResponse;
+  assets: Array<Asset>;
 };
 
 export type QueryassetArgs = {
@@ -297,9 +290,6 @@ export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
   AssetResponse:
     | (Asset & { __typename: "Asset" })
     | (AssetError & { __typename: "AssetError" });
-  AssetsResponse:
-    | (AssetError & { __typename: "AssetError" })
-    | (Assets & { __typename: "Assets" });
 };
 
 /** Mapping of interface types */
@@ -316,10 +306,6 @@ export type ResolversTypes = {
   AssetError: ResolverTypeWrapper<AssetError>;
   AssetResponse: ResolverTypeWrapper<
     ResolversUnionTypes<ResolversTypes>["AssetResponse"]
-  >;
-  Assets: ResolverTypeWrapper<Assets>;
-  AssetsResponse: ResolverTypeWrapper<
-    ResolversUnionTypes<ResolversTypes>["AssetsResponse"]
   >;
   CreateAssetInput: CreateAssetInput;
   CreateDocumentInput: CreateDocumentInput;
@@ -350,8 +336,6 @@ export type ResolversParentTypes = {
   ID: Scalars["ID"]["output"];
   AssetError: AssetError;
   AssetResponse: ResolversUnionTypes<ResolversParentTypes>["AssetResponse"];
-  Assets: Assets;
-  AssetsResponse: ResolversUnionTypes<ResolversParentTypes>["AssetsResponse"];
   CreateAssetInput: CreateAssetInput;
   CreateDocumentInput: CreateDocumentInput;
   CreateFileInput: CreateFileInput;
@@ -422,27 +406,6 @@ export type AssetResponseResolvers<
 > = {
   __resolveType?: TypeResolveFn<
     "Asset" | "AssetError",
-    ParentType,
-    ContextType
-  >;
-};
-
-export type AssetsResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes["Assets"] = ResolversParentTypes["Assets"],
-> = {
-  value?: Resolver<Array<ResolversTypes["Asset"]>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type AssetsResponseResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes["AssetsResponse"] = ResolversParentTypes["AssetsResponse"],
-> = {
-  __resolveType?: TypeResolveFn<
-    "AssetError" | "Assets",
     ParentType,
     ContextType
   >;
@@ -553,7 +516,7 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryassetArgs, "id">
   >;
-  assets?: Resolver<ResolversTypes["AssetsResponse"], ParentType, ContextType>;
+  assets?: Resolver<Array<ResolversTypes["Asset"]>, ParentType, ContextType>;
 };
 
 export interface TemporalInstantScalarConfig
@@ -570,8 +533,6 @@ export type Resolvers<ContextType = any> = {
   Asset?: AssetResolvers<ContextType>;
   AssetError?: AssetErrorResolvers<ContextType>;
   AssetResponse?: AssetResponseResolvers<ContextType>;
-  Assets?: AssetsResolvers<ContextType>;
-  AssetsResponse?: AssetsResponseResolvers<ContextType>;
   Document?: DocumentResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
   File?: FileResolvers<ContextType>;
