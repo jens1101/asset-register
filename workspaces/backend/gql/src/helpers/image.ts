@@ -7,8 +7,7 @@ import type {
 } from "../gql-server/types.generated.js";
 import { deleteFile, saveFile } from "./file.js";
 import { entityManagerWapper } from "./util.js";
-import { Decimal } from "decimal.js";
-import { Array, Effect, Option, pipe } from "effect";
+import { Array, BigDecimal, Effect, Option, Order, pipe } from "effect";
 import type { FindOptionsRelations, FindOptionsWhere } from "typeorm";
 
 export const readMainImage = ({ where }: { where: FindOptionsWhere<Image> }) =>
@@ -82,9 +81,7 @@ export const createImage = (asset: Asset, input: CreateImageInput) =>
       ),
     });
 
-    asset.images = [...asset.images, image].sort((a, b) =>
-      a.position.comparedTo(b.position),
-    );
+    asset.images = Array.sort([...asset.images, image], orderImageByPosition);
 
     return asset;
   });
@@ -100,13 +97,14 @@ const updateImage = (asset: Asset, input: UpdateImageInput) =>
     if (input.previousImageId || input.previousImageId === null) {
       image.position = yield* getNewImagePosition(
         asset.images,
-        Option.filter(
-          Option.some(Number(input.previousImageId)),
-          (value) => !Number.isNaN(value),
+        pipe(
+          Option.fromNullable(input.previousImageId),
+          Option.map(Number),
+          Option.filter((value) => !Number.isNaN(value)),
         ),
       );
 
-      asset.images.sort((a, b) => a.position.comparedTo(b.position));
+      asset.images = Array.sort(asset.images, orderImageByPosition);
     }
 
     yield* saveImage(image);
@@ -117,6 +115,11 @@ const updateImage = (asset: Asset, input: UpdateImageInput) =>
 
     return asset;
   });
+
+const orderImageByPosition = Order.mapInput(
+  BigDecimal.Order,
+  (image: Image) => image.position,
+);
 
 const findImage = (images: Image[], id: number) =>
   Effect.mapError(
@@ -147,15 +150,31 @@ const getNewImagePosition = (
           });
         }
 
-        return previousImageIndex + 1 === assetImages.length
-          ? (assetImages[previousImageIndex]?.position.add(1) ?? new Decimal(0))
-          : Decimal.sum(
-              assetImages[previousImageIndex]?.position ?? 0,
-              assetImages[previousImageIndex + 1]?.position ?? 0,
-            ).dividedBy(2);
+        if (previousImageIndex + 1 === assetImages.length) {
+          return yield* pipe(
+            Option.fromNullable(assetImages[previousImageIndex]?.position),
+            Option.map(BigDecimal.sum(BigDecimal.fromBigInt(1n))),
+          );
+        }
+
+        return yield* pipe(
+          Option.all([
+            Option.fromNullable(assetImages[previousImageIndex]?.position),
+            Option.fromNullable(assetImages[previousImageIndex + 1]?.position),
+          ]),
+          Option.map(([a, b]) => BigDecimal.sum(a, b)),
+          Option.flatMap((value) =>
+            BigDecimal.divide(value, BigDecimal.fromBigInt(2n)),
+          ),
+        );
       }),
     ),
     Option.getOrElse(() =>
-      Effect.succeed(assetImages[0]?.position.minus(1) ?? new Decimal(0)),
+      pipe(
+        Option.fromNullable(assetImages[0]?.position),
+        Option.map(BigDecimal.subtract(BigDecimal.fromBigInt(1n))),
+        Option.getOrElse(() => BigDecimal.fromBigInt(0n)),
+        Effect.succeed,
+      ),
     ),
   );

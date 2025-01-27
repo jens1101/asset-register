@@ -2,11 +2,11 @@ import { EntityName } from "../enums/EntityName.js";
 import type { Asset } from "./Asset.js";
 import type { File } from "./File.js";
 import {
-  DecimalTransformer,
+  BigDecimalTransformer,
   TemporalInstantTransformer,
 } from "./transformers.js";
 import type { Maybe } from "@app/common";
-import { Decimal } from "decimal.js";
+import { BigDecimal } from "effect";
 import type { Temporal } from "temporal-polyfill";
 import { EntitySchema } from "typeorm";
 
@@ -14,7 +14,7 @@ export interface Image {
   id: number;
   name: Maybe<string>;
   description: Maybe<string>;
-  position: Decimal;
+  position: BigDecimal.BigDecimal;
   createdAt: Temporal.Instant;
   updatedAt: Temporal.Instant;
   file: File;
@@ -49,7 +49,7 @@ export const ImageEntity = new EntitySchema<Image>({
     },
     position: {
       type: "numeric",
-      transformer: DecimalTransformer,
+      transformer: BigDecimalTransformer,
     },
     createdAt: {
       type: "timestamp",
