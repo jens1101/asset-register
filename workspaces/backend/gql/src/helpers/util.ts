@@ -44,7 +44,7 @@ export const findOneOrFailWrapper = <A, E, R, B = never>(options: {
         : Effect.die(error),
   });
 
-export const resolverWrapper = <A, E>(
+export const runAsyncWrapper = <A, E>(
   effect: Effect.Effect<A, E>,
   defectMessage: string,
 ) =>
@@ -61,6 +61,7 @@ export const resolverWrapper = <A, E>(
       result.catch(() => Promise.reject(new GraphQLError(defectMessage))),
   );
 
+// TODO: make this a dual API, then it can be used in a pipe
 export const runSyncWrapper = <A, E>(
   effect: Effect.Effect<A, E>,
   defectMessage: string,

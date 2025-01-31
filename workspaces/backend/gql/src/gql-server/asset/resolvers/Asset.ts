@@ -1,13 +1,13 @@
 import { readImages, readMainImage } from "../../../helpers/image.js";
 import { readProofOfPurchase } from "../../../helpers/proofOfPurchase.js";
-import { resolverWrapper } from "../../../helpers/util.js";
+import { runAsyncWrapper } from "../../../helpers/util.js";
 import { withTransaction } from "../../../scopes/index.js";
 import type { AssetResolvers } from "./../../types.generated.js";
 import { Effect, Option, pipe } from "effect";
 
 export const Asset: AssetResolvers = {
   mainImage: (parent) =>
-    resolverWrapper(
+    runAsyncWrapper(
       pipe(
         readMainImage({ where: { asset: { id: Number(parent.id) } } }),
         withTransaction,
@@ -16,7 +16,7 @@ export const Asset: AssetResolvers = {
       "Failed to read main image",
     ),
   images: (parent) =>
-    resolverWrapper(
+    runAsyncWrapper(
       pipe(
         readImages({ where: { asset: { id: Number(parent.id) } } }),
         withTransaction,
@@ -24,7 +24,7 @@ export const Asset: AssetResolvers = {
       "Failed to read images",
     ),
   proofOfPurchase: (parent) =>
-    resolverWrapper(
+    runAsyncWrapper(
       pipe(
         readProofOfPurchase({ where: { asset: { id: Number(parent.id) } } }),
         withTransaction,

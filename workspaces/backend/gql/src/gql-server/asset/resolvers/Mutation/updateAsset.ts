@@ -3,7 +3,7 @@ import {
   readAsset,
   updateAsset as updateAssetHelper,
 } from "../../../../helpers/asset.js";
-import { resolverWrapper } from "../../../../helpers/util.js";
+import { runAsyncWrapper } from "../../../../helpers/util.js";
 import { withTransaction } from "../../../../scopes/index.js";
 import type {
   MutationResolvers,
@@ -14,7 +14,7 @@ import { Effect, pipe } from "effect";
 export const updateAsset: NonNullable<
   MutationResolvers["updateAsset"]
 > = async (_parent, { data }, _ctx) =>
-  resolverWrapper(
+  runAsyncWrapper(
     pipe(
       readAsset({
         where: { id: Number(data.id) },
