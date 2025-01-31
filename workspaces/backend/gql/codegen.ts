@@ -19,10 +19,19 @@ const config: CodegenConfig = {
           Uint8Array: {
             type: "Uint8Array",
           },
+          BigDecimal: {
+            type: "BigDecimal.BigDecimal",
+          },
+          Currency: {
+            type: "string",
+          },
         },
         add: {
           "./types.generated.ts": {
-            content: 'import type { Temporal } from "temporal-polyfill";',
+            content: [
+              'import type { Temporal } from "temporal-polyfill";',
+              'import type { BigDecimal } from "effect";',
+            ],
           },
         },
       },

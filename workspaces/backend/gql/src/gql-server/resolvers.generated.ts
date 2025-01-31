@@ -6,11 +6,14 @@ import { deleteAsset as Mutation_deleteAsset } from "./asset/resolvers/Mutation/
 import { updateAsset as Mutation_updateAsset } from "./asset/resolvers/Mutation/updateAsset.js";
 import { asset as Query_asset } from "./asset/resolvers/Query/asset.js";
 import { assets as Query_assets } from "./asset/resolvers/Query/assets.js";
+import { BigDecimal } from "./base/resolvers/BigDecimal.js";
+import { Currency } from "./base/resolvers/Currency.js";
 import { TemporalInstant } from "./base/resolvers/TemporalInstant.js";
 import { Uint8Array } from "./base/resolvers/Uint8Array.js";
 import { Document } from "./document/resolvers/Document.js";
 import { File } from "./file/resolvers/File.js";
 import { Image } from "./image/resolvers/Image.js";
+import { Sum } from "./sum/resolvers/Sum.js";
 import type { Resolvers } from "./types.generated.js";
 
 export const resolvers: Resolvers = {
@@ -26,6 +29,9 @@ export const resolvers: Resolvers = {
   Document: Document,
   File: File,
   Image: Image,
+  Sum: Sum,
+  BigDecimal: BigDecimal,
+  Currency: Currency,
   TemporalInstant: TemporalInstant,
   Uint8Array: Uint8Array,
 };

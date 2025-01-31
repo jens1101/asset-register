@@ -1,0 +1,4 @@
+input SumInput {
+  currency: Currency!
+  amount: BigDecimal!
+}

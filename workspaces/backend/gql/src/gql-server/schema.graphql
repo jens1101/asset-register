@@ -7,6 +7,7 @@ type Asset {
   name: String!
   proofOfPurchase: Document
   updatedAt: TemporalInstant!
+  value: Sum!
 }
 
 type AssetError implements Error {
@@ -15,11 +16,14 @@ type AssetError implements Error {
 
 union AssetResponse = Asset | AssetError
 
+scalar BigDecimal
+
 input CreateAssetInput {
   description: String
   images: [CreateImageInput!]
   name: String!
   proofOfPurchase: CreateDocumentInput
+  value: SumInput!
 }
 
 input CreateDocumentInput {
@@ -38,6 +42,8 @@ input CreateImageInput {
   name: String
   previousImageId: ID
 }
+
+scalar Currency
 
 input DeleteDocumentInput {
   id: ID!
@@ -96,6 +102,16 @@ type Mutation {
 type Query {
   asset(id: ID!): AssetResponse!
   assets: [Asset!]!
+}
+
+type Sum {
+  amount: BigDecimal!
+  currency: Currency!
+}
+
+input SumInput {
+  amount: BigDecimal!
+  currency: Currency!
 }
 
 scalar TemporalInstant

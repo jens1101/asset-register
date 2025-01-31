@@ -10,6 +10,7 @@ type Asset {
   description: String
   mainImage: Image
   images: [Image!]!
+  value: Sum!
   proofOfPurchase: Document
   createdAt: TemporalInstant!
   updatedAt: TemporalInstant!

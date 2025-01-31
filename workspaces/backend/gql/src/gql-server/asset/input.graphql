@@ -2,6 +2,7 @@ input CreateAssetInput {
   name: String!
   description: String
   images: [CreateImageInput!]
+  value: SumInput!
   proofOfPurchase: CreateDocumentInput
 }
 
