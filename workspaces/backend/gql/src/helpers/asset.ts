@@ -89,6 +89,7 @@ export const updateAsset = (asset: Asset, input: UpdateAssetInput) =>
     Effect.gen(function* () {
       if (input.name != null) asset.name = input.name;
       if (input.description != null) asset.description = input.description;
+      if (input.value) asset.value = input.value;
 
       return yield* saveAsset(asset);
     }),

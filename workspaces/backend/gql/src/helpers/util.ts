@@ -61,7 +61,6 @@ export const runAsyncWrapper = <A, E>(
       result.catch(() => Promise.reject(new GraphQLError(defectMessage))),
   );
 
-// TODO: make this a dual API, then it can be used in a pipe
 export const runSyncWrapper = <A, E>(
   effect: Effect.Effect<A, E>,
   defectMessage: string,

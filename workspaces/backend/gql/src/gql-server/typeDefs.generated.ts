@@ -92,6 +92,15 @@ export const typeDefs = {
         },
         {
           kind: "InputValueDefinition",
+          name: { kind: "Name", value: "value" },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "SumInput" },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
           name: { kind: "Name", value: "proofOfPurchase" },
           type: {
             kind: "NamedType",

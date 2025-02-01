@@ -182,6 +182,7 @@ export type UpdateAssetInput = {
   images?: InputMaybe<Array<MutateImageInput>>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   proofOfPurchase?: InputMaybe<MutateDocumentInput>;
+  value?: InputMaybe<SumInput>;
 };
 
 export type UpdateDocumentInput = {

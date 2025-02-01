@@ -124,6 +124,7 @@ input UpdateAssetInput {
   images: [MutateImageInput!]
   name: String
   proofOfPurchase: MutateDocumentInput
+  value: SumInput
 }
 
 input UpdateDocumentInput {
