@@ -4,4 +4,5 @@ export const enum EntityName {
   Document = "document",
   File = "file",
   Image = "image",
+  Sum = "sum",
 }
