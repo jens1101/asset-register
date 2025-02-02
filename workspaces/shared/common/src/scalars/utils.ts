@@ -1,4 +1,4 @@
-import { Effect, ParseResult, Schema } from "effect";
+import { Effect, ParseResult, Schema, pipe } from "effect";
 import { Kind } from "graphql";
 
 type TaggedScalarSchema<Tag extends string> = Schema.TaggedStruct<
@@ -29,6 +29,38 @@ export function TaggedScalarFromAst<Tag extends string>(
     encode: (to, _options, ast) =>
       ParseResult.fail(new ParseResult.Type(ast, to, "Cannot encode to AST")),
   });
+}
+
+export const StringScalarFromAst = Schema.transformOrFail(
+  Schema.Unknown,
+  Schema.String,
+  {
+    strict: true,
+    decode: (from, _options, ast) =>
+      pipe(
+        from,
+        getStringScalar,
+        Effect.mapError(
+          (error) => new ParseResult.Type(ast, from, error.message),
+        ),
+      ),
+    encode: (to, _options, ast) =>
+      ParseResult.fail(new ParseResult.Type(ast, to, "Cannot encode to AST")),
+  },
+);
+
+function getStringScalar(ast: unknown): Effect.Effect<string, Error> {
+  if (!(ast && typeof ast === "object" && "value" in ast)) {
+    return Effect.fail(new Error("Missing value property"));
+  }
+
+  const value = ast["value"];
+
+  if (typeof value !== "string") {
+    return Effect.fail(new Error("Value is not a string"));
+  }
+
+  return Effect.succeed(value);
 }
 
 function getTaggedScalar<Tag extends string>(

@@ -2,7 +2,7 @@ import { runSyncWrapper } from "../../../helpers/util.js";
 import {
   CurrencyFromAst,
   type CurrencyScalar,
-  ScalarFromCurrency,
+  CurrencyScalarSchema,
   tag,
 } from "@app/common/scalars/Currency";
 import { Schema } from "effect";
@@ -12,17 +12,17 @@ export const Currency = new GraphQLScalarType<string, CurrencyScalar>({
   name: tag,
   serialize: (value) =>
     runSyncWrapper(
-      Schema.encodeUnknown(ScalarFromCurrency)(value),
+      Schema.encodeUnknown(CurrencyScalarSchema)(value),
       `${tag} can only serialise instances of "string".`,
     ),
   parseValue: (value) =>
     runSyncWrapper(
-      Schema.decodeUnknown(ScalarFromCurrency)(value),
-      `${tag} can only parse valid "CurrencyScalar" shaped objects.`,
+      Schema.decodeUnknown(CurrencyScalarSchema)(value),
+      `${tag} can only parse valid "Currency" strings.`,
     ),
   parseLiteral: (node) =>
     runSyncWrapper(
       Schema.decodeUnknown(CurrencyFromAst)(node),
-      `${tag} can only parse valid "CurrencyScalar" shaped objects.`,
+      `${tag} can only parse valid "Currency" strings.`,
     ),
 });
