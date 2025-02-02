@@ -1,5 +1,6 @@
-import type { FileFragment } from "../gql-client/types/graphql.js";
-import { Equivalence } from "effect";
+import type { FileFragment, SumFragment } from "../gql-client/types/graphql.js";
+import { BigDecimal, Equivalence } from "effect";
+import { For } from "solid-js";
 
 /** Tests if the specified file is an image by checking the mime type. */
 export function isImage(file: File): boolean {
@@ -47,6 +48,7 @@ export function setInputValue(
   }
 }
 
+// TODO: move this
 /**
  * The default formatter that should be used to format date-time values for
  * display
@@ -55,3 +57,19 @@ export const defaultDateTimeFormatter = new Intl.DateTimeFormat(undefined, {
   timeStyle: "medium",
   dateStyle: "medium",
 });
+
+const LOCALE = new Intl.Locale(window.navigator.language);
+
+export function formatSum(sum: SumFragment) {
+  // TODO: performance issue. Maybe memoize these instances.
+  const parts = new Intl.NumberFormat(LOCALE, {
+    style: "currency",
+    currency: sum.currency,
+  })
+    .formatToParts(BigDecimal.format(sum.amount) as Intl.StringNumericLiteral)
+    .map((part) =>
+      part.type === "currency" ? <b>{part.value}</b> : <>{part.value}</>,
+    );
+
+  return <For each={parts}>{(part) => part}</For>;
+}

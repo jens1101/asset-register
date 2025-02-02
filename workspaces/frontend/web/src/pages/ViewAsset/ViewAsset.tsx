@@ -1,4 +1,4 @@
-import { defaultDateTimeFormatter } from "../../common/utils.js";
+import { defaultDateTimeFormatter, formatSum } from "../../common/utils.js";
 import { Carousel } from "../../components/Carousel/Carousel.jsx";
 import { DropdownCaret } from "../../components/Dropdown/DropdownCaret.jsx";
 import type { AssetResource } from "../../data/index.js";
@@ -14,7 +14,7 @@ import { useObjectUrl } from "../../hooks/useObjectUrl.js";
 import "./styles.scss";
 import { useNavigate } from "@solidjs/router";
 import OptionsIcon from "bootstrap-icons/icons/gear-fill.svg";
-import { Option, pipe } from "effect";
+import { BigDecimal, Option, pipe } from "effect";
 import { type Component, Show, Suspense } from "solid-js";
 
 export const ViewAsset: Component<{ data: AssetResource }> = (props) => {
@@ -119,6 +119,18 @@ export const ViewAsset: Component<{ data: AssetResource }> = (props) => {
                 <Show when={asset.description}>
                   <p class={"lead"}>{asset.description}</p>
                 </Show>
+
+                <h3>Value</h3>
+                <p
+                  classList={{
+                    "text-body-tertiary": BigDecimal.lessThanOrEqualTo(
+                      asset.value.amount,
+                      BigDecimal.fromBigInt(0n),
+                    ),
+                  }}
+                >
+                  {formatSum(asset.value)}
+                </p>
 
                 <h3>Created at</h3>
                 <p>
