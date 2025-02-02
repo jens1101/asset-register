@@ -13,7 +13,10 @@ const config: CodegenConfig = {
       plugins: [
         {
           add: {
-            content: 'import type { Temporal } from "temporal-polyfill";',
+            content: [
+              'import type { Temporal } from "temporal-polyfill";',
+              'import type { BigDecimal } from "effect";',
+            ],
           },
         },
       ],
@@ -24,6 +27,8 @@ const config: CodegenConfig = {
           TemporalInstant: "Temporal.Instant",
           Uint8Array: "Uint8Array",
           Void: "void",
+          BigDecimal: "BigDecimal.BigDecimal",
+          Currency: "string",
         },
       },
     },

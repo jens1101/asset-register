@@ -3,6 +3,9 @@ fragment assetListItem on Asset {
   id
   name
   description
+  value {
+    ...sum
+  }
   mainImage {
     ...image
   }

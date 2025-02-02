@@ -5,6 +5,8 @@ export const AssetFormValues = Schema.Struct({
   id: Schema.optional(Schema.NonEmptyString),
   name: Schema.NonEmptyString,
   description: Schema.String,
+  amount: Schema.NonEmptyString,
+  currency: Schema.NonEmptyString,
   proofOfPurchase: Schema.optional(
     Schema.Struct({
       id: Schema.optional(Schema.NonEmptyString),

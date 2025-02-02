@@ -1,4 +1,8 @@
 import {
+  type BigDecimalScalar,
+  ScalarFromBigDecimal,
+} from "@app/common/scalars/BigDecimal";
+import {
   ScalarFromTemporalInstant,
   type TemporalInstantScalar,
 } from "@app/common/scalars/TemporalInstant";
@@ -7,13 +11,13 @@ import {
   type Uint8ArrayScalar,
 } from "@app/common/scalars/Uint8Array";
 import { CombinedError, type Exchange } from "@urql/core";
-import { Schema } from "effect";
+import { BigDecimal, Schema } from "effect";
 import { GraphQLError } from "graphql";
 import { Temporal } from "temporal-polyfill";
 import { walkStep } from "walkjs";
 import { map, pipe } from "wonka";
 
-type TaggedScalar = TemporalInstantScalar | Uint8ArrayScalar;
+type TaggedScalar = TemporalInstantScalar | Uint8ArrayScalar | BigDecimalScalar;
 
 function decodeScalar(scalar: TaggedScalar) {
   switch (scalar._tag) {
@@ -21,6 +25,8 @@ function decodeScalar(scalar: TaggedScalar) {
       return Schema.decodeSync(ScalarFromTemporalInstant)(scalar);
     case "Uint8Array":
       return Schema.decodeSync(ScalarFromUint8Array)(scalar);
+    case "BigDecimal":
+      return Schema.decodeSync(ScalarFromBigDecimal)(scalar);
   }
 }
 
@@ -34,7 +40,6 @@ export const taggedScalarExchange: Exchange = ({ forward }) => {
             return operation;
           }
 
-          // TODO: how to handle errors?
           for (const node of walkStep(operation.variables)) {
             const value: unknown = node.val;
 
@@ -59,6 +64,18 @@ export const taggedScalarExchange: Exchange = ({ forward }) => {
               node.parent.val[node.key] = Schema.encodeSync(
                 ScalarFromTemporalInstant,
               )(value);
+
+              continue;
+            }
+
+            if (BigDecimal.isBigDecimal(value)) {
+              if (!node.parent?.val || !node.key) {
+                continue;
+              }
+
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              node.parent.val[node.key] =
+                Schema.encodeSync(ScalarFromBigDecimal)(value);
 
               continue;
             }
