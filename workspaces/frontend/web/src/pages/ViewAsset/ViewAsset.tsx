@@ -1,4 +1,5 @@
-import { defaultDateTimeFormatter, formatSum } from "../../common/utils.js";
+import { defaultDateTimeFormatter } from "../../common/intl.js";
+import { formatSum } from "../../common/utils.js";
 import { Carousel } from "../../components/Carousel/Carousel.jsx";
 import { DropdownCaret } from "../../components/Dropdown/DropdownCaret.jsx";
 import type { AssetResource } from "../../data/index.js";
