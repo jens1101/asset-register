@@ -62,6 +62,7 @@ export const createAsset = (input: CreateAssetInput) =>
       name: input.name,
       description: input.description,
       images: [],
+      value: input.value,
     }),
     Effect.andThen((asset) =>
       Option.match(Option.fromNullable(input.proofOfPurchase), {
@@ -89,6 +90,7 @@ export const updateAsset = (asset: Asset, input: UpdateAssetInput) =>
     Effect.gen(function* () {
       if (input.name != null) asset.name = input.name;
       if (input.description != null) asset.description = input.description;
+      if (input.value) asset.value = input.value;
 
       return yield* saveAsset(asset);
     }),

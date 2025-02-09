@@ -1,3 +1,8 @@
+import { DEFAULT_CURRENCY } from "../../common/config.js";
+import {
+  availableCurrencies,
+  numberFormatterCache,
+} from "../../common/intl.js";
 import type { IdAttribute, InitialValue } from "../../common/types.js";
 import { MAX_FILE_SIZE } from "../../config.js";
 import {
@@ -11,9 +16,10 @@ import {
   AssetFormValuesFromFormData,
 } from "../../schemas/AssetFormValues.js";
 import { CreateFileInputFromFile } from "../../schemas/CreateFileInput.js";
+import { Currency } from "../../schemas/Currency.js";
 import { Feedback } from "../FormFieldFeedback/Feedback.jsx";
 import { ImageFormField } from "../ImageFormField/ImageFormField.jsx";
-import { Option, Schema } from "effect";
+import { BigDecimal, Option, Schema, pipe } from "effect";
 import prettyBytes from "pretty-bytes";
 import {
   type Component,
@@ -86,6 +92,33 @@ export const AssetForm: Component<
     },
   });
 
+  const currencyId = createUniqueId();
+  const {
+    validation: currencyValidation,
+    errors: currencyErrors,
+    touched: currencyTouched,
+    value: currencyValue,
+  } = useFormField<HTMLSelectElement>({
+    initialValue: initialValue.value?.currency ?? DEFAULT_CURRENCY,
+  });
+
+  const amountId = createUniqueId();
+  const {
+    validation: amountValidation,
+    errors: amountErrors,
+    touched: amountTouched,
+  } = useFormField<HTMLInputElement>({
+    initialValue:
+      initialValue.value?.amount &&
+      BigDecimal.format(initialValue.value.amount),
+    validatonErrorMap: {
+      valueMissing: "A value amount is required",
+      rangeUnderflow: "The value amount cannot be less than zero",
+      badInput: "The value amount must be a number",
+      stepMismatch: "Fractional cents are not supported",
+    },
+  });
+
   return (
     <form ref={submit} id={props.id}>
       <Show when={initialValue.id}>
@@ -128,6 +161,81 @@ export const AssetForm: Component<
         >
           {initialValue.description}
         </textarea>
+      </div>
+
+      <div class={"mb-3"}>
+        <label for={amountId} class={"form-label"}>
+          Value
+        </label>
+
+        <select
+          ref={currencyValidation}
+          id={currencyId}
+          class={"form-select mb-2"}
+          classList={{
+            "is-valid":
+              (previouslyFailedSubmission() || currencyTouched()) &&
+              currencyErrors().length === 0,
+            "is-invalid":
+              (previouslyFailedSubmission() || currencyTouched()) &&
+              currencyErrors().length > 0,
+          }}
+          name={"value.currency"}
+          required
+        >
+          <For each={availableCurrencies}>
+            {({ code, display }) => <option value={code}>{display}</option>}
+          </For>
+        </select>
+
+        <div
+          class="input-group"
+          classList={{
+            "has-validation":
+              (previouslyFailedSubmission() || amountTouched()) &&
+              amountErrors().length > 0,
+          }}
+        >
+          <span class="input-group-text">
+            <b>
+              {pipe(
+                Schema.encodeUnknownOption(Currency)(currencyValue()),
+                Option.map((currency) =>
+                  numberFormatterCache
+                    .get({ style: "currency", currency })
+                    .formatToParts(0)
+                    .filter((part) => part.type === "currency")
+                    .map((part) => part.value),
+                ),
+                Option.flatMap(Option.fromIterable),
+                Option.getOrElse(() => "?"),
+              )}
+            </b>
+          </span>
+
+          <input
+            ref={amountValidation}
+            id={amountId}
+            class={"form-control"}
+            classList={{
+              "is-valid":
+                (previouslyFailedSubmission() || amountTouched()) &&
+                amountErrors().length === 0,
+              "is-invalid":
+                (previouslyFailedSubmission() || amountTouched()) &&
+                amountErrors().length > 0,
+            }}
+            type={"number"}
+            step={0.01}
+            min={0}
+            name={"value.amount"}
+            required
+          />
+
+          <Feedback
+            invalidFeedback={[...currencyErrors(), ...amountErrors()]}
+          />
+        </div>
       </div>
 
       <div class={"mb-3"}>

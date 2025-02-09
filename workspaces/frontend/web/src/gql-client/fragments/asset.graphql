@@ -3,6 +3,9 @@ fragment asset on Asset {
   id
   name
   description
+  value {
+    ...sum
+  }
   createdAt
   updatedAt
   proofOfPurchase {

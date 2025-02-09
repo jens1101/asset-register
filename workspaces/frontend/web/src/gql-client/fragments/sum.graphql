@@ -1,0 +1,4 @@
+fragment sum on Sum {
+  currency
+  amount
+}

@@ -14,6 +14,7 @@ export const BigDecimalTransformer: ValueTransformer = {
   to: (value: Maybe<BigDecimal.BigDecimal>): string | undefined =>
     pipe(
       Option.fromNullable(value),
+      Option.map(BigDecimal.normalize),
       Option.map(BigDecimal.format),
       Option.getOrUndefined,
     ),

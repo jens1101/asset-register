@@ -1,5 +1,7 @@
-import type { FileFragment } from "../gql-client/types/graphql.js";
-import { Equivalence } from "effect";
+import type { FileFragment, SumFragment } from "../gql-client/types/graphql.js";
+import { numberFormatterCache } from "./intl.js";
+import { BigDecimal, Equivalence } from "effect";
+import { For } from "solid-js";
 
 /** Tests if the specified file is an image by checking the mime type. */
 export function isImage(file: File): boolean {
@@ -18,6 +20,15 @@ export const FileEquivalence = Equivalence.make<
     // We use this IndexedDB function, because it's the only built-in browser
     // function that can compare two byte arrays.
     indexedDB.cmp(self.buffer, that.buffer) === 0,
+);
+
+/** Equivalence to test if two sums are equal. */
+export const SumEquivalence = Equivalence.make<
+  Pick<SumFragment, "currency" | "amount">
+>(
+  (self, that) =>
+    self.currency === that.currency &&
+    BigDecimal.equals(self.amount, that.amount),
 );
 
 /**
@@ -47,11 +58,17 @@ export function setInputValue(
   }
 }
 
-/**
- * The default formatter that should be used to format date-time values for
- * display
- */
-export const defaultDateTimeFormatter = new Intl.DateTimeFormat(undefined, {
-  timeStyle: "medium",
-  dateStyle: "medium",
-});
+/** Helper function to format a sum as JSX */
+export function formatSum(sum: SumFragment) {
+  const parts = numberFormatterCache
+    .get({
+      style: "currency",
+      currency: sum.currency,
+    })
+    .formatToParts(BigDecimal.format(sum.amount) as Intl.StringNumericLiteral)
+    .map((part) =>
+      part.type === "currency" ? <b>{part.value}</b> : part.value,
+    );
+
+  return <For each={parts}>{(part) => part}</For>;
+}

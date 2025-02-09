@@ -1,5 +1,5 @@
 import { createAsset as createAssetHelper } from "../../../../helpers/asset.js";
-import { resolverWrapper } from "../../../../helpers/util.js";
+import { runAsyncWrapper } from "../../../../helpers/util.js";
 import { withTransaction } from "../../../../scopes/index.js";
 import type {
   MutationResolvers,
@@ -10,7 +10,7 @@ import { Effect, pipe } from "effect";
 export const createAsset: NonNullable<
   MutationResolvers["createAsset"]
 > = async (_parent, { data }, _ctx) =>
-  resolverWrapper(
+  runAsyncWrapper(
     pipe(
       createAssetHelper(data),
       withTransaction,

@@ -1,4 +1,8 @@
 import {
+  type BigDecimalScalar,
+  ScalarFromBigDecimal,
+} from "@app/common/scalars/BigDecimal";
+import {
   ScalarFromTemporalInstant,
   type TemporalInstantScalar,
 } from "@app/common/scalars/TemporalInstant";
@@ -7,13 +11,25 @@ import {
   type Uint8ArrayScalar,
 } from "@app/common/scalars/Uint8Array";
 import { CombinedError, type Exchange } from "@urql/core";
-import { Schema } from "effect";
+import { BigDecimal, Schema } from "effect";
 import { GraphQLError } from "graphql";
 import { Temporal } from "temporal-polyfill";
-import { walkStep } from "walkjs";
+import { type NodeVisitationRegister, type WalkNode, walkStep } from "walkjs";
 import { map, pipe } from "wonka";
 
-type TaggedScalar = TemporalInstantScalar | Uint8ArrayScalar;
+class VisitationRegister implements NodeVisitationRegister {
+  readonly #seenObjects: Set<unknown> = new Set<unknown>();
+
+  public objectHasBeenSeen(node: WalkNode): boolean {
+    return this.#seenObjects.has(node.val);
+  }
+
+  public registerObjectVisit(node: WalkNode): void {
+    this.#seenObjects.add(node.val);
+  }
+}
+
+type TaggedScalar = TemporalInstantScalar | Uint8ArrayScalar | BigDecimalScalar;
 
 function decodeScalar(scalar: TaggedScalar) {
   switch (scalar._tag) {
@@ -21,6 +37,8 @@ function decodeScalar(scalar: TaggedScalar) {
       return Schema.decodeSync(ScalarFromTemporalInstant)(scalar);
     case "Uint8Array":
       return Schema.decodeSync(ScalarFromUint8Array)(scalar);
+    case "BigDecimal":
+      return Schema.decodeSync(ScalarFromBigDecimal)(scalar);
   }
 }
 
@@ -30,35 +48,51 @@ export const taggedScalarExchange: Exchange = ({ forward }) => {
       pipe(
         operations$,
         map((operation) => {
-          if (!operation.variables) {
-            return operation;
-          }
+          if (!operation.variables) return operation;
 
-          // TODO: how to handle errors?
-          for (const node of walkStep(operation.variables)) {
-            const value: unknown = node.val;
+          const visitationRegister = new VisitationRegister();
 
-            if (value instanceof Uint8Array) {
-              if (!node.parent?.val || !node.key) {
-                continue;
+          for (const node of walkStep(
+            { variables: operation.variables },
+            { graphMode: "graph", visitationRegister },
+          )) {
+            if (!node.key || !node.parent || node.isRoot) continue;
+
+            if (node.val instanceof Uint8Array) {
+              for (const childNode of node.getChildren()) {
+                visitationRegister.registerObjectVisit(childNode);
               }
 
               // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-              node.parent.val[node.key] =
-                Schema.encodeSync(ScalarFromUint8Array)(value);
+              node.parent.val[node.key] = Schema.encodeSync(
+                ScalarFromUint8Array,
+              )(node.val);
 
               continue;
             }
 
-            if (value instanceof Temporal.Instant) {
-              if (!node.parent?.val || !node.key) {
-                continue;
+            if (node.val instanceof Temporal.Instant) {
+              for (const childNode of node.getChildren()) {
+                visitationRegister.registerObjectVisit(childNode);
               }
 
               // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
               node.parent.val[node.key] = Schema.encodeSync(
                 ScalarFromTemporalInstant,
-              )(value);
+              )(node.val);
+
+              continue;
+            }
+
+            if (BigDecimal.isBigDecimal(node.val)) {
+              for (const childNode of node.getChildren()) {
+                visitationRegister.registerObjectVisit(childNode);
+              }
+
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+              node.parent.val[node.key] = Schema.encodeSync(
+                ScalarFromBigDecimal,
+              )(node.val);
 
               continue;
             }

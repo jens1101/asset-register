@@ -1,6 +1,6 @@
 import { ErrorTags } from "../../../../enums/ErrorTags.js";
 import { readAsset } from "../../../../helpers/asset.js";
-import { resolverWrapper } from "../../../../helpers/util.js";
+import { runAsyncWrapper } from "../../../../helpers/util.js";
 import { withTransaction } from "../../../../scopes/index.js";
 import type {
   QueryResolvers,
@@ -13,7 +13,7 @@ export const asset: NonNullable<QueryResolvers["asset"]> = async (
   { id },
   _ctx,
 ) =>
-  resolverWrapper(
+  runAsyncWrapper(
     pipe(
       readAsset({ where: { id: Number(id) } }),
       withTransaction,

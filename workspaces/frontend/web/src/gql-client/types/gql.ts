@@ -14,11 +14,11 @@ import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 const documents = {
-  "fragment asset on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  updatedAt\n  proofOfPurchase {\n    ...document\n  }\n  images {\n    ...image\n  }\n}":
+  "fragment asset on Asset {\n  __typename\n  id\n  name\n  description\n  value {\n    ...sum\n  }\n  createdAt\n  updatedAt\n  proofOfPurchase {\n    ...document\n  }\n  images {\n    ...image\n  }\n}":
     types.AssetFragmentDoc,
   "fragment assetError on AssetError {\n  __typename\n  message\n}":
     types.AssetErrorFragmentDoc,
-  "fragment assetListItem on Asset {\n  __typename\n  id\n  name\n  description\n  mainImage {\n    ...image\n  }\n}":
+  "fragment assetListItem on Asset {\n  __typename\n  id\n  name\n  description\n  value {\n    ...sum\n  }\n  mainImage {\n    ...image\n  }\n}":
     types.AssetListItemFragmentDoc,
   "fragment document on Document {\n  __typename\n  id\n  file {\n    ...file\n  }\n  createdAt\n}":
     types.DocumentFragmentDoc,
@@ -26,6 +26,7 @@ const documents = {
     types.FileFragmentDoc,
   "fragment image on Image {\n  __typename\n  id\n  name\n  description\n  file {\n    ...file\n  }\n  createdAt\n  updatedAt\n}":
     types.ImageFragmentDoc,
+  "fragment sum on Sum {\n  currency\n  amount\n}": types.SumFragmentDoc,
   "mutation CreateAsset($data: CreateAssetInput!) {\n  createAsset(data: $data) {\n    ... on Asset {\n      ...asset\n    }\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}":
     types.CreateAssetDocument,
   "mutation DeleteAsset($id: ID!) {\n  deleteAsset(id: $id) {\n    ... on AssetError {\n      ...assetError\n    }\n  }\n}":
@@ -56,8 +57,8 @@ export function graphql(source: string): unknown;
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "fragment asset on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  updatedAt\n  proofOfPurchase {\n    ...document\n  }\n  images {\n    ...image\n  }\n}",
-): (typeof documents)["fragment asset on Asset {\n  __typename\n  id\n  name\n  description\n  createdAt\n  updatedAt\n  proofOfPurchase {\n    ...document\n  }\n  images {\n    ...image\n  }\n}"];
+  source: "fragment asset on Asset {\n  __typename\n  id\n  name\n  description\n  value {\n    ...sum\n  }\n  createdAt\n  updatedAt\n  proofOfPurchase {\n    ...document\n  }\n  images {\n    ...image\n  }\n}",
+): (typeof documents)["fragment asset on Asset {\n  __typename\n  id\n  name\n  description\n  value {\n    ...sum\n  }\n  createdAt\n  updatedAt\n  proofOfPurchase {\n    ...document\n  }\n  images {\n    ...image\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -68,8 +69,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-  source: "fragment assetListItem on Asset {\n  __typename\n  id\n  name\n  description\n  mainImage {\n    ...image\n  }\n}",
-): (typeof documents)["fragment assetListItem on Asset {\n  __typename\n  id\n  name\n  description\n  mainImage {\n    ...image\n  }\n}"];
+  source: "fragment assetListItem on Asset {\n  __typename\n  id\n  name\n  description\n  value {\n    ...sum\n  }\n  mainImage {\n    ...image\n  }\n}",
+): (typeof documents)["fragment assetListItem on Asset {\n  __typename\n  id\n  name\n  description\n  value {\n    ...sum\n  }\n  mainImage {\n    ...image\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -88,6 +89,12 @@ export function graphql(
 export function graphql(
   source: "fragment image on Image {\n  __typename\n  id\n  name\n  description\n  file {\n    ...file\n  }\n  createdAt\n  updatedAt\n}",
 ): (typeof documents)["fragment image on Image {\n  __typename\n  id\n  name\n  description\n  file {\n    ...file\n  }\n  createdAt\n  updatedAt\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: "fragment sum on Sum {\n  currency\n  amount\n}",
+): (typeof documents)["fragment sum on Sum {\n  currency\n  amount\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

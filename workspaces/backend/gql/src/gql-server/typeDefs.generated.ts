@@ -43,6 +43,18 @@ export const typeDefs = {
         },
         {
           kind: "InputValueDefinition",
+          name: { kind: "Name", value: "value" },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "SumInput" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
           name: { kind: "Name", value: "proofOfPurchase" },
           type: {
             kind: "NamedType",
@@ -76,6 +88,15 @@ export const typeDefs = {
           kind: "InputValueDefinition",
           name: { kind: "Name", value: "description" },
           type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "value" },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "SumInput" },
+          },
           directives: [],
         },
         {
@@ -336,6 +357,16 @@ export const typeDefs = {
         },
         {
           kind: "FieldDefinition",
+          name: { kind: "Name", value: "value" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: { kind: "NamedType", name: { kind: "Name", value: "Sum" } },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
           name: { kind: "Name", value: "proofOfPurchase" },
           arguments: [],
           type: {
@@ -380,6 +411,16 @@ export const typeDefs = {
     {
       kind: "ScalarTypeDefinition",
       name: { kind: "Name", value: "Uint8Array" },
+      directives: [],
+    },
+    {
+      kind: "ScalarTypeDefinition",
+      name: { kind: "Name", value: "BigDecimal" },
+      directives: [],
+    },
+    {
+      kind: "ScalarTypeDefinition",
+      name: { kind: "Name", value: "Currency" },
       directives: [],
     },
     {
@@ -861,6 +902,71 @@ export const typeDefs = {
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "Asset" } },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "InputObjectTypeDefinition",
+      name: { kind: "Name", value: "SumInput" },
+      directives: [],
+      fields: [
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "currency" },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "Currency" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "InputValueDefinition",
+          name: { kind: "Name", value: "amount" },
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "BigDecimal" },
+            },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "ObjectTypeDefinition",
+      name: { kind: "Name", value: "Sum" },
+      interfaces: [],
+      directives: [],
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "currency" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "Currency" },
+            },
+          },
+          directives: [],
+        },
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "amount" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "BigDecimal" },
+            },
           },
           directives: [],
         },

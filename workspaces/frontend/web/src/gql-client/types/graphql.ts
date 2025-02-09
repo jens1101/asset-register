@@ -1,5 +1,6 @@
 /* eslint-disable */
 import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
+import type { BigDecimal } from "effect";
 import type { Temporal } from "temporal-polyfill";
 
 export type Maybe<T> = T | null;
@@ -29,6 +30,8 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
+  BigDecimal: { input: BigDecimal.BigDecimal; output: BigDecimal.BigDecimal };
+  Currency: { input: string; output: string };
   TemporalInstant: { input: Temporal.Instant; output: Temporal.Instant };
   Uint8Array: { input: Uint8Array; output: Uint8Array };
 };
@@ -43,6 +46,7 @@ export type Asset = {
   name: Scalars["String"]["output"];
   proofOfPurchase?: Maybe<Document>;
   updatedAt: Scalars["TemporalInstant"]["output"];
+  value: Sum;
 };
 
 export type AssetError = Error & {
@@ -57,6 +61,7 @@ export type CreateAssetInput = {
   images?: InputMaybe<Array<CreateImageInput>>;
   name: Scalars["String"]["input"];
   proofOfPurchase?: InputMaybe<CreateDocumentInput>;
+  value: SumInput;
 };
 
 export type CreateDocumentInput = {
@@ -154,12 +159,24 @@ export type QueryAssetArgs = {
   id: Scalars["ID"]["input"];
 };
 
+export type Sum = {
+  __typename?: "Sum";
+  amount: Scalars["BigDecimal"]["output"];
+  currency: Scalars["Currency"]["output"];
+};
+
+export type SumInput = {
+  amount: Scalars["BigDecimal"]["input"];
+  currency: Scalars["Currency"]["input"];
+};
+
 export type UpdateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   id: Scalars["ID"]["input"];
   images?: InputMaybe<Array<MutateImageInput>>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   proofOfPurchase?: InputMaybe<MutateDocumentInput>;
+  value?: InputMaybe<SumInput>;
 };
 
 export type UpdateDocumentInput = {
@@ -181,6 +198,11 @@ export type AssetFragment = {
   description?: string | null;
   createdAt: Temporal.Instant;
   updatedAt: Temporal.Instant;
+  value: {
+    __typename?: "Sum";
+    currency: string;
+    amount: BigDecimal.BigDecimal;
+  };
   proofOfPurchase?: {
     __typename: "Document";
     id: string;
@@ -219,6 +241,11 @@ export type AssetListItemFragment = {
   id: string;
   name: string;
   description?: string | null;
+  value: {
+    __typename?: "Sum";
+    currency: string;
+    amount: BigDecimal.BigDecimal;
+  };
   mainImage?: {
     __typename: "Image";
     id: string;
@@ -277,6 +304,12 @@ export type ImageFragment = {
   };
 };
 
+export type SumFragment = {
+  __typename?: "Sum";
+  currency: string;
+  amount: BigDecimal.BigDecimal;
+};
+
 export type CreateAssetMutationVariables = Exact<{
   data: CreateAssetInput;
 }>;
@@ -291,6 +324,11 @@ export type CreateAssetMutation = {
         description?: string | null;
         createdAt: Temporal.Instant;
         updatedAt: Temporal.Instant;
+        value: {
+          __typename?: "Sum";
+          currency: string;
+          amount: BigDecimal.BigDecimal;
+        };
         proofOfPurchase?: {
           __typename: "Document";
           id: string;
@@ -347,6 +385,11 @@ export type UpdateAssetMutation = {
         description?: string | null;
         createdAt: Temporal.Instant;
         updatedAt: Temporal.Instant;
+        value: {
+          __typename?: "Sum";
+          currency: string;
+          amount: BigDecimal.BigDecimal;
+        };
         proofOfPurchase?: {
           __typename: "Document";
           id: string;
@@ -394,6 +437,11 @@ export type AssetQuery = {
         description?: string | null;
         createdAt: Temporal.Instant;
         updatedAt: Temporal.Instant;
+        value: {
+          __typename?: "Sum";
+          currency: string;
+          amount: BigDecimal.BigDecimal;
+        };
         proofOfPurchase?: {
           __typename: "Document";
           id: string;
@@ -436,6 +484,11 @@ export type AssetListQuery = {
     id: string;
     name: string;
     description?: string | null;
+    value: {
+      __typename?: "Sum";
+      currency: string;
+      amount: BigDecimal.BigDecimal;
+    };
     mainImage?: {
       __typename: "Image";
       id: string;
@@ -455,6 +508,26 @@ export type AssetListQuery = {
   }>;
 };
 
+export const SumFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "sum" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "Sum" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "currency" } },
+          { kind: "Field", name: { kind: "Name", value: "amount" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<SumFragment, unknown>;
 export const FileFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -605,6 +678,19 @@ export const AssetFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "value" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "FragmentSpread",
+                  name: { kind: "Name", value: "sum" },
+                },
+              ],
+            },
+          },
           { kind: "Field", name: { kind: "Name", value: "createdAt" } },
           { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
           {
@@ -652,6 +738,21 @@ export const AssetFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "filename" } },
           { kind: "Field", name: { kind: "Name", value: "mimeType" } },
           { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "sum" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "Sum" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "currency" } },
+          { kind: "Field", name: { kind: "Name", value: "amount" } },
         ],
       },
     },
@@ -757,6 +858,19 @@ export const AssetListItemFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "description" } },
           {
             kind: "Field",
+            name: { kind: "Name", value: "value" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "FragmentSpread",
+                  name: { kind: "Name", value: "sum" },
+                },
+              ],
+            },
+          },
+          {
+            kind: "Field",
             name: { kind: "Name", value: "mainImage" },
             selectionSet: {
               kind: "SelectionSet",
@@ -787,6 +901,21 @@ export const AssetListItemFragmentDoc = {
           { kind: "Field", name: { kind: "Name", value: "filename" } },
           { kind: "Field", name: { kind: "Name", value: "mimeType" } },
           { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "sum" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "Sum" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "currency" } },
+          { kind: "Field", name: { kind: "Name", value: "amount" } },
         ],
       },
     },
@@ -903,6 +1032,21 @@ export const CreateAssetDocument = {
     },
     {
       kind: "FragmentDefinition",
+      name: { kind: "Name", value: "sum" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "Sum" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "currency" } },
+          { kind: "Field", name: { kind: "Name", value: "amount" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
       name: { kind: "Name", value: "file" },
       typeCondition: {
         kind: "NamedType",
@@ -995,6 +1139,19 @@ export const CreateAssetDocument = {
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "value" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "FragmentSpread",
+                  name: { kind: "Name", value: "sum" },
+                },
+              ],
+            },
+          },
           { kind: "Field", name: { kind: "Name", value: "createdAt" } },
           { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
           {
@@ -1197,6 +1354,21 @@ export const UpdateAssetDocument = {
     },
     {
       kind: "FragmentDefinition",
+      name: { kind: "Name", value: "sum" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "Sum" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "currency" } },
+          { kind: "Field", name: { kind: "Name", value: "amount" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
       name: { kind: "Name", value: "file" },
       typeCondition: {
         kind: "NamedType",
@@ -1289,6 +1461,19 @@ export const UpdateAssetDocument = {
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "value" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "FragmentSpread",
+                  name: { kind: "Name", value: "sum" },
+                },
+              ],
+            },
+          },
           { kind: "Field", name: { kind: "Name", value: "createdAt" } },
           { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
           {
@@ -1413,6 +1598,21 @@ export const AssetDocument = {
     },
     {
       kind: "FragmentDefinition",
+      name: { kind: "Name", value: "sum" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "Sum" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "currency" } },
+          { kind: "Field", name: { kind: "Name", value: "amount" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
       name: { kind: "Name", value: "file" },
       typeCondition: {
         kind: "NamedType",
@@ -1505,6 +1705,19 @@ export const AssetDocument = {
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "value" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "FragmentSpread",
+                  name: { kind: "Name", value: "sum" },
+                },
+              ],
+            },
+          },
           { kind: "Field", name: { kind: "Name", value: "createdAt" } },
           { kind: "Field", name: { kind: "Name", value: "updatedAt" } },
           {
@@ -1581,6 +1794,21 @@ export const AssetListDocument = {
     },
     {
       kind: "FragmentDefinition",
+      name: { kind: "Name", value: "sum" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "Sum" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "currency" } },
+          { kind: "Field", name: { kind: "Name", value: "amount" } },
+        ],
+      },
+    },
+    {
+      kind: "FragmentDefinition",
       name: { kind: "Name", value: "file" },
       typeCondition: {
         kind: "NamedType",
@@ -1644,6 +1872,19 @@ export const AssetListDocument = {
           { kind: "Field", name: { kind: "Name", value: "id" } },
           { kind: "Field", name: { kind: "Name", value: "name" } },
           { kind: "Field", name: { kind: "Name", value: "description" } },
+          {
+            kind: "Field",
+            name: { kind: "Name", value: "value" },
+            selectionSet: {
+              kind: "SelectionSet",
+              selections: [
+                {
+                  kind: "FragmentSpread",
+                  name: { kind: "Name", value: "sum" },
+                },
+              ],
+            },
+          },
           {
             kind: "Field",
             name: { kind: "Name", value: "mainImage" },

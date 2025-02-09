@@ -1,4 +1,4 @@
-import { FileEquivalence } from "../common/utils.js";
+import { FileEquivalence, SumEquivalence } from "../common/utils.js";
 import { AssetForm } from "../components/AssetForm/AssetForm.jsx";
 import type { AssetResource } from "../data/index.js";
 import { client } from "../gql-client/client.js";
@@ -15,6 +15,7 @@ import {
 } from "../gql-client/types/graphql.js";
 import type { AssetFormValues } from "../schemas/AssetFormValues.js";
 import { CreateFileInputFromFile } from "../schemas/CreateFileInput.js";
+import { SumInputFromFormValues } from "../schemas/SumInput.js";
 import { useNavigate } from "@solidjs/router";
 import { Effect, Exit, Option, Schema, pipe } from "effect";
 import { isNonEmptyArray } from "effect/Array";
@@ -37,12 +38,19 @@ function updateAssset(
       Option.getOrElse(() => ({})),
     );
 
+    const valueInput = pipe(
+      yield* getValueInput(asset, formValues),
+      Option.map((value) => ({ value })),
+      Option.getOrElse(() => ({})),
+    );
+
     const updateAssetInput: UpdateAssetInput = {
       id: asset.id,
       ...(formValues.name !== asset.name && { name: formValues.name }),
       ...(formValues.description !== asset.description && {
         description: formValues.description,
       }),
+      ...valueInput,
       ...proofOfPurchaseInput,
       ...imagesInput,
     };
@@ -101,6 +109,21 @@ const getProofOfPurchaseInput = (
       onNone: () =>
         Option.map(newFile, (newFile) => ({ update: { file: newFile } })),
     });
+  });
+
+const getValueInput = (
+  asset: AssetFragment,
+  formValues: typeof AssetFormValues.Type,
+) =>
+  Effect.gen(function* () {
+    const valueInput = yield* Schema.decode(SumInputFromFormValues)(
+      formValues.value,
+    );
+
+    return Option.filter(
+      Option.some(valueInput),
+      () => !SumEquivalence(asset.value, valueInput),
+    );
   });
 
 const getImagesInput = (

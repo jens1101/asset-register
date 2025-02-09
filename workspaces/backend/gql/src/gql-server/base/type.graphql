@@ -6,6 +6,10 @@ scalar TemporalInstant
 
 scalar Uint8Array
 
+scalar BigDecimal
+
+scalar Currency
+
 interface Error {
   message: String!
 }

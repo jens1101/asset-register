@@ -2,6 +2,7 @@ input CreateAssetInput {
   name: String!
   description: String
   images: [CreateImageInput!]
+  value: SumInput!
   proofOfPurchase: CreateDocumentInput
 }
 
@@ -9,6 +10,7 @@ input UpdateAssetInput {
   id: ID!
   name: String
   description: String
+  value: SumInput
   proofOfPurchase: MutateDocumentInput
   images: [MutateImageInput!]
 }

@@ -1,3 +1,4 @@
+import type { BigDecimal } from "effect";
 import type {
   GraphQLResolveInfo,
   GraphQLScalarType,
@@ -35,6 +36,8 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
+  BigDecimal: { input: BigDecimal.BigDecimal; output: BigDecimal.BigDecimal };
+  Currency: { input: string; output: string };
   TemporalInstant: { input: Temporal.Instant; output: Temporal.Instant };
   Uint8Array: { input: Uint8Array; output: Uint8Array };
 };
@@ -49,6 +52,7 @@ export type Asset = {
   name: Scalars["String"]["output"];
   proofOfPurchase?: Maybe<Document>;
   updatedAt: Scalars["TemporalInstant"]["output"];
+  value: Sum;
 };
 
 export type AssetError = Error & {
@@ -63,6 +67,7 @@ export type CreateAssetInput = {
   images?: InputMaybe<Array<CreateImageInput>>;
   name: Scalars["String"]["input"];
   proofOfPurchase?: InputMaybe<CreateDocumentInput>;
+  value: SumInput;
 };
 
 export type CreateDocumentInput = {
@@ -160,12 +165,24 @@ export type QueryassetArgs = {
   id: Scalars["ID"]["input"];
 };
 
+export type Sum = {
+  __typename?: "Sum";
+  amount: Scalars["BigDecimal"]["output"];
+  currency: Scalars["Currency"]["output"];
+};
+
+export type SumInput = {
+  amount: Scalars["BigDecimal"]["input"];
+  currency: Scalars["Currency"]["input"];
+};
+
 export type UpdateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   id: Scalars["ID"]["input"];
   images?: InputMaybe<Array<MutateImageInput>>;
   name?: InputMaybe<Scalars["String"]["input"]>;
   proofOfPurchase?: InputMaybe<MutateDocumentInput>;
+  value?: InputMaybe<SumInput>;
 };
 
 export type UpdateDocumentInput = {
@@ -307,10 +324,12 @@ export type ResolversTypes = {
   AssetResponse: ResolverTypeWrapper<
     ResolversUnionTypes<ResolversTypes>["AssetResponse"]
   >;
+  BigDecimal: ResolverTypeWrapper<Scalars["BigDecimal"]["output"]>;
   CreateAssetInput: CreateAssetInput;
   CreateDocumentInput: CreateDocumentInput;
   CreateFileInput: CreateFileInput;
   CreateImageInput: CreateImageInput;
+  Currency: ResolverTypeWrapper<Scalars["Currency"]["output"]>;
   DeleteDocumentInput: DeleteDocumentInput;
   DeleteImageInput: DeleteImageInput;
   Document: ResolverTypeWrapper<Document>;
@@ -321,6 +340,8 @@ export type ResolversTypes = {
   MutateImageInput: MutateImageInput;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
+  Sum: ResolverTypeWrapper<Sum>;
+  SumInput: SumInput;
   TemporalInstant: ResolverTypeWrapper<Scalars["TemporalInstant"]["output"]>;
   Uint8Array: ResolverTypeWrapper<Scalars["Uint8Array"]["output"]>;
   UpdateAssetInput: UpdateAssetInput;
@@ -336,10 +357,12 @@ export type ResolversParentTypes = {
   ID: Scalars["ID"]["output"];
   AssetError: AssetError;
   AssetResponse: ResolversUnionTypes<ResolversParentTypes>["AssetResponse"];
+  BigDecimal: Scalars["BigDecimal"]["output"];
   CreateAssetInput: CreateAssetInput;
   CreateDocumentInput: CreateDocumentInput;
   CreateFileInput: CreateFileInput;
   CreateImageInput: CreateImageInput;
+  Currency: Scalars["Currency"]["output"];
   DeleteDocumentInput: DeleteDocumentInput;
   DeleteImageInput: DeleteImageInput;
   Document: Document;
@@ -350,6 +373,8 @@ export type ResolversParentTypes = {
   MutateImageInput: MutateImageInput;
   Mutation: {};
   Query: {};
+  Sum: Sum;
+  SumInput: SumInput;
   TemporalInstant: Scalars["TemporalInstant"]["output"];
   Uint8Array: Scalars["Uint8Array"]["output"];
   UpdateAssetInput: UpdateAssetInput;
@@ -387,6 +412,7 @@ export type AssetResolvers<
     ParentType,
     ContextType
   >;
+  value?: Resolver<ResolversTypes["Sum"], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -410,6 +436,16 @@ export type AssetResponseResolvers<
     ContextType
   >;
 };
+
+export interface BigDecimalScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes["BigDecimal"], any> {
+  name: "BigDecimal";
+}
+
+export interface CurrencyScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes["Currency"], any> {
+  name: "Currency";
+}
 
 export type DocumentResolvers<
   ContextType = any,
@@ -519,6 +555,15 @@ export type QueryResolvers<
   assets?: Resolver<Array<ResolversTypes["Asset"]>, ParentType, ContextType>;
 };
 
+export type SumResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes["Sum"] = ResolversParentTypes["Sum"],
+> = {
+  amount?: Resolver<ResolversTypes["BigDecimal"], ParentType, ContextType>;
+  currency?: Resolver<ResolversTypes["Currency"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface TemporalInstantScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes["TemporalInstant"], any> {
   name: "TemporalInstant";
@@ -533,12 +578,15 @@ export type Resolvers<ContextType = any> = {
   Asset?: AssetResolvers<ContextType>;
   AssetError?: AssetErrorResolvers<ContextType>;
   AssetResponse?: AssetResponseResolvers<ContextType>;
+  BigDecimal?: GraphQLScalarType;
+  Currency?: GraphQLScalarType;
   Document?: DocumentResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
   File?: FileResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Sum?: SumResolvers<ContextType>;
   TemporalInstant?: GraphQLScalarType;
   Uint8Array?: GraphQLScalarType;
 };

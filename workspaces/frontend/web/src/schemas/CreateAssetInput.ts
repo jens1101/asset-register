@@ -3,6 +3,7 @@ import { AssetFormValues } from "./AssetFormValues.js";
 import { CreateDocumentInput } from "./CreateDocumentInput.js";
 import { CreateFileInputFromFile } from "./CreateFileInput.js";
 import { CreateImageInput } from "./CreateImageInput.js";
+import { SumInput, SumInputFromFormValues } from "./SumInput.js";
 import { inputMaybe } from "./inputMaybe.js";
 import { Effect, ParseResult, Schema } from "effect";
 
@@ -10,6 +11,7 @@ const CreateAssetInput: Schema.Schema<CreateAssetInputType> = Schema.Struct({
   name: Schema.NonEmptyString,
   description: inputMaybe(Schema.NonEmptyString),
   proofOfPurchase: inputMaybe(CreateDocumentInput),
+  value: SumInput,
   images: inputMaybe(Schema.mutable(Schema.Array(CreateImageInput))),
 }).annotations({
   identifier: "CreateAssetInput",
@@ -47,6 +49,7 @@ export const CreateAssetInputFromAssetFormValues = Schema.transformOrFail(
                     from.proofOfPurchase.file,
                   ),
                 }),
+            value: yield* Schema.decode(SumInputFromFormValues)(from.value),
           };
         }),
         (error) => new ParseResult.Type(ast, from, error.message),

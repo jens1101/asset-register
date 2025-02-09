@@ -7,7 +7,9 @@
   "exports": {
     ".": "./dist/index.js",
     "./scalars/TemporalInstant": "./dist/scalars/TemporalInstant.js",
-    "./scalars/Uint8Array": "./dist/scalars/Uint8Array.js"
+    "./scalars/Uint8Array": "./dist/scalars/Uint8Array.js",
+    "./scalars/BigDecimal": "./dist/scalars/BigDecimal.js",
+    "./scalars/Currency": "./dist/scalars/Currency.js"
   },
   "files": [
     "dist"

@@ -1,5 +1,42 @@
 # Asset Register
 
+## Guides
+
+### Generating migrations
+
+```sh
+npm run build
+npm run migration:generate src/migrations/[migration-name]
+```
+
+where `[migration-name]` is the suffix that you want to add to the end of the
+generated file name. It's recommended to keep this in kebab case.
+
+This command automatically detects the difference between the entities registerd
+with the data source and the DB, and generates the migrations accordingly.
+Therefore the build step is required.
+
+It's recommended to code and generate migrations in sensical increments.
+Otherwise a single migration may become difficult to understand since it covers
+a large scope of work.
+
+**Important:** After generating new migration(s) you also need to update the
+"src/migrations/index.ts" file. Otherwise it won't be picked up.
+
+**Example**
+
+```sh
+npm run build
+npm run migration:generate src/migrations/addedd-image-position
+```
+
+### Running migrations
+
+```sh
+npm run build
+npm run migration:run
+```
+
 ## Errors and Defects
 
 Errors and defects form part of the

@@ -1,6 +1,6 @@
 import type { InitialValue } from "../common/types.js";
 import { setInputValue } from "../common/utils.js";
-import { type Accessor, createSignal, onCleanup } from "solid-js";
+import { type Accessor, createSignal, onCleanup, onMount } from "solid-js";
 
 /**
  * The minimum interface required for the field validation to work. This is
@@ -178,8 +178,11 @@ export function useFormField<E extends FormFieldElement>({
   empty: Accessor<boolean>;
   /** When called, clears the value of this input field. */
   clear: () => void;
+  /** Accessor to the internal value of the element */
+  value: Accessor<E["value"] | undefined>;
 } {
   const [element, setElement] = createSignal<E>();
+  const [value, setValue] = createSignal<E["value"]>();
   const [touched, setTouched] = createSignal<boolean>(false);
   const [empty, setEmpty] = createSignal<boolean>(true);
   const [nativeErrorMessages, setNativeErrorMessages] = createSignal<string[]>(
@@ -329,11 +332,13 @@ export function useFormField<E extends FormFieldElement>({
   };
 
   /**
-   * Event listener to mark the form field as "touched".
+   * Event listener to mark the form field as "touched" and update the value
+   * signal.
    * @param event The event, as specified by {@link touchedEventType}, that
    * triggerd this listener
    */
   const onTouched: EventListener = () => {
+    setValue(element()?.value);
     setTouched(true);
   };
 
@@ -374,21 +379,32 @@ export function useFormField<E extends FormFieldElement>({
     }
 
     setElement(() => formFieldElement);
+  };
+
+  // Run the initialisation logic after the component has been mounted. This is
+  // done because some form elements (such as `select`) can have dynamic
+  // children that need to be rendered first.
+  onMount(() => {
+    const currentElement = element();
+
+    if (!currentElement) return;
 
     if (initialValue) {
-      setInputValue(formFieldElement, initialValue);
+      setInputValue(currentElement, initialValue);
       setEmpty(!initialValue);
     }
 
-    formFieldElement.addEventListener(validationEventType, onValidation);
-    formFieldElement.addEventListener("invalid", onInvalid);
-    formFieldElement.addEventListener(touchedEventType, onTouched);
-    formFieldElement.addEventListener("change", onEmpty);
+    setValue(currentElement.value);
+
+    currentElement.addEventListener(validationEventType, onValidation);
+    currentElement.addEventListener("invalid", onInvalid);
+    currentElement.addEventListener(touchedEventType, onTouched);
+    currentElement.addEventListener("change", onEmpty);
 
     // Validations are immediately run in order to prevent fields from initially
     // being marked as valid and then beecoming invalid upon submission.
     onValidation(new Event("initialised"));
-  };
+  });
 
   onCleanup(() => {
     const currentElement = element();
@@ -407,5 +423,6 @@ export function useFormField<E extends FormFieldElement>({
     touched,
     empty,
     clear,
+    value,
   };
 }
