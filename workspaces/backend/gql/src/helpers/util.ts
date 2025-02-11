@@ -60,18 +60,3 @@ export const runAsyncWrapper = <A, E>(
     (result) =>
       result.catch(() => Promise.reject(new GraphQLError(defectMessage))),
   );
-
-export const runSyncWrapper = <A, E>(
-  effect: Effect.Effect<A, E>,
-  defectMessage: string,
-) =>
-  pipe(
-    effect,
-    Effect.catchAllCause((cause) =>
-      pipe(
-        Effect.logError(defectMessage, cause),
-        Effect.andThen(Effect.die(new GraphQLError(defectMessage))),
-      ),
-    ),
-    Effect.runSync,
-  );
