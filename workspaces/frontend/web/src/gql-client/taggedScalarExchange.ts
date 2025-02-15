@@ -3,10 +3,14 @@ import {
   temporalInstantScalar,
   uint8ArrayScalar,
 } from "@app/scalars";
+import { walk } from "@app/walker";
 import { type Exchange } from "@urql/core";
-import { Option, Schema, pipe } from "effect";
-import { walkStep } from "walkjs";
-import { map, pipe as wonkaPipe } from "wonka";
+import { Effect, Option, Schema, pipe } from "effect";
+import {
+  fromPromise as wonkaFromPromise,
+  mergeMap as wonkaMergeMap,
+  pipe as wonkaPipe,
+} from "wonka";
 
 /** A union schema of all the tagged scalars used in this GQL API. */
 const taggedScalarsSchema = Schema.Union(
@@ -21,68 +25,74 @@ export const taggedScalarExchange: Exchange = ({ forward }) => {
     const operationResult$ = forward(
       wonkaPipe(
         operations$,
-        map((operation) => {
-          if (!operation.variables) return operation;
+        wonkaMergeMap((operation) =>
+          pipe(
+            operation,
+            async (operation) => {
+              const operationVariables = { variables: operation.variables };
 
-          const operationVariables = { variables: operation.variables };
+              for (const node of walk(operationVariables)) {
+                if (node.isPrimitive) continue;
+                if (Option.isNone(node.parentInfo)) continue;
 
-          for (const node of walkStep(operationVariables, {
-            graphMode: "graph",
-          })) {
-            pipe(
-              Option.some(node),
-              // The root node can always be skipped since it just exists as a
-              // container for the variables.
-              Option.filter((node) => !node.isRoot),
-              Option.flatMap((node) =>
-                Schema.encodeUnknownOption(taggedScalarsSchema)(node.val),
-              ),
-              Option.andThen((value) => {
-                if (node.parent?.val && node.key) {
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                  node.parent.val[node.key] = value;
-                }
-              }),
-            );
-          }
+                const encodedValue = await pipe(
+                  node.value,
+                  Schema.encodeUnknown(taggedScalarsSchema),
+                  Effect.option,
+                  Effect.runPromise,
+                );
 
-          operation.variables = operationVariables.variables;
-          return operation;
-        }),
+                if (Option.isNone(encodedValue)) continue;
+
+                const { parentNode, childKey } = node.parentInfo.value;
+
+                node.skipDescendants();
+                parentNode.value[childKey] = encodedValue.value;
+              }
+
+              operation.variables = operationVariables.variables;
+              return operation;
+            },
+            wonkaFromPromise,
+          ),
+        ),
       ),
     );
 
     // Decode the tagged scalars within the operation result data.
     return wonkaPipe(
       operationResult$,
-      map((operationResult) => {
-        if (!operationResult.data) return operationResult;
+      wonkaMergeMap((operationResult) =>
+        pipe(
+          operationResult,
+          async (operationResult) => {
+            const operationData = { data: operationResult.data as unknown };
 
-        const operationData = { data: operationResult.data as unknown };
+            for (const node of walk(operationData)) {
+              if (node.isPrimitive) continue;
+              if (Option.isNone(node.parentInfo)) continue;
 
-        for (const node of walkStep(operationData)) {
-          pipe(
-            Option.some(node),
-            // - The root node can always be skipped since it just exists as a
-            //   container for the data.
-            // - Tagged scalars are always objects, so we can skip any node
-            //   that's a primitive value.
-            Option.filter((node) => !node.isRoot && node.nodeType !== "value"),
-            Option.flatMap((node) =>
-              Schema.decodeUnknownOption(taggedScalarsSchema)(node.val),
-            ),
-            Option.andThen((value) => {
-              if (node.parent?.val && node.key) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                node.parent.val[node.key] = value;
-              }
-            }),
-          );
-        }
+              const decodedValue = await pipe(
+                node.value,
+                Schema.decodeUnknown(taggedScalarsSchema),
+                Effect.option,
+                Effect.runPromise,
+              );
 
-        operationResult.data = operationData.data;
-        return operationResult;
-      }),
+              if (Option.isNone(decodedValue)) continue;
+
+              const { parentNode, childKey } = node.parentInfo.value;
+
+              node.skipDescendants();
+              parentNode.value[childKey] = decodedValue.value;
+            }
+
+            operationResult.data = operationData.data;
+            return operationResult;
+          },
+          wonkaFromPromise,
+        ),
+      ),
     );
   };
 };

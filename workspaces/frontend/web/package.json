@@ -21,6 +21,7 @@
   "dependencies": {
     "@app/common": "1.0.0",
     "@app/scalars": "1.0.0",
+    "@app/walker": "1.0.0",
     "@graphql-codegen/add": "5.0.3",
     "@solidjs/router": "^0.15.0",
     "@urql/core": "^5.0.8",
@@ -33,7 +34,6 @@
     "pretty-bytes": "6.1.1",
     "solid-js": "^1.8.11",
     "temporal-polyfill": "0.2.5",
-    "walkjs": "6.0.1",
     "wonka": "6.3.4"
   },
   "devDependencies": {
