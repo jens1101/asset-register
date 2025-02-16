@@ -1,4 +1,9 @@
 import { taggedScalarExchange } from "./taggedScalarExchange.js";
+import {
+  bigDecimalScalar,
+  temporalInstantScalar,
+  uint8ArrayScalar,
+} from "@app/scalars";
 import { Client, fetchExchange, subscriptionExchange } from "@urql/core";
 import type { FetchBody } from "@urql/core/internal";
 import { type SubscribePayload, createClient } from "graphql-ws";
@@ -13,7 +18,11 @@ const webSocketClient = createClient({
 export const client = new Client({
   url: UPSTREAM_GQL_URL,
   exchanges: [
-    taggedScalarExchange,
+    taggedScalarExchange(
+      bigDecimalScalar,
+      temporalInstantScalar,
+      uint8ArrayScalar,
+    ),
     fetchExchange,
     subscriptionExchange({
       forwardSubscription(request: FetchBody) {
