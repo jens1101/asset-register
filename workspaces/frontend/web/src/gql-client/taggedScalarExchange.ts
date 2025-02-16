@@ -19,6 +19,32 @@ const taggedScalarsSchema = Schema.Union(
   uint8ArrayScalar.typeFromScalar,
 );
 
+async function codeData<T, A, E>(
+  data: T,
+  codeValue: (value: unknown) => Effect.Effect<A, E>,
+) {
+  for (const node of walk(data)) {
+    if (node.isPrimitive) continue;
+    if (Option.isNone(node.parentInfo)) continue;
+
+    const codedValue = await pipe(
+      node.value,
+      codeValue,
+      Effect.option,
+      Effect.runPromise,
+    );
+
+    if (Option.isNone(codedValue)) continue;
+
+    const { parentNode, childKey } = node.parentInfo.value;
+
+    node.skipDescendants();
+    parentNode.value[childKey] = codedValue.value;
+  }
+
+  return data;
+}
+
 export const taggedScalarExchange: Exchange = ({ forward }) => {
   return (operations$) => {
     // Encode the tagged scalars within the operation variables.
@@ -26,34 +52,14 @@ export const taggedScalarExchange: Exchange = ({ forward }) => {
       wonkaPipe(
         operations$,
         wonkaMergeMap((operation) =>
-          pipe(
-            operation,
-            async (operation) => {
-              const operationVariables = { variables: operation.variables };
-
-              for (const node of walk(operationVariables)) {
-                if (node.isPrimitive) continue;
-                if (Option.isNone(node.parentInfo)) continue;
-
-                const encodedValue = await pipe(
-                  node.value,
-                  Schema.encodeUnknown(taggedScalarsSchema),
-                  Effect.option,
-                  Effect.runPromise,
-                );
-
-                if (Option.isNone(encodedValue)) continue;
-
-                const { parentNode, childKey } = node.parentInfo.value;
-
-                node.skipDescendants();
-                parentNode.value[childKey] = encodedValue.value;
-              }
-
-              operation.variables = operationVariables.variables;
+          wonkaFromPromise(
+            codeData(
+              { variables: operation.variables },
+              Schema.encodeUnknown(taggedScalarsSchema),
+            ).then(({ variables }) => {
+              operation.variables = variables;
               return operation;
-            },
-            wonkaFromPromise,
+            }),
           ),
         ),
       ),
@@ -63,34 +69,14 @@ export const taggedScalarExchange: Exchange = ({ forward }) => {
     return wonkaPipe(
       operationResult$,
       wonkaMergeMap((operationResult) =>
-        pipe(
-          operationResult,
-          async (operationResult) => {
-            const operationData = { data: operationResult.data as unknown };
-
-            for (const node of walk(operationData)) {
-              if (node.isPrimitive) continue;
-              if (Option.isNone(node.parentInfo)) continue;
-
-              const decodedValue = await pipe(
-                node.value,
-                Schema.decodeUnknown(taggedScalarsSchema),
-                Effect.option,
-                Effect.runPromise,
-              );
-
-              if (Option.isNone(decodedValue)) continue;
-
-              const { parentNode, childKey } = node.parentInfo.value;
-
-              node.skipDescendants();
-              parentNode.value[childKey] = decodedValue.value;
-            }
-
-            operationResult.data = operationData.data;
+        wonkaFromPromise(
+          codeData(
+            { data: operationResult.data as unknown },
+            Schema.decodeUnknown(taggedScalarsSchema),
+          ).then(({ data }) => {
+            operationResult.data = data;
             return operationResult;
-          },
-          wonkaFromPromise,
+          }),
         ),
       ),
     );
