@@ -23,6 +23,7 @@ export const AssetEntity = new EntitySchema<Asset>({
   checks: [
     { expression: 'upper("valueCurrency") = "valueCurrency"' },
     { expression: '"valueAmount" >= 0' },
+    { expression: "TRIM(\"name\") != ''" },
   ],
   columns: {
     id: {
