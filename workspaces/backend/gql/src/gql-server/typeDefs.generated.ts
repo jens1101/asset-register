@@ -432,6 +432,11 @@ export const typeDefs = {
       directives: [],
     },
     {
+      kind: "ScalarTypeDefinition",
+      name: { kind: "Name", value: "TrimmedString" },
+      directives: [],
+    },
+    {
       kind: "InterfaceTypeDefinition",
       name: { kind: "Name", value: "Error" },
       interfaces: [],
@@ -709,7 +714,10 @@ export const typeDefs = {
         {
           kind: "InputValueDefinition",
           name: { kind: "Name", value: "name" },
-          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "TrimmedString" },
+          },
           directives: [],
         },
         {
@@ -755,7 +763,10 @@ export const typeDefs = {
         {
           kind: "InputValueDefinition",
           name: { kind: "Name", value: "name" },
-          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "TrimmedString" },
+          },
           directives: [],
         },
         {
@@ -857,7 +868,10 @@ export const typeDefs = {
           kind: "FieldDefinition",
           name: { kind: "Name", value: "name" },
           arguments: [],
-          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "TrimmedString" },
+          },
           directives: [],
         },
         {

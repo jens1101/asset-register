@@ -39,7 +39,7 @@ input CreateFileInput {
 input CreateImageInput {
   description: String
   file: CreateFileInput!
-  name: String
+  name: TrimmedString
   previousImageId: ID
 }
 
@@ -78,7 +78,7 @@ type Image {
   description: String
   file: File!
   id: ID!
-  name: String
+  name: TrimmedString
   updatedAt: TemporalInstant!
 }
 
@@ -118,6 +118,8 @@ input SumInput {
 
 scalar TemporalInstant
 
+scalar TrimmedString
+
 scalar Uint8Array
 
 input UpdateAssetInput {
@@ -137,6 +139,6 @@ input UpdateImageInput {
   description: String
   file: CreateFileInput
   id: ID!
-  name: String
+  name: TrimmedString
   previousImageId: ID
 }

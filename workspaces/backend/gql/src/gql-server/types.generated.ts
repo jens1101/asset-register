@@ -40,6 +40,7 @@ export type Scalars = {
   Currency: { input: string; output: string };
   NonEmptyTrimmedString: { input: string; output: string };
   TemporalInstant: { input: Temporal.Instant; output: Temporal.Instant };
+  TrimmedString: { input: string; output: string };
   Uint8Array: { input: Uint8Array; output: Uint8Array };
 };
 
@@ -84,7 +85,7 @@ export type CreateFileInput = {
 export type CreateImageInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   file: CreateFileInput;
-  name?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["TrimmedString"]["input"]>;
   previousImageId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
@@ -124,7 +125,7 @@ export type Image = {
   description?: Maybe<Scalars["String"]["output"]>;
   file: File;
   id: Scalars["ID"]["output"];
-  name?: Maybe<Scalars["String"]["output"]>;
+  name?: Maybe<Scalars["TrimmedString"]["output"]>;
   updatedAt: Scalars["TemporalInstant"]["output"];
 };
 
@@ -194,7 +195,7 @@ export type UpdateImageInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   file?: InputMaybe<CreateFileInput>;
   id: Scalars["ID"]["input"];
-  name?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["TrimmedString"]["input"]>;
   previousImageId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
@@ -347,6 +348,7 @@ export type ResolversTypes = {
   Sum: ResolverTypeWrapper<Sum>;
   SumInput: SumInput;
   TemporalInstant: ResolverTypeWrapper<Scalars["TemporalInstant"]["output"]>;
+  TrimmedString: ResolverTypeWrapper<Scalars["TrimmedString"]["output"]>;
   Uint8Array: ResolverTypeWrapper<Scalars["Uint8Array"]["output"]>;
   UpdateAssetInput: UpdateAssetInput;
   UpdateDocumentInput: UpdateDocumentInput;
@@ -381,6 +383,7 @@ export type ResolversParentTypes = {
   Sum: Sum;
   SumInput: SumInput;
   TemporalInstant: Scalars["TemporalInstant"]["output"];
+  TrimmedString: Scalars["TrimmedString"]["output"];
   Uint8Array: Scalars["Uint8Array"]["output"];
   UpdateAssetInput: UpdateAssetInput;
   UpdateDocumentInput: UpdateDocumentInput;
@@ -516,7 +519,11 @@ export type ImageResolvers<
   >;
   file?: Resolver<ResolversTypes["File"], ParentType, ContextType>;
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes["String"]>, ParentType, ContextType>;
+  name?: Resolver<
+    Maybe<ResolversTypes["TrimmedString"]>,
+    ParentType,
+    ContextType
+  >;
   updatedAt?: Resolver<
     ResolversTypes["TemporalInstant"],
     ParentType,
@@ -586,6 +593,11 @@ export interface TemporalInstantScalarConfig
   name: "TemporalInstant";
 }
 
+export interface TrimmedStringScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes["TrimmedString"], any> {
+  name: "TrimmedString";
+}
+
 export interface Uint8ArrayScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes["Uint8Array"], any> {
   name: "Uint8Array";
@@ -606,5 +618,6 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   Sum?: SumResolvers<ContextType>;
   TemporalInstant?: GraphQLScalarType;
+  TrimmedString?: GraphQLScalarType;
   Uint8Array?: GraphQLScalarType;
 };

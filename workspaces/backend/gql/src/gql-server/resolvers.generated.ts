@@ -10,6 +10,7 @@ import { BigDecimal } from "./base/resolvers/BigDecimal.js";
 import { Currency } from "./base/resolvers/Currency.js";
 import { NonEmptyTrimmedString } from "./base/resolvers/NonEmptyTrimmedString.js";
 import { TemporalInstant } from "./base/resolvers/TemporalInstant.js";
+import { TrimmedString } from "./base/resolvers/TrimmedString.js";
 import { Uint8Array } from "./base/resolvers/Uint8Array.js";
 import { Document } from "./document/resolvers/Document.js";
 import { File } from "./file/resolvers/File.js";
@@ -35,5 +36,6 @@ export const resolvers: Resolvers = {
   Currency: Currency,
   NonEmptyTrimmedString: NonEmptyTrimmedString,
   TemporalInstant: TemporalInstant,
+  TrimmedString: TrimmedString,
   Uint8Array: Uint8Array,
 };
