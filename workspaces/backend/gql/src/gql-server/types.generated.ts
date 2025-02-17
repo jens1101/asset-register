@@ -38,6 +38,7 @@ export type Scalars = {
   Float: { input: number; output: number };
   BigDecimal: { input: BigDecimal.BigDecimal; output: BigDecimal.BigDecimal };
   Currency: { input: string; output: string };
+  NonEmptyTrimmedString: { input: string; output: string };
   TemporalInstant: { input: Temporal.Instant; output: Temporal.Instant };
   Uint8Array: { input: Uint8Array; output: Uint8Array };
 };
@@ -49,7 +50,7 @@ export type Asset = {
   id: Scalars["ID"]["output"];
   images: Array<Image>;
   mainImage?: Maybe<Image>;
-  name: Scalars["String"]["output"];
+  name: Scalars["NonEmptyTrimmedString"]["output"];
   proofOfPurchase?: Maybe<Document>;
   updatedAt: Scalars["TemporalInstant"]["output"];
   value: Sum;
@@ -65,7 +66,7 @@ export type AssetResponse = Asset | AssetError;
 export type CreateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   images?: InputMaybe<Array<CreateImageInput>>;
-  name: Scalars["String"]["input"];
+  name: Scalars["NonEmptyTrimmedString"]["input"];
   proofOfPurchase?: InputMaybe<CreateDocumentInput>;
   value: SumInput;
 };
@@ -180,7 +181,7 @@ export type UpdateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   id: Scalars["ID"]["input"];
   images?: InputMaybe<Array<MutateImageInput>>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["NonEmptyTrimmedString"]["input"]>;
   proofOfPurchase?: InputMaybe<MutateDocumentInput>;
   value?: InputMaybe<SumInput>;
 };
@@ -339,6 +340,9 @@ export type ResolversTypes = {
   MutateDocumentInput: MutateDocumentInput;
   MutateImageInput: MutateImageInput;
   Mutation: ResolverTypeWrapper<{}>;
+  NonEmptyTrimmedString: ResolverTypeWrapper<
+    Scalars["NonEmptyTrimmedString"]["output"]
+  >;
   Query: ResolverTypeWrapper<{}>;
   Sum: ResolverTypeWrapper<Sum>;
   SumInput: SumInput;
@@ -372,6 +376,7 @@ export type ResolversParentTypes = {
   MutateDocumentInput: MutateDocumentInput;
   MutateImageInput: MutateImageInput;
   Mutation: {};
+  NonEmptyTrimmedString: Scalars["NonEmptyTrimmedString"]["output"];
   Query: {};
   Sum: Sum;
   SumInput: SumInput;
@@ -401,7 +406,11 @@ export type AssetResolvers<
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
   images?: Resolver<Array<ResolversTypes["Image"]>, ParentType, ContextType>;
   mainImage?: Resolver<Maybe<ResolversTypes["Image"]>, ParentType, ContextType>;
-  name?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  name?: Resolver<
+    ResolversTypes["NonEmptyTrimmedString"],
+    ParentType,
+    ContextType
+  >;
   proofOfPurchase?: Resolver<
     Maybe<ResolversTypes["Document"]>,
     ParentType,
@@ -541,6 +550,14 @@ export type MutationResolvers<
   >;
 };
 
+export interface NonEmptyTrimmedStringScalarConfig
+  extends GraphQLScalarTypeConfig<
+    ResolversTypes["NonEmptyTrimmedString"],
+    any
+  > {
+  name: "NonEmptyTrimmedString";
+}
+
 export type QueryResolvers<
   ContextType = any,
   ParentType extends
@@ -585,6 +602,7 @@ export type Resolvers<ContextType = any> = {
   File?: FileResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
+  NonEmptyTrimmedString?: GraphQLScalarType;
   Query?: QueryResolvers<ContextType>;
   Sum?: SumResolvers<ContextType>;
   TemporalInstant?: GraphQLScalarType;

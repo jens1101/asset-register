@@ -10,6 +10,8 @@ scalar BigDecimal
 
 scalar Currency
 
+scalar NonEmptyTrimmedString
+
 interface Error {
   message: String!
 }

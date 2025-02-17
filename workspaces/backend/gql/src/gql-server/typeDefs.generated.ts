@@ -15,7 +15,7 @@ export const typeDefs = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "String" },
+              name: { kind: "Name", value: "NonEmptyTrimmedString" },
             },
           },
           directives: [],
@@ -81,7 +81,10 @@ export const typeDefs = {
         {
           kind: "InputValueDefinition",
           name: { kind: "Name", value: "name" },
-          type: { kind: "NamedType", name: { kind: "Name", value: "String" } },
+          type: {
+            kind: "NamedType",
+            name: { kind: "Name", value: "NonEmptyTrimmedString" },
+          },
           directives: [],
         },
         {
@@ -317,7 +320,7 @@ export const typeDefs = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "String" },
+              name: { kind: "Name", value: "NonEmptyTrimmedString" },
             },
           },
           directives: [],
@@ -421,6 +424,11 @@ export const typeDefs = {
     {
       kind: "ScalarTypeDefinition",
       name: { kind: "Name", value: "Currency" },
+      directives: [],
+    },
+    {
+      kind: "ScalarTypeDefinition",
+      name: { kind: "Name", value: "NonEmptyTrimmedString" },
       directives: [],
     },
     {

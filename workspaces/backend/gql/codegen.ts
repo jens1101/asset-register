@@ -25,6 +25,9 @@ const config: CodegenConfig = {
           Currency: {
             type: "string",
           },
+          NonEmptyTrimmedString: {
+            type: "string",
+          },
         },
         add: {
           "./types.generated.ts": {
