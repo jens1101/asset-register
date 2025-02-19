@@ -51,12 +51,10 @@ export const ImageEntity = new EntitySchema<Image>({
     },
     createdAt: {
       type: "timestamp",
-      createDate: true,
       transformer: TemporalInstantTransformer,
     },
     updatedAt: {
       type: "timestamp",
-      updateDate: true,
       transformer: TemporalInstantTransformer,
     },
   },

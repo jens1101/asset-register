@@ -22,7 +22,6 @@ export const DocumentEntity = new EntitySchema<Document>({
     },
     createdAt: {
       type: "timestamp",
-      createDate: true,
       transformer: TemporalInstantTransformer,
     },
   },
