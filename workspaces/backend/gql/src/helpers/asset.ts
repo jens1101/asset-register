@@ -11,6 +11,7 @@ import {
 } from "./proofOfPurchase.js";
 import { entityManagerWapper, findOneOrFailWrapper } from "./util.js";
 import { Array, Effect, Option, pipe } from "effect";
+import { Temporal } from "temporal-polyfill";
 import { type FindOptionsRelations, type FindOptionsWhere } from "typeorm";
 
 export const readAsset = ({
@@ -91,6 +92,8 @@ export const updateAsset = (asset: Asset, input: UpdateAssetInput) =>
       if (input.name != null) asset.name = input.name;
       if (input.description != null) asset.description = input.description;
       if (input.value) asset.value = input.value;
+
+      asset.updatedAt = Temporal.Now.instant();
 
       return yield* saveAsset(asset);
     }),

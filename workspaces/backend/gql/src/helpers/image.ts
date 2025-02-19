@@ -8,6 +8,7 @@ import type {
 import { deleteFile, saveFile } from "./file.js";
 import { entityManagerWapper } from "./util.js";
 import { Array, BigDecimal, Effect, Option, Order, pipe } from "effect";
+import { Temporal } from "temporal-polyfill";
 import type { FindOptionsRelations, FindOptionsWhere } from "typeorm";
 
 export const readMainImage = ({ where }: { where: FindOptionsWhere<Image> }) =>
@@ -108,6 +109,8 @@ const updateImage = (asset: Asset, input: UpdateImageInput) =>
 
       asset.images = Array.sort(asset.images, orderImageByPosition);
     }
+
+    image.updatedAt = Temporal.Now.instant();
 
     yield* saveImage(image);
 

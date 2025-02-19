@@ -47,12 +47,10 @@ export const AssetEntity = new EntitySchema<Asset>({
     },
     createdAt: {
       type: "timestamp",
-      createDate: true,
       transformer: TemporalInstantTransformer,
     },
     updatedAt: {
       type: "timestamp",
-      updateDate: true,
       transformer: TemporalInstantTransformer,
     },
   },

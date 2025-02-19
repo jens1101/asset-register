@@ -30,7 +30,6 @@ export const FileEntity = new EntitySchema<File>({
     },
     createdAt: {
       type: "timestamp",
-      createDate: true,
       transformer: TemporalInstantTransformer,
     },
   },
