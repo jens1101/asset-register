@@ -35,6 +35,7 @@ export const readImages = ({
       manager.find(ImageEntity, {
         where,
         ...(relations && { relations }),
+        order: { position: "ASC" },
       }),
     onError: (error) => Effect.die(error),
   });
