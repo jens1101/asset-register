@@ -74,9 +74,10 @@ export const createImage = (asset: Asset, input: CreateImageInput) =>
       file: yield* saveFile(input.file),
       position: yield* getNewImagePosition(
         asset.images,
-        Option.filter(
-          Option.some(Number(input.previousImageId)),
-          (value) => !Number.isNaN(value),
+        pipe(
+          Option.fromNullable(input.previousImageId),
+          Option.map(Number),
+          Option.filter((value) => !Number.isNaN(value)),
         ),
       ),
     });
