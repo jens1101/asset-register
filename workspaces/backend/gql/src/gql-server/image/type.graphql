@@ -1,6 +1,6 @@
 type Image {
   id: ID!
-  name: String
+  name: TrimmedString
   description: String
   createdAt: TemporalInstant!
   updatedAt: TemporalInstant!

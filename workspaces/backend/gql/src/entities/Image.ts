@@ -1,4 +1,5 @@
 import { EntityName } from "../enums/EntityName.js";
+import { isTrimmed } from "../helpers/checks.js";
 import type { Asset } from "./Asset.js";
 import type { File } from "./File.js";
 import {
@@ -23,10 +24,7 @@ export interface Image {
 
 export const ImageEntity = new EntitySchema<Image>({
   name: EntityName.Image,
-  orderBy: {
-    asset: "ASC",
-    position: "ASC",
-  },
+  checks: [isTrimmed("name")],
   indices: [
     {
       columns: ["asset", "position"],

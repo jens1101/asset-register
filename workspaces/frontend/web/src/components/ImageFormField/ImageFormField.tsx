@@ -63,6 +63,15 @@ export const ImageFormField: Component<
   } = useFormField<HTMLInputElement>({
     initialValue: initialName,
     validationEventType: "input",
+    customValidators: {
+      isAsync: false,
+      functions: [
+        (element) =>
+          element.value !== element.value.trim()
+            ? "Name may not contain leading or trailing spaces"
+            : "",
+      ],
+    },
     validatonErrorMap: {
       valueMissing: "Name is required",
     },

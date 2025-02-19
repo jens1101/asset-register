@@ -4,7 +4,7 @@ type Asset {
   id: ID!
   images: [Image!]!
   mainImage: Image
-  name: String!
+  name: NonEmptyTrimmedString!
   proofOfPurchase: Document
   updatedAt: TemporalInstant!
   value: Sum!
@@ -21,7 +21,7 @@ scalar BigDecimal
 input CreateAssetInput {
   description: String
   images: [CreateImageInput!]
-  name: String!
+  name: NonEmptyTrimmedString!
   proofOfPurchase: CreateDocumentInput
   value: SumInput!
 }
@@ -39,7 +39,7 @@ input CreateFileInput {
 input CreateImageInput {
   description: String
   file: CreateFileInput!
-  name: String
+  name: TrimmedString
   previousImageId: ID
 }
 
@@ -78,7 +78,7 @@ type Image {
   description: String
   file: File!
   id: ID!
-  name: String
+  name: TrimmedString
   updatedAt: TemporalInstant!
 }
 
@@ -99,6 +99,8 @@ type Mutation {
   updateAsset(data: UpdateAssetInput!): AssetResponse!
 }
 
+scalar NonEmptyTrimmedString
+
 type Query {
   asset(id: ID!): AssetResponse!
   assets: [Asset!]!
@@ -116,13 +118,15 @@ input SumInput {
 
 scalar TemporalInstant
 
+scalar TrimmedString
+
 scalar Uint8Array
 
 input UpdateAssetInput {
   description: String
   id: ID!
   images: [MutateImageInput!]
-  name: String
+  name: NonEmptyTrimmedString
   proofOfPurchase: MutateDocumentInput
   value: SumInput
 }
@@ -135,6 +139,6 @@ input UpdateImageInput {
   description: String
   file: CreateFileInput
   id: ID!
-  name: String
+  name: TrimmedString
   previousImageId: ID
 }

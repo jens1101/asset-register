@@ -13,18 +13,12 @@ const config: CodegenConfig = {
           strictScalars: true,
         },
         scalarsOverrides: {
-          TemporalInstant: {
-            type: "Temporal.Instant",
-          },
-          Uint8Array: {
-            type: "Uint8Array",
-          },
-          BigDecimal: {
-            type: "BigDecimal.BigDecimal",
-          },
-          Currency: {
-            type: "string",
-          },
+          TemporalInstant: { type: "Temporal.Instant" },
+          Uint8Array: { type: "Uint8Array" },
+          BigDecimal: { type: "BigDecimal.BigDecimal" },
+          Currency: { type: "string" },
+          NonEmptyTrimmedString: { type: "string" },
+          TrimmedString: { type: "string" },
         },
         add: {
           "./types.generated.ts": {

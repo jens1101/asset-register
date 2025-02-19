@@ -1,5 +1,5 @@
 input CreateAssetInput {
-  name: String!
+  name: NonEmptyTrimmedString!
   description: String
   images: [CreateImageInput!]
   value: SumInput!
@@ -8,7 +8,7 @@ input CreateAssetInput {
 
 input UpdateAssetInput {
   id: ID!
-  name: String
+  name: NonEmptyTrimmedString
   description: String
   value: SumInput
   proofOfPurchase: MutateDocumentInput

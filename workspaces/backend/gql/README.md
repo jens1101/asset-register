@@ -27,7 +27,7 @@ a large scope of work.
 
 ```sh
 npm run build
-npm run migration:generate src/migrations/addedd-image-position
+npm run migration:generate src/migrations/added-image-position
 ```
 
 ### Running migrations

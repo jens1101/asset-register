@@ -1,4 +1,10 @@
 import { EntityName } from "../enums/EntityName.js";
+import {
+  isGreaterThanOrEqualTo,
+  isNonEmpty,
+  isTrimmed,
+  isUpperCase,
+} from "../helpers/checks.js";
 import type { Document } from "./Document.js";
 import type { Image } from "./Image.js";
 import { type Sum, SumEntity } from "./Sum.js";
@@ -21,8 +27,10 @@ export interface Asset {
 export const AssetEntity = new EntitySchema<Asset>({
   name: EntityName.Asset,
   checks: [
-    { expression: 'upper("valueCurrency") = "valueCurrency"' },
-    { expression: '"valueAmount" >= 0' },
+    isUpperCase("valueCurrency"),
+    isGreaterThanOrEqualTo("valueAmount", "0"),
+    isTrimmed("name"),
+    isNonEmpty("name"),
   ],
   columns: {
     id: {

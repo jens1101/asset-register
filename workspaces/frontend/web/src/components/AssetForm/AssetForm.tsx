@@ -62,6 +62,15 @@ export const AssetForm: Component<
   } = useFormField<HTMLInputElement>({
     initialValue: initialValue.name,
     validationEventType: "input",
+    customValidators: {
+      isAsync: false,
+      functions: [
+        (element) =>
+          element.value !== element.value.trim()
+            ? "Name may not contain leading or trailing spaces"
+            : "",
+      ],
+    },
     validatonErrorMap: {
       valueMissing: "Name is required",
     },

@@ -1,5 +1,5 @@
 input CreateImageInput {
-  name: String
+  name: TrimmedString
   description: String
   file: CreateFileInput!
   previousImageId: ID
@@ -7,7 +7,7 @@ input CreateImageInput {
 
 input UpdateImageInput {
   id: ID!
-  name: String
+  name: TrimmedString
   description: String
   file: CreateFileInput
   previousImageId: ID
