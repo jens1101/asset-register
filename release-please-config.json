@@ -1,0 +1,25 @@
+{
+  "release-type": "node",
+  "plugins": ["node-workspace"],
+  "packages": {
+    "workspaces/backend/gql": {
+      "release-as": "1.0.0"
+    },
+    "workspaces/frontend/web": {
+      "release-as": "1.0.0"
+    },
+    "workspaces/shared/common": {
+      "release-as": "1.0.0"
+    },
+    "workspaces/shared/scalars": {
+      "release-as": "1.0.0"
+    },
+    "workspaces/shared/tsconfig": {
+      "release-as": "1.0.0"
+    },
+    "workspaces/shared/walker": {
+      "release-as": "1.0.0"
+    }
+  },
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
+}
