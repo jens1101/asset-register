@@ -1,5 +1,5 @@
 **/node_modules/
 **/dist/
-CHANGELOG.md
+**/CHANGELOG.md
 package-lock.json
 .nx/
