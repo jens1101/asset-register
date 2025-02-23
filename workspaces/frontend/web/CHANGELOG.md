@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/jens1101/asset-register/compare/web-v1.0.0...web-v1.1.0) (2025-02-23)
+
+
+### Features
+
+* **#54:** Standardised paths in app ([4a07712](https://github.com/jens1101/asset-register/commit/4a07712aa18f5e884a8ac3157fd77c1829ed8349))
+
 ## 1.0.0 (2025-02-22)
 
 
