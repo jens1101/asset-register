@@ -1,4 +1,6 @@
+import { generatePath } from "../../common/route.js";
 import { formatSum } from "../../common/utils.jsx";
+import { Paths } from "../../enums/Paths.js";
 import type {
   AssetListItemFragment,
   FileFragment,
@@ -45,7 +47,10 @@ export const AssetListItem: Component<{ asset: AssetListItemFragment }> = (
           <p class={"card-text"}>{props.asset.description}</p>
         </Show>
 
-        <A href={`/asset/${props.asset.id}`} class={"btn btn-primary"}>
+        <A
+          href={generatePath(Paths.ViewAsset, { id: props.asset.id })}
+          class={"btn btn-primary"}
+        >
           View
         </A>
       </div>

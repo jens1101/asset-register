@@ -1,3 +1,4 @@
+import { Paths } from "../../enums/Paths.js";
 import { A } from "@solidjs/router";
 import { Offcanvas } from "bootstrap";
 import { type Component, createSignal } from "solid-js";
@@ -8,7 +9,7 @@ export const MainNav: Component = () => {
   return (
     <nav class="navbar navbar-expand-md bg-body-tertiary sticky-top">
       <div class="container">
-        <A class="navbar-brand" href="/">
+        <A class="navbar-brand" href={Paths.Home}>
           Asset Register
         </A>
 
@@ -41,7 +42,7 @@ export const MainNav: Component = () => {
               onClick={() => offcanvasInstance()?.hide()}
             >
               <li class="nav-item">
-                <A class="nav-link" activeClass="active" href="/" end>
+                <A class="nav-link" activeClass="active" href={Paths.Home} end>
                   Home
                 </A>
               </li>
@@ -50,7 +51,7 @@ export const MainNav: Component = () => {
                 <A
                   class="nav-link"
                   activeClass="active"
-                  href="/asset/create"
+                  href={Paths.CreateAsset}
                   end
                 >
                   Create Asset

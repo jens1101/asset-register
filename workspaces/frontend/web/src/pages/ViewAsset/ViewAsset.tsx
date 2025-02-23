@@ -1,8 +1,10 @@
 import { defaultDateTimeFormatter } from "../../common/intl.js";
+import { generatePath } from "../../common/route.js";
 import { formatSum } from "../../common/utils.js";
 import { Carousel } from "../../components/Carousel/Carousel.jsx";
 import { DropdownCaret } from "../../components/Dropdown/DropdownCaret.jsx";
 import type { AssetResource } from "../../data/index.js";
+import { Paths } from "../../enums/Paths.js";
 import { client } from "../../gql-client/client.js";
 import {
   DeleteAssetDocument,
@@ -99,7 +101,7 @@ export const ViewAsset: Component<{ data: AssetResource }> = (props) => {
                       <li>
                         <a
                           class="dropdown-item"
-                          href={`/asset/${asset.id}/edit`}
+                          href={generatePath(Paths.EditAsset, { id: asset.id })}
                         >
                           Edit
                         </a>
