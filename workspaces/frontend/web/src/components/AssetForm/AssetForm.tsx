@@ -1,6 +1,7 @@
 import { DEFAULT_CURRENCY } from "../../common/config.js";
 import {
   availableCurrencies,
+  defaultByteFormatter,
   numberFormatterCache,
 } from "../../common/intl.js";
 import type { IdAttribute, InitialValue } from "../../common/types.js";
@@ -20,7 +21,6 @@ import { Currency } from "../../schemas/Currency.js";
 import { Feedback } from "../FormFieldFeedback/Feedback.jsx";
 import { ImageFormField } from "../ImageFormField/ImageFormField.jsx";
 import { BigDecimal, Option, Schema, pipe } from "effect";
-import prettyBytes from "pretty-bytes";
 import {
   type Component,
   For,
@@ -95,7 +95,7 @@ export const AssetForm: Component<
       functions: [
         (element) =>
           Number(element.files?.[0]?.size) > MAX_FILE_SIZE
-            ? `Maximum allowed file size is ${prettyBytes(MAX_FILE_SIZE)}`
+            ? `Maximum allowed file size is ${defaultByteFormatter.format(MAX_FILE_SIZE)}`
             : "",
       ],
     },

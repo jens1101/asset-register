@@ -60,3 +60,13 @@ export const availableCurrencies = Intl.supportedValuesOf("currency")
     display: displayNamesCache.get({ type: "currency" }).of(code) ?? code,
   }))
   .sort((a, b) => DEFAULT_COLLATOR.compare(a.display, b.display));
+
+/**
+ * The default formatter that should be used to format byte values.
+ */
+export const defaultByteFormatter = numberFormatterCache.get({
+  notation: "compact",
+  style: "unit",
+  unit: "byte",
+  unitDisplay: "narrow",
+});

@@ -1,3 +1,4 @@
+import { defaultByteFormatter } from "../../common/intl.js";
 import type { ClassAttributes, InitialValue } from "../../common/types.js";
 import { isImage } from "../../common/utils.js";
 import { MAX_FILE_SIZE } from "../../config.js";
@@ -8,7 +9,6 @@ import { CreateFileInputFromFile } from "../../schemas/CreateFileInput.js";
 import { Feedback } from "../FormFieldFeedback/Feedback.jsx";
 import "./styles.scss";
 import { Option, Schema } from "effect";
-import prettyBytes from "pretty-bytes";
 import {
   type Accessor,
   type Component,
@@ -93,7 +93,7 @@ export const ImageFormField: Component<
       functions: [
         (element) =>
           Number(element.files?.[0]?.size) > MAX_FILE_SIZE
-            ? `Maximum allowed file size is ${prettyBytes(MAX_FILE_SIZE)}`
+            ? `Maximum allowed file size is ${defaultByteFormatter.format(MAX_FILE_SIZE)}`
             : "",
         (element) =>
           element.files?.[0] && !isImage(element.files[0])

@@ -31,7 +31,6 @@
     "effect": "3.13.2",
     "graphql": "^16.9.0",
     "graphql-ws": "5.16.2",
-    "pretty-bytes": "6.1.1",
     "solid-js": "^1.8.11",
     "temporal-polyfill": "0.2.5",
     "wonka": "6.3.4"
