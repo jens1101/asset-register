@@ -64,6 +64,8 @@ export const createAsset = (input: CreateAssetInput) =>
       description: input.description,
       images: [],
       value: input.value,
+      createdAt: Temporal.Now.instant(),
+      updatedAt: Temporal.Now.instant(),
     }),
     Effect.andThen((asset) =>
       Option.match(Option.fromNullable(input.proofOfPurchase), {
