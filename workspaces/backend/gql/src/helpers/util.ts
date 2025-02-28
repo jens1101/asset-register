@@ -63,3 +63,36 @@ export const resolverWrapper =
       (result) =>
         result.catch(() => Promise.reject(new GraphQLError(defectMessage))),
     );
+
+/**
+ * Helper to log and decode a tagged error.
+ * @param error The error to decode. This doesn't have to be a class instance,
+ * it just needs to have the necessary properties.
+ * @returns An effect containing the decoded error that can be used as a
+ * resolver response.
+ */
+export const handleResolverError = <Tag extends string>(error: {
+  _tag: Tag;
+  message: string;
+}) =>
+  pipe(
+    Effect.succeed(error),
+    Effect.tap(Effect.logWarning),
+    Effect.map(({ _tag, message }) => ({
+      __typename: _tag,
+      message,
+    })),
+  );
+
+/**
+ * Helper to easily add a type name to a value. This is typically all that's
+ * needed for resolvers.
+ * @param typename The type name that should be attached to the value.
+ */
+export const handleResolverResponse =
+  <Typename extends string>(typename: Typename) =>
+  <T>(value: T) =>
+    Effect.succeed({
+      __typename: typename,
+      ...value,
+    } as T & { __typename: Typename });

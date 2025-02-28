@@ -4,3 +4,11 @@ type Document {
   file: File!
   asset: Asset!
 }
+
+"""
+Occurs when attempting to delete a document from an asset that doesn't own the
+document.
+"""
+type DeleteDocumentError implements Error {
+  message: String!
+}

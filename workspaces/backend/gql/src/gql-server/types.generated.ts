@@ -57,13 +57,6 @@ export type Asset = {
   value: Sum;
 };
 
-export type AssetError = Error & {
-  __typename?: "AssetError";
-  message: Scalars["String"]["output"];
-};
-
-export type AssetResponse = Asset | AssetError;
-
 export type CreateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   images?: InputMaybe<Array<CreateImageInput>>;
@@ -87,6 +80,15 @@ export type CreateImageInput = {
   file: CreateFileInput;
   name?: InputMaybe<Scalars["TrimmedString"]["input"]>;
   previousImageId?: InputMaybe<Scalars["ID"]["input"]>;
+};
+
+/**
+ * Occurs when attempting to delete a document from an asset that doesn't own the
+ * document.
+ */
+export type DeleteDocumentError = Error & {
+  __typename?: "DeleteDocumentError";
+  message: Scalars["String"]["output"];
 };
 
 export type DeleteDocumentInput = {
@@ -129,6 +131,12 @@ export type Image = {
   updatedAt: Scalars["TemporalInstant"]["output"];
 };
 
+/** Occurs when an image was not found in the asset's list of images */
+export type ImageNotFoundError = Error & {
+  __typename?: "ImageNotFoundError";
+  message: Scalars["String"]["output"];
+};
+
 export type MutateDocumentInput =
   | { delete: DeleteDocumentInput; update?: never }
   | { delete?: never; update: UpdateDocumentInput };
@@ -140,9 +148,9 @@ export type MutateImageInput =
 
 export type Mutation = {
   __typename?: "Mutation";
-  createAsset: AssetResponse;
-  deleteAsset?: Maybe<AssetError>;
-  updateAsset: AssetResponse;
+  createAsset: Asset;
+  deleteAsset?: Maybe<ReadAssetError>;
+  updateAsset: UpdateAssetResponse;
 };
 
 export type MutationcreateAssetArgs = {
@@ -159,13 +167,21 @@ export type MutationupdateAssetArgs = {
 
 export type Query = {
   __typename?: "Query";
-  asset: AssetResponse;
+  asset: ReadAssetResponse;
   assets: Array<Asset>;
 };
 
 export type QueryassetArgs = {
   id: Scalars["ID"]["input"];
 };
+
+/** Occurs when the specified asset could not be found in the database */
+export type ReadAssetError = Error & {
+  __typename?: "ReadAssetError";
+  message: Scalars["String"]["output"];
+};
+
+export type ReadAssetResponse = Asset | ReadAssetError;
 
 export type Sum = {
   __typename?: "Sum";
@@ -186,6 +202,12 @@ export type UpdateAssetInput = {
   proofOfPurchase?: InputMaybe<MutateDocumentInput>;
   value?: InputMaybe<SumInput>;
 };
+
+export type UpdateAssetResponse =
+  | Asset
+  | DeleteDocumentError
+  | ImageNotFoundError
+  | ReadAssetError;
 
 export type UpdateDocumentInput = {
   file: CreateFileInput;
@@ -306,15 +328,23 @@ export type DirectiveResolverFn<
 
 /** Mapping of union types */
 export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
-  AssetResponse:
+  ReadAssetResponse:
     | (Asset & { __typename: "Asset" })
-    | (AssetError & { __typename: "AssetError" });
+    | (ReadAssetError & { __typename: "ReadAssetError" });
+  UpdateAssetResponse:
+    | (Asset & { __typename: "Asset" })
+    | (DeleteDocumentError & { __typename: "DeleteDocumentError" })
+    | (ImageNotFoundError & { __typename: "ImageNotFoundError" })
+    | (ReadAssetError & { __typename: "ReadAssetError" });
 };
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> =
   {
-    Error: AssetError & { __typename: "AssetError" };
+    Error:
+      | (DeleteDocumentError & { __typename: "DeleteDocumentError" })
+      | (ImageNotFoundError & { __typename: "ImageNotFoundError" })
+      | (ReadAssetError & { __typename: "ReadAssetError" });
   };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -322,22 +352,20 @@ export type ResolversTypes = {
   Asset: ResolverTypeWrapper<Asset>;
   String: ResolverTypeWrapper<Scalars["String"]["output"]>;
   ID: ResolverTypeWrapper<Scalars["ID"]["output"]>;
-  AssetError: ResolverTypeWrapper<AssetError>;
-  AssetResponse: ResolverTypeWrapper<
-    ResolversUnionTypes<ResolversTypes>["AssetResponse"]
-  >;
   BigDecimal: ResolverTypeWrapper<Scalars["BigDecimal"]["output"]>;
   CreateAssetInput: CreateAssetInput;
   CreateDocumentInput: CreateDocumentInput;
   CreateFileInput: CreateFileInput;
   CreateImageInput: CreateImageInput;
   Currency: ResolverTypeWrapper<Scalars["Currency"]["output"]>;
+  DeleteDocumentError: ResolverTypeWrapper<DeleteDocumentError>;
   DeleteDocumentInput: DeleteDocumentInput;
   DeleteImageInput: DeleteImageInput;
   Document: ResolverTypeWrapper<Document>;
   Error: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>["Error"]>;
   File: ResolverTypeWrapper<File>;
   Image: ResolverTypeWrapper<Image>;
+  ImageNotFoundError: ResolverTypeWrapper<ImageNotFoundError>;
   MutateDocumentInput: MutateDocumentInput;
   MutateImageInput: MutateImageInput;
   Mutation: ResolverTypeWrapper<{}>;
@@ -345,12 +373,19 @@ export type ResolversTypes = {
     Scalars["NonEmptyTrimmedString"]["output"]
   >;
   Query: ResolverTypeWrapper<{}>;
+  ReadAssetError: ResolverTypeWrapper<ReadAssetError>;
+  ReadAssetResponse: ResolverTypeWrapper<
+    ResolversUnionTypes<ResolversTypes>["ReadAssetResponse"]
+  >;
   Sum: ResolverTypeWrapper<Sum>;
   SumInput: SumInput;
   TemporalInstant: ResolverTypeWrapper<Scalars["TemporalInstant"]["output"]>;
   TrimmedString: ResolverTypeWrapper<Scalars["TrimmedString"]["output"]>;
   Uint8Array: ResolverTypeWrapper<Scalars["Uint8Array"]["output"]>;
   UpdateAssetInput: UpdateAssetInput;
+  UpdateAssetResponse: ResolverTypeWrapper<
+    ResolversUnionTypes<ResolversTypes>["UpdateAssetResponse"]
+  >;
   UpdateDocumentInput: UpdateDocumentInput;
   UpdateImageInput: UpdateImageInput;
   Boolean: ResolverTypeWrapper<Scalars["Boolean"]["output"]>;
@@ -361,31 +396,34 @@ export type ResolversParentTypes = {
   Asset: Asset;
   String: Scalars["String"]["output"];
   ID: Scalars["ID"]["output"];
-  AssetError: AssetError;
-  AssetResponse: ResolversUnionTypes<ResolversParentTypes>["AssetResponse"];
   BigDecimal: Scalars["BigDecimal"]["output"];
   CreateAssetInput: CreateAssetInput;
   CreateDocumentInput: CreateDocumentInput;
   CreateFileInput: CreateFileInput;
   CreateImageInput: CreateImageInput;
   Currency: Scalars["Currency"]["output"];
+  DeleteDocumentError: DeleteDocumentError;
   DeleteDocumentInput: DeleteDocumentInput;
   DeleteImageInput: DeleteImageInput;
   Document: Document;
   Error: ResolversInterfaceTypes<ResolversParentTypes>["Error"];
   File: File;
   Image: Image;
+  ImageNotFoundError: ImageNotFoundError;
   MutateDocumentInput: MutateDocumentInput;
   MutateImageInput: MutateImageInput;
   Mutation: {};
   NonEmptyTrimmedString: Scalars["NonEmptyTrimmedString"]["output"];
   Query: {};
+  ReadAssetError: ReadAssetError;
+  ReadAssetResponse: ResolversUnionTypes<ResolversParentTypes>["ReadAssetResponse"];
   Sum: Sum;
   SumInput: SumInput;
   TemporalInstant: Scalars["TemporalInstant"]["output"];
   TrimmedString: Scalars["TrimmedString"]["output"];
   Uint8Array: Scalars["Uint8Array"]["output"];
   UpdateAssetInput: UpdateAssetInput;
+  UpdateAssetResponse: ResolversUnionTypes<ResolversParentTypes>["UpdateAssetResponse"];
   UpdateDocumentInput: UpdateDocumentInput;
   UpdateImageInput: UpdateImageInput;
   Boolean: Scalars["Boolean"]["output"];
@@ -428,27 +466,6 @@ export type AssetResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AssetErrorResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes["AssetError"] = ResolversParentTypes["AssetError"],
-> = {
-  message?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type AssetResponseResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes["AssetResponse"] = ResolversParentTypes["AssetResponse"],
-> = {
-  __resolveType?: TypeResolveFn<
-    "Asset" | "AssetError",
-    ParentType,
-    ContextType
-  >;
-};
-
 export interface BigDecimalScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes["BigDecimal"], any> {
   name: "BigDecimal";
@@ -458,6 +475,15 @@ export interface CurrencyScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes["Currency"], any> {
   name: "Currency";
 }
+
+export type DeleteDocumentErrorResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["DeleteDocumentError"] = ResolversParentTypes["DeleteDocumentError"],
+> = {
+  message?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export type DocumentResolvers<
   ContextType = any,
@@ -480,7 +506,11 @@ export type ErrorResolvers<
   ParentType extends
     ResolversParentTypes["Error"] = ResolversParentTypes["Error"],
 > = {
-  __resolveType?: TypeResolveFn<"AssetError", ParentType, ContextType>;
+  __resolveType?: TypeResolveFn<
+    "DeleteDocumentError" | "ImageNotFoundError" | "ReadAssetError",
+    ParentType,
+    ContextType
+  >;
   message?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
 };
 
@@ -532,25 +562,34 @@ export type ImageResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ImageNotFoundErrorResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["ImageNotFoundError"] = ResolversParentTypes["ImageNotFoundError"],
+> = {
+  message?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<
   ContextType = any,
   ParentType extends
     ResolversParentTypes["Mutation"] = ResolversParentTypes["Mutation"],
 > = {
   createAsset?: Resolver<
-    ResolversTypes["AssetResponse"],
+    ResolversTypes["Asset"],
     ParentType,
     ContextType,
     RequireFields<MutationcreateAssetArgs, "data">
   >;
   deleteAsset?: Resolver<
-    Maybe<ResolversTypes["AssetError"]>,
+    Maybe<ResolversTypes["ReadAssetError"]>,
     ParentType,
     ContextType,
     RequireFields<MutationdeleteAssetArgs, "id">
   >;
   updateAsset?: Resolver<
-    ResolversTypes["AssetResponse"],
+    ResolversTypes["UpdateAssetResponse"],
     ParentType,
     ContextType,
     RequireFields<MutationupdateAssetArgs, "data">
@@ -571,12 +610,33 @@ export type QueryResolvers<
     ResolversParentTypes["Query"] = ResolversParentTypes["Query"],
 > = {
   asset?: Resolver<
-    ResolversTypes["AssetResponse"],
+    ResolversTypes["ReadAssetResponse"],
     ParentType,
     ContextType,
     RequireFields<QueryassetArgs, "id">
   >;
   assets?: Resolver<Array<ResolversTypes["Asset"]>, ParentType, ContextType>;
+};
+
+export type ReadAssetErrorResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["ReadAssetError"] = ResolversParentTypes["ReadAssetError"],
+> = {
+  message?: Resolver<ResolversTypes["String"], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReadAssetResponseResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["ReadAssetResponse"] = ResolversParentTypes["ReadAssetResponse"],
+> = {
+  __resolveType?: TypeResolveFn<
+    "Asset" | "ReadAssetError",
+    ParentType,
+    ContextType
+  >;
 };
 
 export type SumResolvers<
@@ -603,21 +663,36 @@ export interface Uint8ArrayScalarConfig
   name: "Uint8Array";
 }
 
+export type UpdateAssetResponseResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes["UpdateAssetResponse"] = ResolversParentTypes["UpdateAssetResponse"],
+> = {
+  __resolveType?: TypeResolveFn<
+    "Asset" | "DeleteDocumentError" | "ImageNotFoundError" | "ReadAssetError",
+    ParentType,
+    ContextType
+  >;
+};
+
 export type Resolvers<ContextType = any> = {
   Asset?: AssetResolvers<ContextType>;
-  AssetError?: AssetErrorResolvers<ContextType>;
-  AssetResponse?: AssetResponseResolvers<ContextType>;
   BigDecimal?: GraphQLScalarType;
   Currency?: GraphQLScalarType;
+  DeleteDocumentError?: DeleteDocumentErrorResolvers<ContextType>;
   Document?: DocumentResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
   File?: FileResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
+  ImageNotFoundError?: ImageNotFoundErrorResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   NonEmptyTrimmedString?: GraphQLScalarType;
   Query?: QueryResolvers<ContextType>;
+  ReadAssetError?: ReadAssetErrorResolvers<ContextType>;
+  ReadAssetResponse?: ReadAssetResponseResolvers<ContextType>;
   Sum?: SumResolvers<ContextType>;
   TemporalInstant?: GraphQLScalarType;
   TrimmedString?: GraphQLScalarType;
   Uint8Array?: GraphQLScalarType;
+  UpdateAssetResponse?: UpdateAssetResponseResolvers<ContextType>;
 };
