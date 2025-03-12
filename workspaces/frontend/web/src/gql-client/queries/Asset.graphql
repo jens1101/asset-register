@@ -3,8 +3,8 @@ query Asset($id: ID!) {
     ... on Asset {
       ...asset
     }
-    ... on AssetError {
-      ...assetError
+    ... on Error {
+      ...error
     }
   }
 }

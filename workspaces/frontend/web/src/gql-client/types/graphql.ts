@@ -32,7 +32,9 @@ export type Scalars = {
   Float: { input: number; output: number };
   BigDecimal: { input: BigDecimal.BigDecimal; output: BigDecimal.BigDecimal };
   Currency: { input: string; output: string };
+  NonEmptyTrimmedString: { input: string; output: string };
   TemporalInstant: { input: Temporal.Instant; output: Temporal.Instant };
+  TrimmedString: { input: string; output: string };
   Uint8Array: { input: Uint8Array; output: Uint8Array };
 };
 
@@ -43,23 +45,16 @@ export type Asset = {
   id: Scalars["ID"]["output"];
   images: Array<Image>;
   mainImage?: Maybe<Image>;
-  name: Scalars["String"]["output"];
+  name: Scalars["NonEmptyTrimmedString"]["output"];
   proofOfPurchase?: Maybe<Document>;
   updatedAt: Scalars["TemporalInstant"]["output"];
   value: Sum;
 };
 
-export type AssetError = Error & {
-  __typename?: "AssetError";
-  message: Scalars["String"]["output"];
-};
-
-export type AssetResponse = Asset | AssetError;
-
 export type CreateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   images?: InputMaybe<Array<CreateImageInput>>;
-  name: Scalars["String"]["input"];
+  name: Scalars["NonEmptyTrimmedString"]["input"];
   proofOfPurchase?: InputMaybe<CreateDocumentInput>;
   value: SumInput;
 };
@@ -77,8 +72,17 @@ export type CreateFileInput = {
 export type CreateImageInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   file: CreateFileInput;
-  name?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["TrimmedString"]["input"]>;
   previousImageId?: InputMaybe<Scalars["ID"]["input"]>;
+};
+
+/**
+ * Occurs when attempting to delete a document from an asset that doesn't own the
+ * document.
+ */
+export type DeleteDocumentError = Error & {
+  __typename?: "DeleteDocumentError";
+  message: Scalars["String"]["output"];
 };
 
 export type DeleteDocumentInput = {
@@ -117,8 +121,14 @@ export type Image = {
   description?: Maybe<Scalars["String"]["output"]>;
   file: File;
   id: Scalars["ID"]["output"];
-  name?: Maybe<Scalars["String"]["output"]>;
+  name?: Maybe<Scalars["TrimmedString"]["output"]>;
   updatedAt: Scalars["TemporalInstant"]["output"];
+};
+
+/** Occurs when an image was not found in the asset's list of images */
+export type ImageNotFoundError = Error & {
+  __typename?: "ImageNotFoundError";
+  message: Scalars["String"]["output"];
 };
 
 export type MutateDocumentInput =
@@ -132,9 +142,9 @@ export type MutateImageInput =
 
 export type Mutation = {
   __typename?: "Mutation";
-  createAsset: AssetResponse;
-  deleteAsset?: Maybe<AssetError>;
-  updateAsset: AssetResponse;
+  createAsset: Asset;
+  deleteAsset?: Maybe<ReadAssetError>;
+  updateAsset: UpdateAssetResponse;
 };
 
 export type MutationCreateAssetArgs = {
@@ -151,13 +161,21 @@ export type MutationUpdateAssetArgs = {
 
 export type Query = {
   __typename?: "Query";
-  asset: AssetResponse;
+  asset: ReadAssetResponse;
   assets: Array<Asset>;
 };
 
 export type QueryAssetArgs = {
   id: Scalars["ID"]["input"];
 };
+
+/** Occurs when the specified asset could not be found in the database */
+export type ReadAssetError = Error & {
+  __typename?: "ReadAssetError";
+  message: Scalars["String"]["output"];
+};
+
+export type ReadAssetResponse = Asset | ReadAssetError;
 
 export type Sum = {
   __typename?: "Sum";
@@ -174,10 +192,16 @@ export type UpdateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   id: Scalars["ID"]["input"];
   images?: InputMaybe<Array<MutateImageInput>>;
-  name?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["NonEmptyTrimmedString"]["input"]>;
   proofOfPurchase?: InputMaybe<MutateDocumentInput>;
   value?: InputMaybe<SumInput>;
 };
+
+export type UpdateAssetResponse =
+  | Asset
+  | DeleteDocumentError
+  | ImageNotFoundError
+  | ReadAssetError;
 
 export type UpdateDocumentInput = {
   file: CreateFileInput;
@@ -187,7 +211,7 @@ export type UpdateImageInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
   file?: InputMaybe<CreateFileInput>;
   id: Scalars["ID"]["input"];
-  name?: InputMaybe<Scalars["String"]["input"]>;
+  name?: InputMaybe<Scalars["TrimmedString"]["input"]>;
   previousImageId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
@@ -234,8 +258,6 @@ export type AssetFragment = {
   }>;
 };
 
-export type AssetErrorFragment = { __typename: "AssetError"; message: string };
-
 export type AssetListItemFragment = {
   __typename: "Asset";
   id: string;
@@ -278,6 +300,26 @@ export type DocumentFragment = {
   };
 };
 
+type Error_DeleteDocumentError_Fragment = {
+  __typename: "DeleteDocumentError";
+  message: string;
+};
+
+type Error_ImageNotFoundError_Fragment = {
+  __typename: "ImageNotFoundError";
+  message: string;
+};
+
+type Error_ReadAssetError_Fragment = {
+  __typename: "ReadAssetError";
+  message: string;
+};
+
+export type ErrorFragment =
+  | Error_DeleteDocumentError_Fragment
+  | Error_ImageNotFoundError_Fragment
+  | Error_ReadAssetError_Fragment;
+
 export type FileFragment = {
   __typename: "File";
   id: string;
@@ -316,50 +358,48 @@ export type CreateAssetMutationVariables = Exact<{
 
 export type CreateAssetMutation = {
   __typename?: "Mutation";
-  createAsset:
-    | {
-        __typename: "Asset";
+  createAsset: {
+    __typename: "Asset";
+    id: string;
+    name: string;
+    description?: string | null;
+    createdAt: Temporal.Instant;
+    updatedAt: Temporal.Instant;
+    value: {
+      __typename?: "Sum";
+      currency: string;
+      amount: BigDecimal.BigDecimal;
+    };
+    proofOfPurchase?: {
+      __typename: "Document";
+      id: string;
+      createdAt: Temporal.Instant;
+      file: {
+        __typename: "File";
         id: string;
-        name: string;
-        description?: string | null;
+        buffer: Uint8Array;
+        filename: string;
+        mimeType: string;
         createdAt: Temporal.Instant;
-        updatedAt: Temporal.Instant;
-        value: {
-          __typename?: "Sum";
-          currency: string;
-          amount: BigDecimal.BigDecimal;
-        };
-        proofOfPurchase?: {
-          __typename: "Document";
-          id: string;
-          createdAt: Temporal.Instant;
-          file: {
-            __typename: "File";
-            id: string;
-            buffer: Uint8Array;
-            filename: string;
-            mimeType: string;
-            createdAt: Temporal.Instant;
-          };
-        } | null;
-        images: Array<{
-          __typename: "Image";
-          id: string;
-          name?: string | null;
-          description?: string | null;
-          createdAt: Temporal.Instant;
-          updatedAt: Temporal.Instant;
-          file: {
-            __typename: "File";
-            id: string;
-            buffer: Uint8Array;
-            filename: string;
-            mimeType: string;
-            createdAt: Temporal.Instant;
-          };
-        }>;
-      }
-    | { __typename: "AssetError"; message: string };
+      };
+    } | null;
+    images: Array<{
+      __typename: "Image";
+      id: string;
+      name?: string | null;
+      description?: string | null;
+      createdAt: Temporal.Instant;
+      updatedAt: Temporal.Instant;
+      file: {
+        __typename: "File";
+        id: string;
+        buffer: Uint8Array;
+        filename: string;
+        mimeType: string;
+        createdAt: Temporal.Instant;
+      };
+    }>;
+  };
 };
 
 export type DeleteAssetMutationVariables = Exact<{
@@ -368,7 +408,7 @@ export type DeleteAssetMutationVariables = Exact<{
 
 export type DeleteAssetMutation = {
   __typename?: "Mutation";
-  deleteAsset?: { __typename: "AssetError"; message: string } | null;
+  deleteAsset?: { __typename: "ReadAssetError"; message: string } | null;
 };
 
 export type UpdateAssetMutationVariables = Exact<{
@@ -420,7 +460,9 @@ export type UpdateAssetMutation = {
           };
         }>;
       }
-    | { __typename: "AssetError"; message: string };
+    | { __typename: "DeleteDocumentError"; message: string }
+    | { __typename: "ImageNotFoundError"; message: string }
+    | { __typename: "ReadAssetError"; message: string };
 };
 
 export type AssetQueryVariables = Exact<{
@@ -472,7 +514,7 @@ export type AssetQuery = {
           };
         }>;
       }
-    | { __typename: "AssetError"; message: string };
+    | { __typename: "ReadAssetError"; message: string };
 };
 
 export type AssetListQueryVariables = Exact<{ [key: string]: never }>;
@@ -819,26 +861,6 @@ export const AssetFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<AssetFragment, unknown>;
-export const AssetErrorFragmentDoc = {
-  kind: "Document",
-  definitions: [
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "assetError" },
-      typeCondition: {
-        kind: "NamedType",
-        name: { kind: "Name", value: "AssetError" },
-      },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "__typename" } },
-          { kind: "Field", name: { kind: "Name", value: "message" } },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<AssetErrorFragment, unknown>;
 export const AssetListItemFragmentDoc = {
   kind: "Document",
   definitions: [
@@ -953,6 +975,26 @@ export const AssetListItemFragmentDoc = {
     },
   ],
 } as unknown as DocumentNode<AssetListItemFragment, unknown>;
+export const ErrorFragmentDoc = {
+  kind: "Document",
+  definitions: [
+    {
+      kind: "FragmentDefinition",
+      name: { kind: "Name", value: "error" },
+      typeCondition: {
+        kind: "NamedType",
+        name: { kind: "Name", value: "Error" },
+      },
+      selectionSet: {
+        kind: "SelectionSet",
+        selections: [
+          { kind: "Field", name: { kind: "Name", value: "__typename" } },
+          { kind: "Field", name: { kind: "Name", value: "message" } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<ErrorFragment, unknown>;
 export const CreateAssetDocument = {
   kind: "Document",
   definitions: [
@@ -993,36 +1035,8 @@ export const CreateAssetDocument = {
               kind: "SelectionSet",
               selections: [
                 {
-                  kind: "InlineFragment",
-                  typeCondition: {
-                    kind: "NamedType",
-                    name: { kind: "Name", value: "Asset" },
-                  },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "FragmentSpread",
-                        name: { kind: "Name", value: "asset" },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: "InlineFragment",
-                  typeCondition: {
-                    kind: "NamedType",
-                    name: { kind: "Name", value: "AssetError" },
-                  },
-                  selectionSet: {
-                    kind: "SelectionSet",
-                    selections: [
-                      {
-                        kind: "FragmentSpread",
-                        name: { kind: "Name", value: "assetError" },
-                      },
-                    ],
-                  },
+                  kind: "FragmentSpread",
+                  name: { kind: "Name", value: "asset" },
                 },
               ],
             },
@@ -1183,21 +1197,6 @@ export const CreateAssetDocument = {
         ],
       },
     },
-    {
-      kind: "FragmentDefinition",
-      name: { kind: "Name", value: "assetError" },
-      typeCondition: {
-        kind: "NamedType",
-        name: { kind: "Name", value: "AssetError" },
-      },
-      selectionSet: {
-        kind: "SelectionSet",
-        selections: [
-          { kind: "Field", name: { kind: "Name", value: "__typename" } },
-          { kind: "Field", name: { kind: "Name", value: "message" } },
-        ],
-      },
-    },
   ],
 } as unknown as DocumentNode<CreateAssetMutation, CreateAssetMutationVariables>;
 export const DeleteAssetDocument = {
@@ -1240,14 +1239,14 @@ export const DeleteAssetDocument = {
                   kind: "InlineFragment",
                   typeCondition: {
                     kind: "NamedType",
-                    name: { kind: "Name", value: "AssetError" },
+                    name: { kind: "Name", value: "Error" },
                   },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
                       {
                         kind: "FragmentSpread",
-                        name: { kind: "Name", value: "assetError" },
+                        name: { kind: "Name", value: "error" },
                       },
                     ],
                   },
@@ -1260,10 +1259,10 @@ export const DeleteAssetDocument = {
     },
     {
       kind: "FragmentDefinition",
-      name: { kind: "Name", value: "assetError" },
+      name: { kind: "Name", value: "error" },
       typeCondition: {
         kind: "NamedType",
-        name: { kind: "Name", value: "AssetError" },
+        name: { kind: "Name", value: "Error" },
       },
       selectionSet: {
         kind: "SelectionSet",
@@ -1334,14 +1333,14 @@ export const UpdateAssetDocument = {
                   kind: "InlineFragment",
                   typeCondition: {
                     kind: "NamedType",
-                    name: { kind: "Name", value: "AssetError" },
+                    name: { kind: "Name", value: "Error" },
                   },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
                       {
                         kind: "FragmentSpread",
-                        name: { kind: "Name", value: "assetError" },
+                        name: { kind: "Name", value: "error" },
                       },
                     ],
                   },
@@ -1507,10 +1506,10 @@ export const UpdateAssetDocument = {
     },
     {
       kind: "FragmentDefinition",
-      name: { kind: "Name", value: "assetError" },
+      name: { kind: "Name", value: "error" },
       typeCondition: {
         kind: "NamedType",
-        name: { kind: "Name", value: "AssetError" },
+        name: { kind: "Name", value: "Error" },
       },
       selectionSet: {
         kind: "SelectionSet",
@@ -1578,14 +1577,14 @@ export const AssetDocument = {
                   kind: "InlineFragment",
                   typeCondition: {
                     kind: "NamedType",
-                    name: { kind: "Name", value: "AssetError" },
+                    name: { kind: "Name", value: "Error" },
                   },
                   selectionSet: {
                     kind: "SelectionSet",
                     selections: [
                       {
                         kind: "FragmentSpread",
-                        name: { kind: "Name", value: "assetError" },
+                        name: { kind: "Name", value: "error" },
                       },
                     ],
                   },
@@ -1751,10 +1750,10 @@ export const AssetDocument = {
     },
     {
       kind: "FragmentDefinition",
-      name: { kind: "Name", value: "assetError" },
+      name: { kind: "Name", value: "error" },
       typeCondition: {
         kind: "NamedType",
-        name: { kind: "Name", value: "AssetError" },
+        name: { kind: "Name", value: "Error" },
       },
       selectionSet: {
         kind: "SelectionSet",
