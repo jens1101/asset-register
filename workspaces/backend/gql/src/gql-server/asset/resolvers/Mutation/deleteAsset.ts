@@ -3,32 +3,22 @@ import {
   deleteAsset as deleteAssetHelper,
   readAsset,
 } from "../../../../helpers/asset.js";
-import { runAsyncWrapper } from "../../../../helpers/util.js";
+import {
+  handleResolverError,
+  resolverWrapper,
+} from "../../../../helpers/util.js";
 import { withTransaction } from "../../../../scopes/index.js";
-import type {
-  MutationResolvers,
-  ResolversTypes,
-} from "./../../../types.generated.js";
+import type { MutationResolvers } from "./../../../types.generated.js";
 import { Effect, pipe } from "effect";
 
 export const deleteAsset: NonNullable<
   MutationResolvers["deleteAsset"]
 > = async (_parent, { id }, _ctx) =>
-  runAsyncWrapper(
-    pipe(
-      readAsset({ where: { id: Number(id) } }),
-      Effect.andThen(deleteAssetHelper),
-      Effect.as(null),
-      withTransaction,
-      Effect.catchTag(ErrorTags.ReadAsset, (error) =>
-        pipe(
-          Effect.logWarning(error),
-          Effect.as({
-            __typename: "AssetError",
-            message: "Asset not found",
-          } as ResolversTypes["AssetError"]),
-        ),
-      ),
-    ),
-    "Failed to delete asset",
+  pipe(
+    readAsset({ where: { id: Number(id) } }),
+    Effect.andThen(deleteAssetHelper),
+    Effect.as(null),
+    withTransaction,
+    Effect.catchTag(ErrorTags.ReadAsset, handleResolverError),
+    resolverWrapper("Failed to delete asset"),
   );

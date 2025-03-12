@@ -7,3 +7,8 @@ type Image {
   file: File!
   asset: Asset!
 }
+
+"Occurs when an image was not found in the asset's list of images"
+type ImageNotFoundError implements Error {
+  message: String!
+}

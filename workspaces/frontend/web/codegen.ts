@@ -29,6 +29,8 @@ const config: CodegenConfig = {
           Void: "void",
           BigDecimal: "BigDecimal.BigDecimal",
           Currency: "string",
+          NonEmptyTrimmedString: "string",
+          TrimmedString: "string",
         },
       },
     },

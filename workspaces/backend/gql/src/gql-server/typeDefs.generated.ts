@@ -151,10 +151,7 @@ export const typeDefs = {
           ],
           type: {
             kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "AssetResponse" },
-            },
+            type: { kind: "NamedType", name: { kind: "Name", value: "Asset" } },
           },
           directives: [],
         },
@@ -179,7 +176,7 @@ export const typeDefs = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "AssetResponse" },
+              name: { kind: "Name", value: "UpdateAssetResponse" },
             },
           },
           directives: [],
@@ -203,7 +200,7 @@ export const typeDefs = {
           ],
           type: {
             kind: "NamedType",
-            name: { kind: "Name", value: "AssetError" },
+            name: { kind: "Name", value: "ReadAssetError" },
           },
           directives: [],
         },
@@ -236,7 +233,7 @@ export const typeDefs = {
             kind: "NonNullType",
             type: {
               kind: "NamedType",
-              name: { kind: "Name", value: "AssetResponse" },
+              name: { kind: "Name", value: "ReadAssetResponse" },
             },
           },
           directives: [],
@@ -263,38 +260,6 @@ export const typeDefs = {
       ],
       directives: [],
       interfaces: [],
-    },
-    {
-      kind: "UnionTypeDefinition",
-      name: { kind: "Name", value: "AssetResponse" },
-      directives: [],
-      types: [
-        { kind: "NamedType", name: { kind: "Name", value: "Asset" } },
-        { kind: "NamedType", name: { kind: "Name", value: "AssetError" } },
-      ],
-    },
-    {
-      kind: "ObjectTypeDefinition",
-      name: { kind: "Name", value: "AssetError" },
-      interfaces: [
-        { kind: "NamedType", name: { kind: "Name", value: "Error" } },
-      ],
-      directives: [],
-      fields: [
-        {
-          kind: "FieldDefinition",
-          name: { kind: "Name", value: "message" },
-          arguments: [],
-          type: {
-            kind: "NonNullType",
-            type: {
-              kind: "NamedType",
-              name: { kind: "Name", value: "String" },
-            },
-          },
-          directives: [],
-        },
-      ],
     },
     {
       kind: "ObjectTypeDefinition",
@@ -403,6 +368,61 @@ export const typeDefs = {
             },
           },
           directives: [],
+        },
+      ],
+    },
+    {
+      kind: "ObjectTypeDefinition",
+      description: {
+        kind: "StringValue",
+        value:
+          "Occurs when the specified asset could not be found in the database",
+        block: false,
+      },
+      name: { kind: "Name", value: "ReadAssetError" },
+      interfaces: [
+        { kind: "NamedType", name: { kind: "Name", value: "Error" } },
+      ],
+      directives: [],
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "message" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "UnionTypeDefinition",
+      name: { kind: "Name", value: "ReadAssetResponse" },
+      directives: [],
+      types: [
+        { kind: "NamedType", name: { kind: "Name", value: "Asset" } },
+        { kind: "NamedType", name: { kind: "Name", value: "ReadAssetError" } },
+      ],
+    },
+    {
+      kind: "UnionTypeDefinition",
+      name: { kind: "Name", value: "UpdateAssetResponse" },
+      directives: [],
+      types: [
+        { kind: "NamedType", name: { kind: "Name", value: "Asset" } },
+        { kind: "NamedType", name: { kind: "Name", value: "ReadAssetError" } },
+        {
+          kind: "NamedType",
+          name: { kind: "Name", value: "ImageNotFoundError" },
+        },
+        {
+          kind: "NamedType",
+          name: { kind: "Name", value: "DeleteDocumentError" },
         },
       ],
     },
@@ -588,6 +608,35 @@ export const typeDefs = {
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "Asset" } },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "ObjectTypeDefinition",
+      description: {
+        kind: "StringValue",
+        value:
+          "Occurs when attempting to delete a document from an asset that doesn't own the\ndocument.",
+        block: true,
+      },
+      name: { kind: "Name", value: "DeleteDocumentError" },
+      interfaces: [
+        { kind: "NamedType", name: { kind: "Name", value: "Error" } },
+      ],
+      directives: [],
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "message" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
           },
           directives: [],
         },
@@ -924,6 +973,35 @@ export const typeDefs = {
           type: {
             kind: "NonNullType",
             type: { kind: "NamedType", name: { kind: "Name", value: "Asset" } },
+          },
+          directives: [],
+        },
+      ],
+    },
+    {
+      kind: "ObjectTypeDefinition",
+      description: {
+        kind: "StringValue",
+        value:
+          "Occurs when an image was not found in the asset's list of images",
+        block: false,
+      },
+      name: { kind: "Name", value: "ImageNotFoundError" },
+      interfaces: [
+        { kind: "NamedType", name: { kind: "Name", value: "Error" } },
+      ],
+      directives: [],
+      fields: [
+        {
+          kind: "FieldDefinition",
+          name: { kind: "Name", value: "message" },
+          arguments: [],
+          type: {
+            kind: "NonNullType",
+            type: {
+              kind: "NamedType",
+              name: { kind: "Name", value: "String" },
+            },
           },
           directives: [],
         },

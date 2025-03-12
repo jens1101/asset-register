@@ -1,16 +1,13 @@
 import type { FileFragment, SumFragment } from "../gql-client/types/graphql.js";
-import { numberFormatterCache } from "./intl.js";
-import { BigDecimal, Equivalence } from "effect";
-import { For } from "solid-js";
+import { BigDecimal, Effect, Equivalence, pipe } from "effect";
+import { createResource } from "solid-js";
 
 /** Tests if the specified file is an image by checking the mime type. */
 export function isImage(file: File): boolean {
   return file.type.startsWith("image/");
 }
 
-/**
- * Equivalence to test if two files are equal.
- */
+/** Equivalence to test if two files are equal. */
 export const FileEquivalence = Equivalence.make<
   Pick<FileFragment, "filename" | "mimeType" | "buffer">
 >(
@@ -58,17 +55,38 @@ export function setInputValue(
   }
 }
 
-/** Helper function to format a sum as JSX */
-export function formatSum(sum: SumFragment) {
-  const parts = numberFormatterCache
-    .get({
-      style: "currency",
-      currency: sum.currency,
-    })
-    .formatToParts(BigDecimal.format(sum.amount) as Intl.StringNumericLiteral)
-    .map((part) =>
-      part.type === "currency" ? <b>{part.value}</b> : part.value,
+/**
+ * Wrapper for running an effect. If the effect fails then it will be retried
+ * while the `until` callback remains true.
+ * @param errorMessage The error message to log when the effect still fails
+ * after retries have been exhausted.
+ * @param until Callback function which dictates whether or not the effect
+ * should be retried upon failure. This can return either a `boolean` or an
+ * Effect. A common pattern at this point is to prompt the user if he wants to
+ * retry.
+ */
+export const manualRetryWrapper =
+  (errorMessage: string, until: () => boolean | Effect.Effect<boolean>) =>
+  <A, E>(effect: Effect.Effect<A, E>) =>
+    pipe(
+      effect,
+      Effect.retry({ until }),
+      Effect.catchAllCause((cause) => Effect.logError(errorMessage, cause)),
+      Effect.runPromise,
     );
 
-  return <For each={parts}>{(part) => part}</For>;
-}
+/**
+ * Wrapper for a data loader function. It automatically handles errors and turns
+ * the Effect into a SolidJS resource.
+ * @param errorMessage Any errors that occur will be mapped to a generic `Error`
+ * instance with this message.
+ */
+export const loadWrapper =
+  (errorMessage: string) =>
+  <A, E>(effect: Effect.Effect<A, E>) =>
+    pipe(
+      effect,
+      Effect.tapError(Effect.logError),
+      Effect.mapError(() => new Error(errorMessage)),
+      (effect) => createResource(() => Effect.runPromise(effect)),
+    );

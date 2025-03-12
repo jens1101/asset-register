@@ -1,10 +1,5 @@
 mutation CreateAsset($data: CreateAssetInput!) {
   createAsset(data: $data) {
-    ... on Asset {
-      ...asset
-    }
-    ... on AssetError {
-      ...assetError
-    }
+    ...asset
   }
 }

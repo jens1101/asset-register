@@ -3,3 +3,4 @@
 **/CHANGELOG.md
 package-lock.json
 .nx/
+.release-please-manifest.json

@@ -1,7 +1,16 @@
-import { FileEquivalence, SumEquivalence } from "../common/utils.js";
-import { AssetForm } from "../components/AssetForm/AssetForm.jsx";
-import type { AssetResource } from "../data/index.js";
-import { client } from "../gql-client/client.js";
+import { generatePath } from "../common/route.js";
+import {
+  FileEquivalence,
+  SumEquivalence,
+  manualRetryWrapper,
+} from "../common/utils.js";
+import {
+  AssetForm,
+  type AssetFormSubmitCallback,
+} from "../components/AssetForm/AssetForm.jsx";
+import type { AssetResource } from "../data/asset.js";
+import { Paths } from "../enums/Paths.js";
+import { mutation } from "../gql-client/client.js";
 import {
   type AssetFragment,
   type CreateImageInput,
@@ -13,19 +22,27 @@ import {
   type UpdateAssetMutationVariables,
   type UpdateImageInput,
 } from "../gql-client/types/graphql.js";
+import { useAlertModal } from "../hooks/useAlertModal.jsx";
+import { usePromptModal } from "../hooks/usePromptModal.jsx";
 import type { AssetFormValues } from "../schemas/AssetFormValues.js";
 import { CreateFileInputFromFile } from "../schemas/CreateFileInput.js";
 import { SumInputFromFormValues } from "../schemas/SumInput.js";
 import { useNavigate } from "@solidjs/router";
-import { Effect, Exit, Option, Schema, pipe } from "effect";
+import { Effect, Match, Option, Schema, pipe } from "effect";
 import { isNonEmptyArray } from "effect/Array";
-import { type Accessor, type Component, Show, createUniqueId } from "solid-js";
+import {
+  type Component,
+  ErrorBoundary,
+  Show,
+  Suspense,
+  createUniqueId,
+} from "solid-js";
 
-function updateAssset(
+const updateAssset = (
   asset: AssetFragment,
   formValues: typeof AssetFormValues.Type,
-): Effect.Effect<AssetFragment, Error> {
-  return Effect.gen(function* () {
+) =>
+  Effect.gen(function* () {
     const proofOfPurchaseInput = pipe(
       yield* getProofOfPurchaseInput(asset, formValues),
       Option.map((proofOfPurchase) => ({ proofOfPurchase })),
@@ -61,28 +78,15 @@ function updateAssset(
       return asset;
     }
 
-    // TODO: This could be moved into a util function. The client functions are turned into an effect.
-    const { data, error } = yield* Effect.promise(() =>
-      client.mutation<UpdateAssetMutation, UpdateAssetMutationVariables>(
-        UpdateAssetDocument,
-        {
-          data: updateAssetInput,
-        },
-      ),
-    );
+    const result = yield* mutation<
+      UpdateAssetMutation,
+      UpdateAssetMutationVariables
+    >(UpdateAssetDocument, {
+      data: updateAssetInput,
+    });
 
-    // TODO: Improve error handling
-    if (error) {
-      return yield* Effect.fail(error);
-    }
-
-    if (data?.updateAsset.__typename === "Asset") {
-      return data.updateAsset;
-    }
-
-    return yield* Effect.fail(new Error("Failed to update asset"));
+    return result.updateAsset;
   });
-}
 
 const getProofOfPurchaseInput = (
   asset: AssetFragment,
@@ -195,55 +199,113 @@ const getImagesInput = (
   });
 
 export const EditAsset: Component<{ data: AssetResource }> = (props) => {
-  const initialAsset: Accessor<Option.Option<AssetFragment>> = () =>
-    Option.fromNullable(props.data()?.asset).pipe(
-      Option.filter((data) => data.__typename === "Asset"),
+  const assetQuery = () =>
+    pipe(
+      props.data.assetQuery(),
+      Option.fromNullable,
+      Option.map((assetQuery) => assetQuery.asset),
     );
+  const asset = () =>
+    Option.filter(assetQuery(), (asset) => asset.__typename === "Asset");
   const formId = createUniqueId();
   const navigate = useNavigate();
+  const { showPromptModal } = usePromptModal();
+  const { showAlertModal } = useAlertModal();
 
-  const onSubmit = async (formValues: typeof AssetFormValues.Type) => {
-    const asset = initialAsset();
-
-    if (Option.isNone(asset)) return;
-
-    Exit.match(
-      await Effect.runPromiseExit(updateAssset(asset.value, formValues)),
-      {
-        onSuccess(asset) {
-          navigate(`/asset/${asset.id}`);
-        },
-        onFailure(cause) {
-          // TODO: error handling
-          console.error(cause);
-        },
-      },
+  const onSubmit: AssetFormSubmitCallback = (formValues) =>
+    pipe(
+      Effect.all([asset(), formValues]),
+      Effect.andThen(([asset, formValues]) => updateAssset(asset, formValues)),
+      Effect.andThen((result) =>
+        pipe(
+          Match.value(result),
+          Match.when({ __typename: "ReadAssetError" }, () =>
+            pipe(
+              showAlertModal({
+                title: "Failed to edit asset",
+                body: "The asset no longer exists or could not be found",
+                dismiss: "Go Home",
+              }),
+              Effect.andThen(() => {
+                navigate(Paths.Home);
+              }),
+            ),
+          ),
+          Match.when({ __typename: "DeleteDocumentError" }, () =>
+            showAlertModal({
+              title: "Failed to edit asset",
+              body: "The proof of purchase failed to update. Please try again.",
+              dismiss: "Dismiss",
+            }),
+          ),
+          Match.when({ __typename: "ImageNotFoundError" }, () =>
+            showAlertModal({
+              title: "Failed to edit asset",
+              body: "One of the images failed to update. Please try again.",
+              dismiss: "Dismiss",
+            }),
+          ),
+          Match.when({ __typename: "Asset" }, (asset) => {
+            navigate(generatePath(Paths.ViewAsset, { id: asset.id }));
+          }),
+          Match.exhaustive,
+        ),
+      ),
+      manualRetryWrapper("Failed to edit asset", () =>
+        pipe(
+          showPromptModal({
+            title: "Edit asset failed",
+            body: "Do you want to retry?",
+            positive: "Yes",
+            negative: "No",
+          }),
+          Effect.map((response) => response === "positive"),
+        ),
+      ),
     );
-  };
 
   return (
     <section class="container">
-      <h1>Edit Asset</h1>
+      <Suspense fallback={<span>...</span>}>
+        <ErrorBoundary fallback={<div>Implement error component</div>}>
+          <Show
+            when={pipe(
+              assetQuery(),
+              Option.filter((asset) => asset.__typename === "ReadAssetError"),
+              Option.getOrNull,
+            )}
+          >
+            <div>
+              <p>Asset not found</p>
+              <a class="btn btn-primary" href={Paths.Home}>
+                Go home
+              </a>
+            </div>
+          </Show>
 
-      <Show when={Option.getOrUndefined(initialAsset())} keyed>
-        {(initialAsset) => (
-          <>
-            <AssetForm
-              onSubmit={onSubmit}
-              initialValue={initialAsset}
-              id={formId}
-            />
+          <Show when={pipe(asset(), Option.getOrNull)} keyed>
+            {(asset) => (
+              <>
+                <h1>Edit Asset</h1>
 
-            <button
-              type={"submit"}
-              class={"btn btn-primary mt-3"}
-              form={formId}
-            >
-              Save changes
-            </button>
-          </>
-        )}
-      </Show>
+                <AssetForm
+                  onSubmit={onSubmit}
+                  initialValue={asset}
+                  id={formId}
+                />
+
+                <button
+                  type={"submit"}
+                  class={"btn btn-primary mt-3"}
+                  form={formId}
+                >
+                  Save changes
+                </button>
+              </>
+            )}
+          </Show>
+        </ErrorBoundary>
+      </Suspense>
     </section>
   );
 };

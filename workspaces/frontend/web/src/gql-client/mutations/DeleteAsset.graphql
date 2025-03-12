@@ -1,7 +1,7 @@
 mutation DeleteAsset($id: ID!) {
   deleteAsset(id: $id) {
-    ... on AssetError {
-      ...assetError
+    ... on Error {
+      ...error
     }
   }
 }

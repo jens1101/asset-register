@@ -1,6 +1,7 @@
 import { DEFAULT_CURRENCY } from "../../common/config.js";
 import {
   availableCurrencies,
+  defaultByteFormatter,
   numberFormatterCache,
 } from "../../common/intl.js";
 import type { IdAttribute, InitialValue } from "../../common/types.js";
@@ -19,8 +20,14 @@ import { CreateFileInputFromFile } from "../../schemas/CreateFileInput.js";
 import { Currency } from "../../schemas/Currency.js";
 import { Feedback } from "../FormFieldFeedback/Feedback.jsx";
 import { ImageFormField } from "../ImageFormField/ImageFormField.jsx";
-import { BigDecimal, Option, Schema, pipe } from "effect";
-import prettyBytes from "pretty-bytes";
+import {
+  BigDecimal,
+  type Effect,
+  Option,
+  type ParseResult,
+  Schema,
+  pipe,
+} from "effect";
 import {
   type Component,
   For,
@@ -29,11 +36,16 @@ import {
   createUniqueId,
 } from "solid-js";
 
+export type AssetFormSubmitCallback = (
+  formValues: Effect.Effect<
+    typeof AssetFormValues.Type,
+    ParseResult.ParseError
+  >,
+) => unknown;
+
 export const AssetForm: Component<
   InitialValue<Partial<AssetFragment>> &
-    IdAttribute & {
-      onSubmit?: (formValues: typeof AssetFormValues.Type) => unknown;
-    }
+    IdAttribute & { onSubmit?: AssetFormSubmitCallback }
 > = (props) => {
   const initialValue = props.initialValue ?? {};
 
@@ -42,15 +54,8 @@ export const AssetForm: Component<
   );
 
   const { submit, previouslyFailedSubmission } = useForm({
-    onSubmit: async (formData: FormData) => {
-      try {
-        props.onSubmit?.(
-          await Schema.decodePromise(AssetFormValuesFromFormData)(formData),
-        );
-      } catch (foo) {
-        // TODO: error handling
-        console.log(foo);
-      }
+    onSubmit: (formData: FormData) => {
+      props.onSubmit?.(Schema.decode(AssetFormValuesFromFormData)(formData));
     },
   });
 
@@ -95,7 +100,7 @@ export const AssetForm: Component<
       functions: [
         (element) =>
           Number(element.files?.[0]?.size) > MAX_FILE_SIZE
-            ? `Maximum allowed file size is ${prettyBytes(MAX_FILE_SIZE)}`
+            ? `Maximum allowed file size is ${defaultByteFormatter.format(MAX_FILE_SIZE)}`
             : "",
       ],
     },

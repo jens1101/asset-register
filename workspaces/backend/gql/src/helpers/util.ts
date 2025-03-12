@@ -44,19 +44,55 @@ export const findOneOrFailWrapper = <A, E, R, B = never>(options: {
         : Effect.die(error),
   });
 
-export const runAsyncWrapper = <A, E>(
-  effect: Effect.Effect<A, E>,
-  defectMessage: string,
-) =>
+/**
+ * Helper function for GQL resolvers. This automatically handles uncaught errors
+ * and defects, runs the specified effect as a promise, and converts any promise
+ * rejections into a `GraphQLError` instance.
+ * @param defectMessage The message to use when a defect occurs. This gets
+ * logged and used as message for the `GraphQLError` instance. This makes it
+ * easier to reference the error in the logs at a later stage.
+ */
+export const resolverWrapper =
+  (defectMessage: string) =>
+  <A, E>(effect: Effect.Effect<A, E>) =>
+    pipe(
+      effect,
+      Effect.tapErrorCause((cause) => Effect.logError(defectMessage, cause)),
+      Effect.catchAllCause(Effect.die),
+      Effect.runPromise,
+      (result) =>
+        result.catch(() => Promise.reject(new GraphQLError(defectMessage))),
+    );
+
+/**
+ * Helper to log and decode a tagged error.
+ * @param error The error to decode. This doesn't have to be a class instance,
+ * it just needs to have the necessary properties.
+ * @returns An effect containing the decoded error that can be used as a
+ * resolver response.
+ */
+export const handleResolverError = <Tag extends string>(error: {
+  _tag: Tag;
+  message: string;
+}) =>
   pipe(
-    effect,
-    Effect.catchAllCause((cause) =>
-      pipe(
-        Effect.logError(defectMessage, cause),
-        Effect.andThen(Effect.die(cause)),
-      ),
-    ),
-    Effect.runPromise,
-    (result) =>
-      result.catch(() => Promise.reject(new GraphQLError(defectMessage))),
+    Effect.succeed(error),
+    Effect.tap(Effect.logWarning),
+    Effect.map(({ _tag, message }) => ({
+      __typename: _tag,
+      message,
+    })),
   );
+
+/**
+ * Helper to easily add a type name to a value. This is typically all that's
+ * needed for resolvers.
+ * @param typename The type name that should be attached to the value.
+ */
+export const handleResolverResponse =
+  <Typename extends string>(typename: Typename) =>
+  <T>(value: T) =>
+    Effect.succeed({
+      __typename: typename,
+      ...value,
+    } as T & { __typename: Typename });

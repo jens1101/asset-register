@@ -1,4 +1,0 @@
-fragment assetError on AssetError {
-  __typename
-  message
-}

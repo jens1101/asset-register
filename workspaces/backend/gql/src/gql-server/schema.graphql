@@ -10,12 +10,6 @@ type Asset {
   value: Sum!
 }
 
-type AssetError implements Error {
-  message: String!
-}
-
-union AssetResponse = Asset | AssetError
-
 scalar BigDecimal
 
 input CreateAssetInput {
@@ -44,6 +38,14 @@ input CreateImageInput {
 }
 
 scalar Currency
+
+"""
+Occurs when attempting to delete a document from an asset that doesn't own the
+document.
+"""
+type DeleteDocumentError implements Error {
+  message: String!
+}
 
 input DeleteDocumentInput {
   id: ID!
@@ -82,6 +84,13 @@ type Image {
   updatedAt: TemporalInstant!
 }
 
+"""
+Occurs when an image was not found in the asset's list of images
+"""
+type ImageNotFoundError implements Error {
+  message: String!
+}
+
 input MutateDocumentInput @oneOf {
   delete: DeleteDocumentInput
   update: UpdateDocumentInput
@@ -94,17 +103,26 @@ input MutateImageInput @oneOf {
 }
 
 type Mutation {
-  createAsset(data: CreateAssetInput!): AssetResponse!
-  deleteAsset(id: ID!): AssetError
-  updateAsset(data: UpdateAssetInput!): AssetResponse!
+  createAsset(data: CreateAssetInput!): Asset!
+  deleteAsset(id: ID!): ReadAssetError
+  updateAsset(data: UpdateAssetInput!): UpdateAssetResponse!
 }
 
 scalar NonEmptyTrimmedString
 
 type Query {
-  asset(id: ID!): AssetResponse!
+  asset(id: ID!): ReadAssetResponse!
   assets: [Asset!]!
 }
+
+"""
+Occurs when the specified asset could not be found in the database
+"""
+type ReadAssetError implements Error {
+  message: String!
+}
+
+union ReadAssetResponse = Asset | ReadAssetError
 
 type Sum {
   amount: BigDecimal!
@@ -130,6 +148,12 @@ input UpdateAssetInput {
   proofOfPurchase: MutateDocumentInput
   value: SumInput
 }
+
+union UpdateAssetResponse =
+  | Asset
+  | DeleteDocumentError
+  | ImageNotFoundError
+  | ReadAssetError
 
 input UpdateDocumentInput {
   file: CreateFileInput!
