@@ -1,11 +1,11 @@
 import { generatePath } from "../../common/route.js";
-import { formatSum } from "../../common/utils.jsx";
 import { Paths } from "../../enums/Paths.js";
 import type {
   AssetListItemFragment,
   FileFragment,
 } from "../../gql-client/types/graphql.js";
 import { useObjectUrl } from "../../hooks/useObjectUrl.js";
+import { Sum } from "../Sum.jsx";
 import "./styles.scss";
 import { A } from "@solidjs/router";
 import { BigDecimal } from "effect";
@@ -40,7 +40,7 @@ export const AssetListItem: Component<{ asset: AssetListItemFragment }> = (
               : "text-body-tertiary"
           }`}
         >
-          {formatSum(props.asset.value)}
+          <Sum>{props.asset.value}</Sum>
         </h6>
 
         <Show when={props.asset.description}>
