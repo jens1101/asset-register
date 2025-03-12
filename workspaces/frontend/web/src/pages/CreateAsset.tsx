@@ -1,6 +1,9 @@
 import { generatePath } from "../common/route.js";
 import { manualRetryWrapper } from "../common/utils.jsx";
-import { AssetForm } from "../components/AssetForm/AssetForm.jsx";
+import {
+  AssetForm,
+  type AssetFormSubmitCallback,
+} from "../components/AssetForm/AssetForm.jsx";
 import { Paths } from "../enums/Paths.js";
 import { mutation } from "../gql-client/client.js";
 import {
@@ -9,7 +12,6 @@ import {
   type CreateAssetMutationVariables,
 } from "../gql-client/types/graphql.js";
 import { usePromptModal } from "../hooks/useModal/usePromptModal.jsx";
-import type { AssetFormValues } from "../schemas/AssetFormValues.js";
 import { CreateAssetInputFromAssetFormValues } from "../schemas/CreateAssetInput.js";
 import { useNavigate } from "@solidjs/router";
 import { Effect, Schema, pipe } from "effect";
@@ -20,10 +22,10 @@ export const CreateAsset: Component = () => {
   const navigate = useNavigate();
   const { showPromptModal } = usePromptModal();
 
-  const onSubmit = (formValues: typeof AssetFormValues.Type) =>
+  const onSubmit: AssetFormSubmitCallback = (formValues) =>
     pipe(
       formValues,
-      Schema.decode(CreateAssetInputFromAssetFormValues),
+      Effect.andThen(Schema.decode(CreateAssetInputFromAssetFormValues)),
       Effect.andThen((createAssetInput) =>
         mutation<CreateAssetMutation, CreateAssetMutationVariables>(
           CreateAssetDocument,

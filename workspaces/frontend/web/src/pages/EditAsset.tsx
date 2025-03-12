@@ -4,7 +4,10 @@ import {
   SumEquivalence,
   manualRetryWrapper,
 } from "../common/utils.js";
-import { AssetForm } from "../components/AssetForm/AssetForm.jsx";
+import {
+  AssetForm,
+  type AssetFormSubmitCallback,
+} from "../components/AssetForm/AssetForm.jsx";
 import type { AssetResource } from "../data/asset.js";
 import { Paths } from "../enums/Paths.js";
 import { mutation } from "../gql-client/client.js";
@@ -209,10 +212,10 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
   const { showPromptModal } = usePromptModal();
   const { showAlertModal } = useAlertModal();
 
-  const onSubmit = async (formValues: typeof AssetFormValues.Type) =>
+  const onSubmit: AssetFormSubmitCallback = (formValues) =>
     pipe(
-      asset(),
-      Effect.andThen((asset) => updateAssset(asset, formValues)),
+      Effect.all([asset(), formValues]),
+      Effect.andThen(([asset, formValues]) => updateAssset(asset, formValues)),
       Effect.andThen((result) =>
         pipe(
           Match.value(result),
