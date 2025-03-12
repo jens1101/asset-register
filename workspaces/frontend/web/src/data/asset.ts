@@ -1,27 +1,21 @@
-import { client } from "../gql-client/client.js";
+import { loadWrapper } from "../common/utils.js";
+import { query } from "../gql-client/client.js";
 import {
   AssetDocument,
   type AssetQuery,
   type AssetQueryVariables,
 } from "../gql-client/types/graphql.js";
-import type { RoutePreloadFunc } from "@solidjs/router";
-import { type Resource, createResource } from "solid-js";
+import type { RoutePreloadFuncArgs } from "@solidjs/router";
+import { pipe } from "effect";
 
-// TODO: maybe return an Either that contains the error or data.
-export type AssetResource = Resource<AssetQuery | undefined>;
+/** Data loader function for an asset */
+export const loadAsset = ({ params }: RoutePreloadFuncArgs) =>
+  pipe(
+    query<AssetQuery, AssetQueryVariables>(AssetDocument, {
+      id: params["id"] ?? "",
+    }),
+    loadWrapper("Failed to fetch asset"),
+    ([assetQuery, { refetch }]) => ({ assetQuery, refetch }),
+  );
 
-export const loadAsset: RoutePreloadFunc<AssetResource> = ({ params }) => {
-  // TODO: error handling. Maybe we need to separate the errors from the data?
-  const [data] = createResource(async () => {
-    const { data } = await client.query<AssetQuery, AssetQueryVariables>(
-      AssetDocument,
-      {
-        id: params["id"] ?? "",
-      },
-    );
-
-    return data;
-  });
-
-  return data;
-};
+export type AssetResource = ReturnType<typeof loadAsset>;

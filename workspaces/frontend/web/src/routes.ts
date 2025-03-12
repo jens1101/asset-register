@@ -1,9 +1,5 @@
-import {
-  type AssetListResource,
-  type AssetResource,
-  loadAsset,
-  loadAssetList,
-} from "./data/index.js";
+import { type AssetResource, loadAsset } from "./data/asset.js";
+import { type AssetListResource, loadAssetList } from "./data/assetList.js";
 import { Paths } from "./enums/Paths.js";
 import { Home } from "./pages/Home.jsx";
 import type { RouteDefinition } from "@solidjs/router";

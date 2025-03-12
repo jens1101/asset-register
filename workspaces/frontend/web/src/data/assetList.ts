@@ -1,24 +1,18 @@
-import { client } from "../gql-client/client.js";
+import { loadWrapper } from "../common/utils.js";
+import { query } from "../gql-client/client.js";
 import {
   AssetListDocument,
   type AssetListQuery,
   type AssetListQueryVariables,
 } from "../gql-client/types/graphql.js";
-import type { RoutePreloadFunc } from "@solidjs/router";
-import { type Resource, createResource } from "solid-js";
+import { pipe } from "effect";
 
-export type AssetListResource = Resource<AssetListQuery | undefined>;
+/** Data loader function for a list of assets */
+export const loadAssetList = () =>
+  pipe(
+    query<AssetListQuery, AssetListQueryVariables>(AssetListDocument, {}),
+    loadWrapper("Failed to fetch asset list"),
+    ([assetListQuery, { refetch }]) => ({ assetListQuery, refetch }),
+  );
 
-// TODO: error handling
-export const loadAssetList: RoutePreloadFunc<AssetListResource> = () => {
-  const [data] = createResource(async () => {
-    const { data } = await client.query<
-      AssetListQuery,
-      AssetListQueryVariables
-    >(AssetListDocument, {});
-
-    return data;
-  });
-
-  return data;
-};
+export type AssetListResource = ReturnType<typeof loadAssetList>;

@@ -1,62 +1,52 @@
+import { generatePath } from "../common/route.js";
+import { manualRetryWrapper } from "../common/utils.jsx";
 import { AssetForm } from "../components/AssetForm/AssetForm.jsx";
-import { client } from "../gql-client/client.js";
+import { Paths } from "../enums/Paths.js";
+import { mutation } from "../gql-client/client.js";
 import {
-  type AssetFragment,
   CreateAssetDocument,
   type CreateAssetMutation,
   type CreateAssetMutationVariables,
 } from "../gql-client/types/graphql.js";
+import { usePromptModal } from "../hooks/useModal/usePromptModal.jsx";
 import type { AssetFormValues } from "../schemas/AssetFormValues.js";
 import { CreateAssetInputFromAssetFormValues } from "../schemas/CreateAssetInput.js";
 import { useNavigate } from "@solidjs/router";
-import { Effect, Exit, Schema } from "effect";
+import { Effect, Schema, pipe } from "effect";
 import { type Component, createUniqueId } from "solid-js";
-
-function createAsset(
-  formValues: typeof AssetFormValues.Type,
-): Effect.Effect<AssetFragment, Error> {
-  return Effect.gen(function* () {
-    const createAssetInput = yield* Schema.decode(
-      CreateAssetInputFromAssetFormValues,
-    )(formValues);
-
-    const { data, error } = yield* Effect.promise(() =>
-      client.mutation<CreateAssetMutation, CreateAssetMutationVariables>(
-        CreateAssetDocument,
-        {
-          data: createAssetInput,
-        },
-      ),
-    );
-
-    // TODO: Improve error handling
-    if (error) {
-      return yield* Effect.fail(error);
-    }
-
-    if (data?.createAsset.__typename === "Asset") {
-      return data.createAsset;
-    }
-
-    return yield* Effect.fail(new Error("Failed to create asset"));
-  });
-}
 
 export const CreateAsset: Component = () => {
   const formId = createUniqueId();
   const navigate = useNavigate();
+  const { showPromptModal } = usePromptModal();
 
-  const onSubmit = async (formValues: typeof AssetFormValues.Type) => {
-    Exit.match(await Effect.runPromiseExit(createAsset(formValues)), {
-      onSuccess(asset) {
-        navigate(`/asset/${asset.id}`);
-      },
-      onFailure(cause) {
-        // TODO: error handling
-        console.error(cause);
-      },
-    });
-  };
+  const onSubmit = (formValues: typeof AssetFormValues.Type) =>
+    pipe(
+      formValues,
+      Schema.decode(CreateAssetInputFromAssetFormValues),
+      Effect.andThen((createAssetInput) =>
+        mutation<CreateAssetMutation, CreateAssetMutationVariables>(
+          CreateAssetDocument,
+          {
+            data: createAssetInput,
+          },
+        ),
+      ),
+      Effect.andThen((result) => {
+        navigate(generatePath(Paths.ViewAsset, { id: result.createAsset.id }));
+      }),
+      manualRetryWrapper("Failed to create asset", () =>
+        pipe(
+          showPromptModal({
+            title: "Create asset failed",
+            body: "Do you want to retry?",
+            positive: "Yes",
+            negative: "No",
+          }),
+          Effect.map((response) => response === "positive"),
+        ),
+      ),
+    );
 
   return (
     <section class="container">
