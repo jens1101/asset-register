@@ -22,8 +22,8 @@ import {
   type UpdateAssetMutationVariables,
   type UpdateImageInput,
 } from "../gql-client/types/graphql.js";
-import { useAlertModal } from "../hooks/useModal/useAlertModal.jsx";
-import { usePromptModal } from "../hooks/useModal/usePromptModal.jsx";
+import { useAlertModal } from "../hooks/useAlertModal.jsx";
+import { usePromptModal } from "../hooks/usePromptModal.jsx";
 import type { AssetFormValues } from "../schemas/AssetFormValues.js";
 import { CreateFileInputFromFile } from "../schemas/CreateFileInput.js";
 import { SumInputFromFormValues } from "../schemas/SumInput.js";

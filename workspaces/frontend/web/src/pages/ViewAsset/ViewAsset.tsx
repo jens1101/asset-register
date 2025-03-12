@@ -12,10 +12,10 @@ import {
   type DeleteAssetMutation,
   type DeleteAssetMutationVariables,
 } from "../../gql-client/types/graphql.js";
+import { useAlertModal } from "../../hooks/useAlertModal.jsx";
 import { useDropdown } from "../../hooks/useDropdown.js";
-import { useAlertModal } from "../../hooks/useModal/useAlertModal.jsx";
-import { usePromptModal } from "../../hooks/useModal/usePromptModal.jsx";
 import { useObjectUrl } from "../../hooks/useObjectUrl.js";
+import { usePromptModal } from "../../hooks/usePromptModal.jsx";
 import "./styles.scss";
 import { useNavigate } from "@solidjs/router";
 import OptionsIcon from "bootstrap-icons/icons/gear-fill.svg";

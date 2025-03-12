@@ -1,5 +1,5 @@
 import { generatePath } from "../common/route.js";
-import { manualRetryWrapper } from "../common/utils.jsx";
+import { manualRetryWrapper } from "../common/utils.js";
 import {
   AssetForm,
   type AssetFormSubmitCallback,
@@ -11,7 +11,7 @@ import {
   type CreateAssetMutation,
   type CreateAssetMutationVariables,
 } from "../gql-client/types/graphql.js";
-import { usePromptModal } from "../hooks/useModal/usePromptModal.jsx";
+import { usePromptModal } from "../hooks/usePromptModal.jsx";
 import { CreateAssetInputFromAssetFormValues } from "../schemas/CreateAssetInput.js";
 import { useNavigate } from "@solidjs/router";
 import { Effect, Schema, pipe } from "effect";

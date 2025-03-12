@@ -16,7 +16,6 @@ import {
  * handle dynamic content well. Therefore only the element reference is stored
  * here and the `Modal` instance needs to be created after the modal content
  * is set.
- * @see `useModal` for a hook that creates modals.
  */
 export const ModalContext = createContext<{
   content: Accessor<Option.Option<JSX.Element>>;

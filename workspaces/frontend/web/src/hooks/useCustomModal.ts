@@ -1,4 +1,4 @@
-import { ModalContext } from "../../context/modal.jsx";
+import { ModalContext } from "../context/modal.jsx";
 import { Modal } from "bootstrap";
 import { Deferred, Effect, Option, pipe } from "effect";
 import {
@@ -51,19 +51,18 @@ export const useCustomModal = <Result = null>() => {
     pipe(
       startTransition(() => context.setContent(Option.some(dialog))),
       (promise) => Effect.promise(() => promise),
-      Effect.andThen(() => context.element()),
-      Effect.andThen((element) =>
-        Effect.gen(function* () {
-          const modalResult = yield* Deferred.make<Result | null>();
-          setModalResult(Option.some(modalResult));
-
-          const modalInstance = new Modal(element, options);
-          setModalInstance(Option.some(modalInstance));
-          modalInstance.show();
-
-          return yield* Deferred.await(modalResult);
-        }),
+      Effect.andThen(() =>
+        Effect.all([context.element(), Deferred.make<Result | null>()]),
       ),
+      Effect.andThen(([element, modalResult]) => {
+        setModalResult(Option.some(modalResult));
+
+        const modalInstance = new Modal(element, options);
+        setModalInstance(Option.some(modalInstance));
+        modalInstance.show();
+
+        return Deferred.await(modalResult);
+      }),
       // This can only happen if the modal element itself does not exist. This
       // should never happen, therefore we simply log an error just in case.
       Effect.catchTag("NoSuchElementException", (error) =>
