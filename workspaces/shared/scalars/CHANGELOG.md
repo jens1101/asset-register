@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/jens1101/asset-register/compare/scalars-v1.0.0...scalars-v1.0.1) (2025-03-14)
+
+
+### Bug Fixes
+
+* **#46:** Updated dependencies ([c9fa1c8](https://github.com/jens1101/asset-register/commit/c9fa1c80ff73a49f5bfaf65230c5c1c54b844145))
+
 ## 1.0.0 (2025-02-22)
 
 
