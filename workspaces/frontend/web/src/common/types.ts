@@ -1,5 +1,3 @@
-import type { Maybe } from "@app/common";
-
 /** Utility interface to easily add `class` and `classList` to any component. */
 export interface ClassAttributes {
   classList?:
@@ -23,5 +21,5 @@ export interface IdAttribute {
 /** Common interface for an initial value. */
 export interface InitialValue<T> {
   /** The initial value for this field. */
-  initialValue?: Maybe<T>;
+  initialValue?: T | undefined;
 }

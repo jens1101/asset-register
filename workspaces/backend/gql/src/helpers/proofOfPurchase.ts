@@ -62,6 +62,6 @@ const deleteProofOfPurchase = (asset: Asset, input: DeleteDocumentInput) =>
     }
 
     yield* deleteDocument(asset.proofOfPurchase);
-    asset.proofOfPurchase = null;
+    asset.proofOfPurchase = undefined;
     return asset;
   });

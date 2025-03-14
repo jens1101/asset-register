@@ -32,7 +32,6 @@
     "typeorm": "typeorm"
   },
   "dependencies": {
-    "@app/common": "1.0.0",
     "@app/scalars": "1.0.0",
     "effect": "3.13.10",
     "graphql": "^16.9.0",
