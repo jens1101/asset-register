@@ -4,7 +4,6 @@
   "packages": {
     "workspaces/backend/gql": {},
     "workspaces/frontend/web": {},
-    "workspaces/shared/common": {},
     "workspaces/shared/scalars": {},
     "workspaces/shared/tsconfig": {},
     "workspaces/shared/walker": {}
