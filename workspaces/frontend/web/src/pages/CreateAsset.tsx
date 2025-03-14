@@ -13,6 +13,7 @@ import {
 } from "../gql-client/types/graphql.js";
 import { usePromptModal } from "../hooks/usePromptModal.jsx";
 import { CreateAssetInputFromAssetFormValues } from "../schemas/CreateAssetInput.js";
+import { Title } from "@solidjs/meta";
 import { useNavigate } from "@solidjs/router";
 import { Effect, Schema, pipe } from "effect";
 import { type Component, createUniqueId } from "solid-js";
@@ -51,14 +52,18 @@ export const CreateAsset: Component = () => {
     );
 
   return (
-    <section class="container">
-      <h1>Create Asset</h1>
+    <>
+      <Title>Create Asset</Title>
 
-      <AssetForm onSubmit={onSubmit} id={formId} />
+      <section class="container">
+        <h1>Create Asset</h1>
 
-      <button type={"submit"} class={"btn btn-primary mt-3"} form={formId}>
-        Create asset
-      </button>
-    </section>
+        <AssetForm onSubmit={onSubmit} id={formId} />
+
+        <button type={"submit"} class={"btn btn-primary mt-3"} form={formId}>
+          Create asset
+        </button>
+      </section>
+    </>
   );
 };

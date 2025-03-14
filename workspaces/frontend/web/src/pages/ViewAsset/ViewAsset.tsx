@@ -17,6 +17,7 @@ import { useDropdown } from "../../hooks/useDropdown.js";
 import { useObjectUrl } from "../../hooks/useObjectUrl.js";
 import { usePromptModal } from "../../hooks/usePromptModal.jsx";
 import "./styles.scss";
+import { Title } from "@solidjs/meta";
 import { useNavigate } from "@solidjs/router";
 import OptionsIcon from "bootstrap-icons/icons/gear-fill.svg";
 import { BigDecimal, Effect, Option, pipe } from "effect";
@@ -101,6 +102,15 @@ export const ViewAsset: Component<{ data: AssetResource }> = (props) => {
 
   return (
     <>
+      <Title>
+        View Asset
+        {pipe(
+          asset(),
+          Option.map((asset) => ` - ${asset.name}`),
+          Option.getOrElse(() => ""),
+        )}
+      </Title>
+
       <section class="container">
         {/* TODO: implement loader component */}
         <Suspense fallback={<span>...</span>}>
