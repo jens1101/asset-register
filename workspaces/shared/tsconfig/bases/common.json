@@ -8,6 +8,8 @@
     "sourceMap": true,
     "declaration": true,
     "verbatimModuleSyntax": true,
-    "erasableSyntaxOnly": true
+    "erasableSyntaxOnly": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   }
 }
