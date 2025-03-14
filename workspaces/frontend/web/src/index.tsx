@@ -3,6 +3,7 @@ import { Modal } from "./components/Modal/Modal.jsx";
 import { ModalProvider } from "./context/modal.jsx";
 import { routes } from "./routes.js";
 import "./styles/index.scss";
+import { MetaProvider, Title } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { Effect, Option, pipe } from "effect";
 import { render } from "solid-js/web";
@@ -13,10 +14,14 @@ await pipe(
   Effect.andThen((root) =>
     render(
       () => (
-        <ModalProvider>
-          <Router root={App}>{routes}</Router>
-          <Modal />
-        </ModalProvider>
+        <MetaProvider>
+          <ModalProvider>
+            <Title>Asset Register</Title>
+
+            <Router root={App}>{routes}</Router>
+            <Modal />
+          </ModalProvider>
+        </MetaProvider>
       ),
       root,
     ),

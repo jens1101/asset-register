@@ -27,6 +27,7 @@ import { usePromptModal } from "../hooks/usePromptModal.jsx";
 import type { AssetFormValues } from "../schemas/AssetFormValues.js";
 import { CreateFileInputFromFile } from "../schemas/CreateFileInput.js";
 import { SumInputFromFormValues } from "../schemas/SumInput.js";
+import { Title } from "@solidjs/meta";
 import { useNavigate } from "@solidjs/router";
 import { Effect, Match, Option, Schema, pipe } from "effect";
 import { isNonEmptyArray } from "effect/Array";
@@ -265,47 +266,58 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
     );
 
   return (
-    <section class="container">
-      <Suspense fallback={<span>...</span>}>
-        <ErrorBoundary fallback={<div>Implement error component</div>}>
-          <Show
-            when={pipe(
-              assetQuery(),
-              Option.filter((asset) => asset.__typename === "ReadAssetError"),
-              Option.getOrNull,
-            )}
-          >
-            <div>
-              <p>Asset not found</p>
-              <a class="btn btn-primary" href={Paths.Home}>
-                Go home
-              </a>
-            </div>
-          </Show>
+    <>
+      <Title>
+        Edit Asset
+        {pipe(
+          asset(),
+          Option.map((asset) => ` - ${asset.name}`),
+          Option.getOrElse(() => ""),
+        )}
+      </Title>
 
-          <Show when={pipe(asset(), Option.getOrNull)} keyed>
-            {(asset) => (
-              <>
-                <h1>Edit Asset</h1>
+      <section class="container">
+        <Suspense fallback={<span>...</span>}>
+          <ErrorBoundary fallback={<div>Implement error component</div>}>
+            <Show
+              when={pipe(
+                assetQuery(),
+                Option.filter((asset) => asset.__typename === "ReadAssetError"),
+                Option.getOrNull,
+              )}
+            >
+              <div>
+                <p>Asset not found</p>
+                <a class="btn btn-primary" href={Paths.Home}>
+                  Go home
+                </a>
+              </div>
+            </Show>
 
-                <AssetForm
-                  onSubmit={onSubmit}
-                  initialValue={asset}
-                  id={formId}
-                />
+            <Show when={pipe(asset(), Option.getOrNull)} keyed>
+              {(asset) => (
+                <>
+                  <h1>Edit Asset</h1>
 
-                <button
-                  type={"submit"}
-                  class={"btn btn-primary mt-3"}
-                  form={formId}
-                >
-                  Save changes
-                </button>
-              </>
-            )}
-          </Show>
-        </ErrorBoundary>
-      </Suspense>
-    </section>
+                  <AssetForm
+                    onSubmit={onSubmit}
+                    initialValue={asset}
+                    id={formId}
+                  />
+
+                  <button
+                    type={"submit"}
+                    class={"btn btn-primary mt-3"}
+                    form={formId}
+                  >
+                    Save changes
+                  </button>
+                </>
+              )}
+            </Show>
+          </ErrorBoundary>
+        </Suspense>
+      </section>
+    </>
   );
 };
