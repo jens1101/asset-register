@@ -4,17 +4,11 @@
   "private": true,
   "description": "",
   "type": "module",
-  "main": "dist/index.js",
-  "files": [
-    "dist"
-  ],
+  "main": "src/index.ts",
   "scripts": {
-    "prebuild": "npm run clean",
-    "build": "tsc",
-    "clean": "rimraf ./dist",
     "format": "prettier --write ./",
     "lint": "npm run lint:eslint && npm run lint:format && npm run lint:circular",
-    "lint:circular": "dpdm -T --exit-code circular:1 --no-warning --no-tree ./src/index.ts",
+    "lint:circular": "dpdm -T --exit-code circular:1 --no-warning --no-tree src/index.ts",
     "lint:eslint": "eslint --max-warnings 0",
     "lint:format": "prettier --check .",
     "test": "tsc --noEmit"
