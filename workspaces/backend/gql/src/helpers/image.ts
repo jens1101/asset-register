@@ -71,8 +71,8 @@ export const createImage = (asset: Asset, input: CreateImageInput) =>
   Effect.gen(function* () {
     const image = yield* saveImage({
       asset,
-      name: input.name,
-      description: input.description,
+      name: input.name ?? undefined,
+      description: input.description ?? undefined,
       file: yield* saveFile(input.file),
       position: yield* getNewImagePosition(
         asset.images,

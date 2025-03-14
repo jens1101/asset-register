@@ -6,15 +6,14 @@ import {
   BigDecimalTransformer,
   TemporalInstantTransformer,
 } from "./transformers.js";
-import type { Maybe } from "@app/common";
 import { BigDecimal } from "effect";
 import type { Temporal } from "temporal-polyfill";
 import { EntitySchema } from "typeorm";
 
 export interface Image {
   id: number;
-  name: Maybe<string>;
-  description: Maybe<string>;
+  name: string | undefined;
+  description: string | undefined;
   position: BigDecimal.BigDecimal;
   createdAt: Temporal.Instant;
   updatedAt: Temporal.Instant;

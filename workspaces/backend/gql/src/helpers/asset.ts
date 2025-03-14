@@ -61,7 +61,7 @@ export const createAsset = (input: CreateAssetInput) =>
   pipe(
     saveAsset({
       name: input.name,
-      description: input.description,
+      description: input.description ?? undefined,
       images: [],
       value: input.value,
       createdAt: Temporal.Now.instant(),

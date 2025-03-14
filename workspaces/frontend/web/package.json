@@ -19,7 +19,6 @@
     "test": "tsc --noEmit"
   },
   "dependencies": {
-    "@app/common": "1.0.0",
     "@app/scalars": "1.0.0",
     "@app/walker": "1.0.0",
     "@graphql-codegen/add": "5.0.3",

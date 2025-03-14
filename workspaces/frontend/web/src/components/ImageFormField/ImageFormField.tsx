@@ -61,7 +61,7 @@ export const ImageFormField: Component<
     errors: nameErrors,
     touched: nameTouched,
   } = useFormField<HTMLInputElement>({
-    initialValue: initialName,
+    initialValue: initialName ?? undefined,
     validationEventType: "input",
     customValidators: {
       isAsync: false,

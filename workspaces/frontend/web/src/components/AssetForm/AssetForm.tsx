@@ -90,7 +90,7 @@ export const AssetForm: Component<
     empty: proofOfPurchaseEmpty,
     clear: proofOfPurchaseClear,
   } = useFormField<HTMLInputElement>({
-    initialValue: Option.getOrNull(
+    initialValue: Option.getOrUndefined(
       Schema.encodeUnknownOption(CreateFileInputFromFile)(
         initialValue.proofOfPurchase?.file,
       ),
