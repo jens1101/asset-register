@@ -11,7 +11,7 @@
     "lint:circular": "dpdm -T --exit-code circular:1 --no-warning --no-tree src/index.ts",
     "lint:eslint": "eslint --max-warnings 0",
     "lint:format": "prettier --check .",
-    "test": "tsc"
+    "test": "tsc && node --test --experimental-test-coverage"
   },
   "devDependencies": {
     "@app/tsconfig": "1.0.0",
