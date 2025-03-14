@@ -1,5 +1,34 @@
 # Changelog
 
+## [2.0.0](https://github.com/jens1101/asset-register/compare/gql-v1.0.0...gql-v2.0.0) (2025-03-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* **#60:** Replaced the previous `AssetError` with more specialized error types.
+    - Created `handleResolverError` and `handleResolverResponse` helpers to shorten resolvers.
+    - Added documentation.
+
+### Features
+
+* **#60:** Improved GQL typed errors ([c279bc2](https://github.com/jens1101/asset-register/commit/c279bc29825cc4e3ac9740a884972bcae8579498))
+* **#84:** Removed `@app/common` ([0c37bdc](https://github.com/jens1101/asset-register/commit/0c37bdc112ee75ea8a3dd5add6ea3be5f9514448))
+* **#84:** Removed `@app/common` ([05106ec](https://github.com/jens1101/asset-register/commit/05106ece02a2bb1d87162f51b5cd146ee1934703))
+
+
+### Bug Fixes
+
+* **#46:** Updated dependencies ([c9fa1c8](https://github.com/jens1101/asset-register/commit/c9fa1c80ff73a49f5bfaf65230c5c1c54b844145))
+* **#60:** Refactored the resolver wrapper ([6c6305d](https://github.com/jens1101/asset-register/commit/6c6305dbf4b0807cd3dd4d27e7121376aea28ea8))
+* Fixed a bug with Asset creation ([0543416](https://github.com/jens1101/asset-register/commit/0543416821e1fdc3b11be66b8088dbdb4ce2bddb))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @app/scalars bumped from 1.0.0 to 1.0.1
+
 ## 1.0.0 (2025-02-22)
 
 
