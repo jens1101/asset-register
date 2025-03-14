@@ -1,9 +1,9 @@
-import { ScalarName } from "./ScalarName.js";
-import { TaggedScalar } from "./TaggedScalar.js";
+import { ScalarName } from "./ScalarName.ts";
+import { TaggedScalar } from "./TaggedScalar.ts";
 import { Schema } from "effect";
 
 export const uint8ArrayScalar = new TaggedScalar<
-  ScalarName.Uint8Array,
+  typeof ScalarName.Uint8Array,
   Uint8Array
 >({
   name: ScalarName.Uint8Array,

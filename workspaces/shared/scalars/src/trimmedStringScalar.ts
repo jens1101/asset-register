@@ -1,5 +1,5 @@
-import { ScalarName } from "./ScalarName.js";
-import { StringScalar } from "./StringScalar.js";
+import { ScalarName } from "./ScalarName.ts";
+import { StringScalar } from "./StringScalar.ts";
 import { Schema } from "effect";
 
 export const trimmedStringScalar = new StringScalar({

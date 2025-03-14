@@ -1,9 +1,9 @@
-import { ScalarName } from "./ScalarName.js";
-import { TaggedScalar } from "./TaggedScalar.js";
+import { ScalarName } from "./ScalarName.ts";
+import { TaggedScalar } from "./TaggedScalar.ts";
 import { BigDecimal, Schema } from "effect";
 
 export const bigDecimalScalar = new TaggedScalar<
-  ScalarName.BigDecimal,
+  typeof ScalarName.BigDecimal,
   BigDecimal.BigDecimal
 >({
   name: ScalarName.BigDecimal,
