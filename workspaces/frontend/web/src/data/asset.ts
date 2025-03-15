@@ -1,10 +1,10 @@
-import { loadWrapper } from "../common/utils.js";
-import { query } from "../gql-client/client.js";
+import { loadWrapper } from "../common/utils.ts";
+import { query } from "../gql-client/client.ts";
 import {
   AssetDocument,
   type AssetQuery,
   type AssetQueryVariables,
-} from "../gql-client/types/graphql.js";
+} from "../gql-client/types/graphql.ts";
 import type { RoutePreloadFuncArgs } from "@solidjs/router";
 import { pipe } from "effect";
 

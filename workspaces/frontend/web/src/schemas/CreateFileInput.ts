@@ -1,4 +1,4 @@
-import type { CreateFileInput as CreateFileInputType } from "../gql-client/types/graphql.js";
+import type { CreateFileInput as CreateFileInputType } from "../gql-client/types/graphql.ts";
 import { Effect, ParseResult, Schema } from "effect";
 
 export const CreateFileInput: Schema.Schema<CreateFileInputType> =

@@ -1,6 +1,6 @@
-import type { ClassAttributes } from "../../common/types.js";
-import type { ImageFragment } from "../../gql-client/types/graphql.js";
-import { CarouselSlide } from "./CarouselSlide.jsx";
+import type { ClassAttributes } from "../../common/types.ts";
+import type { ImageFragment } from "../../gql-client/types/graphql.ts";
+import { CarouselSlide } from "./CarouselSlide.tsx";
 import "./styles.scss";
 import { Carousel as BootstrapCarousel } from "bootstrap";
 import PreviousIcon from "bootstrap-icons/icons/chevron-compact-left.svg";

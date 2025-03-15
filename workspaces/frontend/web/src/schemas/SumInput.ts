@@ -1,5 +1,5 @@
-import type { SumInput as SumInputType } from "../gql-client/types/graphql.js";
-import { Currency } from "./Currency.js";
+import type { SumInput as SumInputType } from "../gql-client/types/graphql.ts";
+import { Currency } from "./Currency.ts";
 import { BigDecimal, Effect, ParseResult, Schema, pipe } from "effect";
 
 export const SumInput: Schema.Schema<SumInputType> = Schema.Struct({

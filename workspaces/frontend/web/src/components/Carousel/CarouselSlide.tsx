@@ -1,6 +1,6 @@
-import type { ClassAttributes } from "../../common/types.js";
-import type { ImageFragment } from "../../gql-client/types/graphql.js";
-import { useObjectUrl } from "../../hooks/useObjectUrl.js";
+import type { ClassAttributes } from "../../common/types.ts";
+import type { ImageFragment } from "../../gql-client/types/graphql.ts";
+import { useObjectUrl } from "../../hooks/useObjectUrl.ts";
 import { type Component, Show } from "solid-js";
 
 export const CarouselSlide: Component<

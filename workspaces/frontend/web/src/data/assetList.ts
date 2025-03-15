@@ -1,10 +1,10 @@
-import { loadWrapper } from "../common/utils.js";
-import { query } from "../gql-client/client.js";
+import { loadWrapper } from "../common/utils.ts";
+import { query } from "../gql-client/client.ts";
 import {
   AssetListDocument,
   type AssetListQuery,
   type AssetListQueryVariables,
-} from "../gql-client/types/graphql.js";
+} from "../gql-client/types/graphql.ts";
 import { pipe } from "effect";
 
 /** Data loader function for a list of assets */

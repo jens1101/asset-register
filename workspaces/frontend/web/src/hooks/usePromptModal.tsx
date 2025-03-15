@@ -1,4 +1,4 @@
-import { useCustomModal } from "./useCustomModal.js";
+import { useCustomModal } from "./useCustomModal.ts";
 import { Modal } from "bootstrap";
 import { type Component, type JSX, Show } from "solid-js";
 

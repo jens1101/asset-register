@@ -1,6 +1,6 @@
-import type { CreateImageInput as CreateImageInputType } from "../gql-client/types/graphql.js";
-import { CreateFileInput } from "./CreateFileInput.js";
-import { inputMaybe } from "./inputMaybe.js";
+import type { CreateImageInput as CreateImageInputType } from "../gql-client/types/graphql.ts";
+import { CreateFileInput } from "./CreateFileInput.ts";
+import { inputMaybe } from "./inputMaybe.ts";
 import { Schema } from "effect";
 
 export const CreateImageInput: Schema.Schema<CreateImageInputType> =

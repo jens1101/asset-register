@@ -1,25 +1,25 @@
-import { DEFAULT_CURRENCY } from "../../common/config.js";
+import { DEFAULT_CURRENCY } from "../../common/config.ts";
 import {
   availableCurrencies,
   defaultByteFormatter,
   numberFormatterCache,
-} from "../../common/intl.js";
-import type { IdAttribute, InitialValue } from "../../common/types.js";
-import { MAX_FILE_SIZE } from "../../config.js";
+} from "../../common/intl.ts";
+import type { IdAttribute, InitialValue } from "../../common/types.ts";
+import { MAX_FILE_SIZE } from "../../config.ts";
 import {
   type AssetFragment,
   type ImageFragment,
-} from "../../gql-client/types/graphql.js";
-import { useForm } from "../../hooks/useForm.js";
-import { useFormField } from "../../hooks/useFormField.js";
+} from "../../gql-client/types/graphql.ts";
+import { useForm } from "../../hooks/useForm.ts";
+import { useFormField } from "../../hooks/useFormField.ts";
 import {
   type AssetFormValues,
   AssetFormValuesFromFormData,
-} from "../../schemas/AssetFormValues.js";
-import { CreateFileInputFromFile } from "../../schemas/CreateFileInput.js";
-import { Currency } from "../../schemas/Currency.js";
-import { Feedback } from "../FormFieldFeedback/Feedback.jsx";
-import { ImageFormField } from "../ImageFormField/ImageFormField.jsx";
+} from "../../schemas/AssetFormValues.ts";
+import { CreateFileInputFromFile } from "../../schemas/CreateFileInput.ts";
+import { Currency } from "../../schemas/Currency.ts";
+import { Feedback } from "../FormFieldFeedback/Feedback.tsx";
+import { ImageFormField } from "../ImageFormField/ImageFormField.tsx";
 import {
   BigDecimal,
   type Effect,

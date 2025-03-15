@@ -1,4 +1,4 @@
-import type { FileFragment } from "../gql-client/types/graphql.js";
+import type { FileFragment } from "../gql-client/types/graphql.ts";
 import { onCleanup } from "solid-js";
 
 /**

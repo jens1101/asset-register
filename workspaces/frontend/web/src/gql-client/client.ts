@@ -1,4 +1,4 @@
-import { taggedScalarExchange } from "./taggedScalarExchange.js";
+import { taggedScalarExchange } from "./taggedScalarExchange.ts";
 import {
   bigDecimalScalar,
   temporalInstantScalar,

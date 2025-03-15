@@ -1,5 +1,5 @@
-import type { InitialValue } from "../common/types.js";
-import { setInputValue } from "../common/utils.js";
+import type { InitialValue } from "../common/types.ts";
+import { setInputValue } from "../common/utils.ts";
 import { type Accessor, createSignal, onCleanup, onMount } from "solid-js";
 
 /**

@@ -1,16 +1,16 @@
-import { generatePath } from "../common/route.js";
+import { generatePath } from "../common/route.ts";
 import {
   FileEquivalence,
   SumEquivalence,
   manualRetryWrapper,
-} from "../common/utils.js";
+} from "../common/utils.ts";
 import {
   AssetForm,
   type AssetFormSubmitCallback,
-} from "../components/AssetForm/AssetForm.jsx";
-import type { AssetResource } from "../data/asset.js";
-import { Paths } from "../enums/Paths.js";
-import { mutation } from "../gql-client/client.js";
+} from "../components/AssetForm/AssetForm.tsx";
+import type { AssetResource } from "../data/asset.ts";
+import { Paths } from "../enums/Paths.ts";
+import { mutation } from "../gql-client/client.ts";
 import {
   type AssetFragment,
   type CreateImageInput,
@@ -21,16 +21,15 @@ import {
   type UpdateAssetMutation,
   type UpdateAssetMutationVariables,
   type UpdateImageInput,
-} from "../gql-client/types/graphql.js";
-import { useAlertModal } from "../hooks/useAlertModal.jsx";
-import { usePromptModal } from "../hooks/usePromptModal.jsx";
-import type { AssetFormValues } from "../schemas/AssetFormValues.js";
-import { CreateFileInputFromFile } from "../schemas/CreateFileInput.js";
-import { SumInputFromFormValues } from "../schemas/SumInput.js";
+} from "../gql-client/types/graphql.ts";
+import { useAlertModal } from "../hooks/useAlertModal.tsx";
+import { usePromptModal } from "../hooks/usePromptModal.tsx";
+import type { AssetFormValues } from "../schemas/AssetFormValues.ts";
+import { CreateFileInputFromFile } from "../schemas/CreateFileInput.ts";
+import { SumInputFromFormValues } from "../schemas/SumInput.ts";
 import { Title } from "@solidjs/meta";
 import { useNavigate } from "@solidjs/router";
-import { Effect, Match, Option, Schema, pipe } from "effect";
-import { isNonEmptyArray } from "effect/Array";
+import { Array, Effect, Match, Option, Schema, pipe } from "effect";
 import {
   type Component,
   ErrorBoundary,
@@ -138,8 +137,8 @@ const getImagesInput = (
   Effect.gen(function* () {
     const inputs: MutateImageInput[] = [];
 
-    const currentImageIds = new Set(asset.images.map((image) => image.id));
-    const newImageIds = new Set();
+    const currentImageIds: string[] = asset.images.map((image) => image.id);
+    const newImageIds: string[] = [];
 
     let previousImageId: string | null = null;
     let createImageInputs: CreateImageInput[] = [];
@@ -185,18 +184,18 @@ const getImagesInput = (
         inputs.push({ update: updateInput });
       }
 
-      newImageIds.add(newImage.id);
+      newImageIds.push(newImage.id);
       previousImageId = newImage.id;
     }
 
     inputs.push(
       ...createImageInputs.map((create) => ({ create })),
-      ...Array.from(currentImageIds.difference(newImageIds), (id) => ({
+      ...Array.difference(currentImageIds, newImageIds).map((id) => ({
         delete: { id },
       })),
     );
 
-    return Option.filter(Option.some(inputs), isNonEmptyArray);
+    return Option.filter(Option.some(inputs), Array.isNonEmptyArray);
   });
 
 export const EditAsset: Component<{ data: AssetResource }> = (props) => {

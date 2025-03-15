@@ -1,5 +1,5 @@
-import { AssetListItem } from "../components/AssetListItem/AssetListItem.jsx";
-import type { AssetListResource } from "../data/assetList.js";
+import { AssetListItem } from "../components/AssetListItem/AssetListItem.tsx";
+import type { AssetListResource } from "../data/assetList.ts";
 import { Option, pipe } from "effect";
 import { type Component, For, Show, Suspense } from "solid-js";
 

@@ -1,21 +1,21 @@
-import { defaultDateTimeFormatter } from "../../common/intl.js";
-import { generatePath } from "../../common/route.js";
-import { manualRetryWrapper } from "../../common/utils.js";
-import { Carousel } from "../../components/Carousel/Carousel.jsx";
-import { DropdownCaret } from "../../components/Dropdown/DropdownCaret.jsx";
-import { Sum } from "../../components/Sum.jsx";
-import type { AssetResource } from "../../data/asset.js";
-import { Paths } from "../../enums/Paths.js";
-import { mutation } from "../../gql-client/client.js";
+import { defaultDateTimeFormatter } from "../../common/intl.ts";
+import { generatePath } from "../../common/route.ts";
+import { manualRetryWrapper } from "../../common/utils.ts";
+import { Carousel } from "../../components/Carousel/Carousel.tsx";
+import { DropdownCaret } from "../../components/Dropdown/DropdownCaret.tsx";
+import { Sum } from "../../components/Sum.tsx";
+import type { AssetResource } from "../../data/asset.ts";
+import { Paths } from "../../enums/Paths.ts";
+import { mutation } from "../../gql-client/client.ts";
 import {
   DeleteAssetDocument,
   type DeleteAssetMutation,
   type DeleteAssetMutationVariables,
-} from "../../gql-client/types/graphql.js";
-import { useAlertModal } from "../../hooks/useAlertModal.jsx";
-import { useDropdown } from "../../hooks/useDropdown.js";
-import { useObjectUrl } from "../../hooks/useObjectUrl.js";
-import { usePromptModal } from "../../hooks/usePromptModal.jsx";
+} from "../../gql-client/types/graphql.ts";
+import { useAlertModal } from "../../hooks/useAlertModal.tsx";
+import { useDropdown } from "../../hooks/useDropdown.ts";
+import { useObjectUrl } from "../../hooks/useObjectUrl.ts";
+import { usePromptModal } from "../../hooks/usePromptModal.tsx";
 import "./styles.scss";
 import { Title } from "@solidjs/meta";
 import { useNavigate } from "@solidjs/router";

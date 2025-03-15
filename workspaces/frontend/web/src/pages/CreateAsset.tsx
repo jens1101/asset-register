@@ -1,18 +1,18 @@
-import { generatePath } from "../common/route.js";
-import { manualRetryWrapper } from "../common/utils.js";
+import { generatePath } from "../common/route.ts";
+import { manualRetryWrapper } from "../common/utils.ts";
 import {
   AssetForm,
   type AssetFormSubmitCallback,
-} from "../components/AssetForm/AssetForm.jsx";
-import { Paths } from "../enums/Paths.js";
-import { mutation } from "../gql-client/client.js";
+} from "../components/AssetForm/AssetForm.tsx";
+import { Paths } from "../enums/Paths.ts";
+import { mutation } from "../gql-client/client.ts";
 import {
   CreateAssetDocument,
   type CreateAssetMutation,
   type CreateAssetMutationVariables,
-} from "../gql-client/types/graphql.js";
-import { usePromptModal } from "../hooks/usePromptModal.jsx";
-import { CreateAssetInputFromAssetFormValues } from "../schemas/CreateAssetInput.js";
+} from "../gql-client/types/graphql.ts";
+import { usePromptModal } from "../hooks/usePromptModal.tsx";
+import { CreateAssetInputFromAssetFormValues } from "../schemas/CreateAssetInput.ts";
 import { Title } from "@solidjs/meta";
 import { useNavigate } from "@solidjs/router";
 import { Effect, Schema, pipe } from "effect";

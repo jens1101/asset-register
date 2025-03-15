@@ -1,4 +1,4 @@
-import { Paths } from "../../enums/Paths.js";
+import { Paths } from "../../enums/Paths.ts";
 import { A } from "@solidjs/router";
 import { Offcanvas } from "bootstrap";
 import { type Component, createSignal } from "solid-js";
