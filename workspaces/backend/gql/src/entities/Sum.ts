@@ -1,5 +1,5 @@
-import { EntityName } from "../enums/EntityName.js";
-import { BigDecimalTransformer } from "./transformers.js";
+import { EntityName } from "../enums/EntityName.ts";
+import { BigDecimalTransformer } from "./transformers.ts";
 import type { BigDecimal } from "effect";
 import { EntitySchema } from "typeorm";
 

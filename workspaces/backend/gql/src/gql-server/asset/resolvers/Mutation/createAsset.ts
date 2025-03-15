@@ -1,10 +1,10 @@
-import { createAsset as createAssetHelper } from "../../../../helpers/asset.js";
+import { createAsset as createAssetHelper } from "../../../../helpers/asset.ts";
 import {
   handleResolverResponse,
   resolverWrapper,
-} from "../../../../helpers/util.js";
-import { withTransaction } from "../../../../scopes/index.js";
-import type { MutationResolvers } from "./../../../types.generated.js";
+} from "../../../../helpers/util.ts";
+import { withTransaction } from "../../../../scopes/index.ts";
+import type { MutationResolvers } from "./../../../types.generated.ts";
 import { Effect, pipe } from "effect";
 
 export const createAsset: NonNullable<

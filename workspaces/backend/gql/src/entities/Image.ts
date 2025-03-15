@@ -1,11 +1,11 @@
-import { EntityName } from "../enums/EntityName.js";
-import { isTrimmed } from "../helpers/checks.js";
-import type { Asset } from "./Asset.js";
-import type { File } from "./File.js";
+import { EntityName } from "../enums/EntityName.ts";
+import { isTrimmed } from "../helpers/checks.ts";
+import type { Asset } from "./Asset.ts";
+import type { File } from "./File.ts";
 import {
   BigDecimalTransformer,
   TemporalInstantTransformer,
-} from "./transformers.js";
+} from "./transformers.ts";
 import { BigDecimal } from "effect";
 import type { Temporal } from "temporal-polyfill";
 import { EntitySchema } from "typeorm";

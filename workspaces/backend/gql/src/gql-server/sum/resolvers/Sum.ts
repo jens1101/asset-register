@@ -1,3 +1,3 @@
-import type { SumResolvers } from "./../../types.generated.js";
+import type { SumResolvers } from "./../../types.generated.ts";
 
 export const Sum: SumResolvers = {};

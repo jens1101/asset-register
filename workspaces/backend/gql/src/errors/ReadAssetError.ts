@@ -1,5 +1,5 @@
-import { ErrorTags } from "../enums/ErrorTags.js";
-import type { ErrorInput, ErrorParameters } from "./errorInterfaces.js";
+import { ErrorTags } from "../enums/ErrorTags.ts";
+import type { ErrorInput, ErrorParameters } from "./errorInterfaces.ts";
 import { Data } from "effect";
 
 /** Used when the specified asset could not be found in the database */

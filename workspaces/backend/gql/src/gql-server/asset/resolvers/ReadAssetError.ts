@@ -1,3 +1,3 @@
-import type { ReadAssetErrorResolvers } from "./../../types.generated.js";
+import type { ReadAssetErrorResolvers } from "./../../types.generated.ts";
 
 export const ReadAssetError: ReadAssetErrorResolvers = {};

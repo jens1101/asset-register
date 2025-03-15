@@ -1,8 +1,8 @@
-import { readImages, readMainImage } from "../../../helpers/image.js";
-import { readProofOfPurchase } from "../../../helpers/proofOfPurchase.js";
-import { resolverWrapper } from "../../../helpers/util.js";
-import { withTransaction } from "../../../scopes/index.js";
-import type { AssetResolvers } from "./../../types.generated.js";
+import { readImages, readMainImage } from "../../../helpers/image.ts";
+import { readProofOfPurchase } from "../../../helpers/proofOfPurchase.ts";
+import { resolverWrapper } from "../../../helpers/util.ts";
+import { withTransaction } from "../../../scopes/index.ts";
+import type { AssetResolvers } from "./../../types.generated.ts";
 import { Effect, Option, pipe } from "effect";
 
 export const Asset: AssetResolvers = {

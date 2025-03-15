@@ -1,7 +1,7 @@
-import { EntityName } from "../enums/EntityName.js";
-import type { Asset } from "./Asset.js";
-import type { File } from "./File.js";
-import { TemporalInstantTransformer } from "./transformers.js";
+import { EntityName } from "../enums/EntityName.ts";
+import type { Asset } from "./Asset.ts";
+import type { File } from "./File.ts";
+import { TemporalInstantTransformer } from "./transformers.ts";
 import type { Temporal } from "temporal-polyfill";
 import { EntitySchema } from "typeorm";
 

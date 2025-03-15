@@ -1,11 +1,11 @@
-import { dataSource } from "../dataSource.js";
+import { dataSource } from "../dataSource.ts";
 import {
   DataSourceService,
   EntityManagerService,
   QueryRunnerService,
-} from "../services/index.js";
-import { withQueryRunner } from "./withQueryRunner.js";
-import { withQueryRunnerTransaction } from "./withQueryRunnerTransaction.js";
+} from "../services/index.ts";
+import { withQueryRunner } from "./withQueryRunner.ts";
+import { withQueryRunnerTransaction } from "./withQueryRunnerTransaction.ts";
 import { Effect, pipe } from "effect";
 
 export const withTransaction = <A, E>(

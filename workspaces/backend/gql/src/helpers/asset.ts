@@ -1,15 +1,15 @@
-import { type Asset, AssetEntity } from "../entities/index.js";
-import { ReadAssetError } from "../errors/ReadAssetError.js";
+import { type Asset, AssetEntity } from "../entities/index.ts";
+import { ReadAssetError } from "../errors/ReadAssetError.ts";
 import type {
   CreateAssetInput,
   UpdateAssetInput,
-} from "../gql-server/types.generated.js";
-import { createImage, mutateImages } from "./image.js";
+} from "../gql-server/types.generated.ts";
+import { createImage, mutateImages } from "./image.ts";
 import {
   mutateProofOfPurchase,
   updateProofOfPurchase,
-} from "./proofOfPurchase.js";
-import { entityManagerWapper, findOneOrFailWrapper } from "./util.js";
+} from "./proofOfPurchase.ts";
+import { entityManagerWapper, findOneOrFailWrapper } from "./util.ts";
 import { Array, Effect, Option, pipe } from "effect";
 import { Temporal } from "temporal-polyfill";
 import { type FindOptionsRelations, type FindOptionsWhere } from "typeorm";

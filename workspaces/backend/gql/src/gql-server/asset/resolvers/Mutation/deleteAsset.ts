@@ -1,14 +1,14 @@
-import { ErrorTags } from "../../../../enums/ErrorTags.js";
+import { ErrorTags } from "../../../../enums/ErrorTags.ts";
 import {
   deleteAsset as deleteAssetHelper,
   readAsset,
-} from "../../../../helpers/asset.js";
+} from "../../../../helpers/asset.ts";
 import {
   handleResolverError,
   resolverWrapper,
-} from "../../../../helpers/util.js";
-import { withTransaction } from "../../../../scopes/index.js";
-import type { MutationResolvers } from "./../../../types.generated.js";
+} from "../../../../helpers/util.ts";
+import { withTransaction } from "../../../../scopes/index.ts";
+import type { MutationResolvers } from "./../../../types.generated.ts";
 import { Effect, pipe } from "effect";
 
 export const deleteAsset: NonNullable<

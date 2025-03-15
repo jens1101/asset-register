@@ -1,6 +1,6 @@
-import { DATA_SOURCE_INIT_RETRIES } from "./config.js";
-import { entities } from "./entities/index.js";
-import { migrations } from "./migrations/index.js";
+import { DATA_SOURCE_INIT_RETRIES } from "./config.ts";
+import { entities } from "./entities/index.ts";
+import { migrations } from "./migrations/index.ts";
 import retry from "retry";
 import { DataSource } from "typeorm";
 
