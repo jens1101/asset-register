@@ -3,7 +3,9 @@ import { gqlServerRun, stringScalarFromAst } from "./utils.ts";
 import { Schema } from "effect";
 import { GraphQLScalarType } from "graphql";
 
-export class StringScalar<Tag extends keyof typeof ScalarName> {
+export class StringScalar<
+  Tag extends (typeof ScalarName)[keyof typeof ScalarName],
+> {
   name: Tag;
   /** The schema for this scalar */
   schema: Schema.Schema<string>;

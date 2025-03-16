@@ -8,7 +8,10 @@ import {
 import { Schema } from "effect";
 import { GraphQLScalarType } from "graphql";
 
-export class TaggedScalar<Tag extends keyof typeof ScalarName, Type> {
+export class TaggedScalar<
+  Tag extends (typeof ScalarName)[keyof typeof ScalarName],
+  Type,
+> {
   /** The name and tag of this scalar */
   name: Tag;
   /** The schema for this scalar */
