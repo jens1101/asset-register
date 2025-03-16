@@ -1,4 +1,4 @@
-import { ModalContext } from "../../context/modal.jsx";
+import { ModalContext } from "../../context/modal.tsx";
 import { Option } from "effect";
 import { type Component, useContext } from "solid-js";
 

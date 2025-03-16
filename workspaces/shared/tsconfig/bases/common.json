@@ -7,6 +7,9 @@
   "compilerOptions": {
     "sourceMap": true,
     "declaration": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   }
 }

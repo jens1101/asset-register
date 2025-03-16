@@ -1,4 +1,4 @@
-import type { TaggedScalarSchema } from "./TaggedScalarSchema.js";
+import type { TaggedScalarSchema } from "./TaggedScalarSchema.ts";
 import { Effect, ParseResult, Schema, pipe } from "effect";
 import { GraphQLError, Kind } from "graphql";
 

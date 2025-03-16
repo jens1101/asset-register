@@ -1,12 +1,12 @@
-import { defaultByteFormatter } from "../../common/intl.js";
-import type { ClassAttributes, InitialValue } from "../../common/types.js";
-import { isImage } from "../../common/utils.js";
-import { MAX_FILE_SIZE } from "../../config.js";
-import type { ImageFragment } from "../../gql-client/types/graphql.js";
-import { useFormField } from "../../hooks/useFormField.js";
-import { useObjectUrl } from "../../hooks/useObjectUrl.js";
-import { CreateFileInputFromFile } from "../../schemas/CreateFileInput.js";
-import { Feedback } from "../FormFieldFeedback/Feedback.jsx";
+import { defaultByteFormatter } from "../../common/intl.ts";
+import type { ClassAttributes, InitialValue } from "../../common/types.ts";
+import { isImage } from "../../common/utils.ts";
+import { MAX_FILE_SIZE } from "../../config.ts";
+import type { ImageFragment } from "../../gql-client/types/graphql.ts";
+import { useFormField } from "../../hooks/useFormField.ts";
+import { useObjectUrl } from "../../hooks/useObjectUrl.ts";
+import { CreateFileInputFromFile } from "../../schemas/CreateFileInput.ts";
+import { Feedback } from "../FormFieldFeedback/Feedback.tsx";
 import "./styles.scss";
 import { Option, Schema } from "effect";
 import {
@@ -17,12 +17,13 @@ import {
   createUniqueId,
 } from "solid-js";
 
-const enum FieldName {
-  Id = "id",
-  Name = "name",
-  Description = "description",
-  File = "file",
-}
+const FieldName = {
+  Id: "id",
+  Name: "name",
+  Description: "description",
+  File: "file",
+} as const;
+type FieldName = (typeof FieldName)[keyof typeof FieldName];
 
 export const ImageFormField: Component<
   ClassAttributes &

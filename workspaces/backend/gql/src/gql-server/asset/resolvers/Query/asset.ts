@@ -1,12 +1,12 @@
-import { ErrorTags } from "../../../../enums/ErrorTags.js";
-import { readAsset } from "../../../../helpers/asset.js";
+import { ErrorTags } from "../../../../enums/ErrorTags.ts";
+import { readAsset } from "../../../../helpers/asset.ts";
 import {
   handleResolverError,
   handleResolverResponse,
   resolverWrapper,
-} from "../../../../helpers/util.js";
-import { withTransaction } from "../../../../scopes/index.js";
-import type { QueryResolvers } from "./../../../types.generated.js";
+} from "../../../../helpers/util.ts";
+import { withTransaction } from "../../../../scopes/index.ts";
+import type { QueryResolvers } from "./../../../types.generated.ts";
 import { Effect, pipe } from "effect";
 
 export const asset: NonNullable<QueryResolvers["asset"]> = async (

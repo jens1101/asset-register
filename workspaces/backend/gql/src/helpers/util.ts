@@ -1,4 +1,4 @@
-import { EntityManagerService } from "../services/index.js";
+import { EntityManagerService } from "../services/index.ts";
 import { Effect, pipe } from "effect";
 import { GraphQLError } from "graphql";
 import { type EntityManager, EntityNotFoundError } from "typeorm";

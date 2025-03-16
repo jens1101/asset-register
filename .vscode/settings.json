@@ -1,10 +1,8 @@
 {
-  "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
   "eslint.validate": ["javascript", "typescript"],
-  "eslint.workingDirectories": [
-    "workspaces/backend/gql",
-    "workspaces/frontend/web"
-  ],
-  "files.autoSave": "afterDelay"
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+  "files.autoSave": "afterDelay",
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

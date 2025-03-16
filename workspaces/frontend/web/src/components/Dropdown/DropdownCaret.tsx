@@ -1,4 +1,4 @@
-import type { ClassAttributes } from "../../common/types.js";
+import type { ClassAttributes } from "../../common/types.ts";
 import "./styles.scss";
 import Caret from "bootstrap-icons/icons/caret-down-fill.svg";
 import type { Component } from "solid-js";

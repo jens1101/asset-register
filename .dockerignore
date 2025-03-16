@@ -15,5 +15,5 @@
 **/node_modules
 commitlint.config.js
 knip.config.js
-prettier.config.jso
+prettier.config.js
 README.md

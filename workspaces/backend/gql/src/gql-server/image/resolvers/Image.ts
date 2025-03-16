@@ -1,7 +1,7 @@
-import { readAsset } from "../../../helpers/asset.js";
-import { resolverWrapper } from "../../../helpers/util.js";
-import { withTransaction } from "../../../scopes/index.js";
-import type { ImageResolvers } from "./../../types.generated.js";
+import { readAsset } from "../../../helpers/asset.ts";
+import { resolverWrapper } from "../../../helpers/util.ts";
+import { withTransaction } from "../../../scopes/index.ts";
+import type { ImageResolvers } from "./../../types.generated.ts";
 import { pipe } from "effect";
 
 export const Image: ImageResolvers = {

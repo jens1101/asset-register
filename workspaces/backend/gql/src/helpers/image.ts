@@ -1,12 +1,12 @@
-import { type Asset, type Image, ImageEntity } from "../entities/index.js";
-import { ImageNotFoundError } from "../errors/ImageNotFoundError.js";
+import { type Asset, type Image, ImageEntity } from "../entities/index.ts";
+import { ImageNotFoundError } from "../errors/ImageNotFoundError.ts";
 import type {
   CreateImageInput,
   MutateImageInput,
   UpdateImageInput,
-} from "../gql-server/types.generated.js";
-import { deleteFile, saveFile } from "./file.js";
-import { entityManagerWapper } from "./util.js";
+} from "../gql-server/types.generated.ts";
+import { deleteFile, saveFile } from "./file.ts";
+import { entityManagerWapper } from "./util.ts";
 import { Array, BigDecimal, Effect, Option, Order, pipe } from "effect";
 import { Temporal } from "temporal-polyfill";
 import type { FindOptionsRelations, FindOptionsWhere } from "typeorm";

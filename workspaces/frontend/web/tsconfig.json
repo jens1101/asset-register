@@ -4,9 +4,7 @@
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
     "types": ["vite-plugin-solid-svg/types-component-solid", "vite/client"],
-    "noEmit": true,
-    "isolatedModules": true,
-    "lib": ["DOM", "ESNext"]
+    "lib": ["DOM", "ES2024"]
   },
   "exclude": ["dist/", "node_modules/"]
 }

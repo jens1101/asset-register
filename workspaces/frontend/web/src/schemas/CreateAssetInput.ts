@@ -1,10 +1,10 @@
-import type { CreateAssetInput as CreateAssetInputType } from "../gql-client/types/graphql.js";
-import { AssetFormValues } from "./AssetFormValues.js";
-import { CreateDocumentInput } from "./CreateDocumentInput.js";
-import { CreateFileInputFromFile } from "./CreateFileInput.js";
-import { CreateImageInput } from "./CreateImageInput.js";
-import { SumInput, SumInputFromFormValues } from "./SumInput.js";
-import { inputMaybe } from "./inputMaybe.js";
+import type { CreateAssetInput as CreateAssetInputType } from "../gql-client/types/graphql.ts";
+import { AssetFormValues } from "./AssetFormValues.ts";
+import { CreateDocumentInput } from "./CreateDocumentInput.ts";
+import { CreateFileInputFromFile } from "./CreateFileInput.ts";
+import { CreateImageInput } from "./CreateImageInput.ts";
+import { SumInput, SumInputFromFormValues } from "./SumInput.ts";
+import { inputMaybe } from "./inputMaybe.ts";
 import { Effect, ParseResult, Schema } from "effect";
 
 const CreateAssetInput: Schema.Schema<CreateAssetInputType> = Schema.Struct({

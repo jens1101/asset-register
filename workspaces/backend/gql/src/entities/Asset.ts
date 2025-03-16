@@ -1,14 +1,14 @@
-import { EntityName } from "../enums/EntityName.js";
+import { EntityName } from "../enums/EntityName.ts";
 import {
   isGreaterThanOrEqualTo,
   isNonEmpty,
   isTrimmed,
   isUpperCase,
-} from "../helpers/checks.js";
-import type { Document } from "./Document.js";
-import type { Image } from "./Image.js";
-import { type Sum, SumEntity } from "./Sum.js";
-import { TemporalInstantTransformer } from "./transformers.js";
+} from "../helpers/checks.ts";
+import type { Document } from "./Document.ts";
+import type { Image } from "./Image.ts";
+import { type Sum, SumEntity } from "./Sum.ts";
+import { TemporalInstantTransformer } from "./transformers.ts";
 import { Temporal } from "temporal-polyfill";
 import { EntitySchema } from "typeorm";
 

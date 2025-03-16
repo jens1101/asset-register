@@ -1,5 +1,5 @@
-import { resolvers } from "./resolvers.generated.js";
-import { typeDefs } from "./typeDefs.generated.js";
+import { resolvers } from "./resolvers.generated.ts";
+import { typeDefs } from "./typeDefs.generated.ts";
 import { useServer } from "graphql-ws/lib/use/ws";
 import {
   createSchema,

@@ -1,4 +1,4 @@
-import { QueryRunnerService } from "../services/index.js";
+import { QueryRunnerService } from "../services/index.ts";
 import { Effect, Exit, pipe } from "effect";
 
 export const withQueryRunnerTransaction = Effect.acquireRelease(

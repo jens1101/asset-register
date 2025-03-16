@@ -1,4 +1,4 @@
-import { ModalContext } from "../context/modal.jsx";
+import { ModalContext } from "../context/modal.tsx";
 import { Modal } from "bootstrap";
 import { Deferred, Effect, Option, pipe } from "effect";
 import {

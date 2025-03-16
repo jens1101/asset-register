@@ -1,15 +1,15 @@
-import { ErrorTags } from "../../../../enums/ErrorTags.js";
+import { ErrorTags } from "../../../../enums/ErrorTags.ts";
 import {
   readAsset,
   updateAsset as updateAssetHelper,
-} from "../../../../helpers/asset.js";
+} from "../../../../helpers/asset.ts";
 import {
   handleResolverError,
   handleResolverResponse,
   resolverWrapper,
-} from "../../../../helpers/util.js";
-import { withTransaction } from "../../../../scopes/index.js";
-import type { MutationResolvers } from "./../../../types.generated.js";
+} from "../../../../helpers/util.ts";
+import { withTransaction } from "../../../../scopes/index.ts";
+import type { MutationResolvers } from "./../../../types.generated.ts";
 import { Effect, pipe } from "effect";
 
 export const updateAsset: NonNullable<

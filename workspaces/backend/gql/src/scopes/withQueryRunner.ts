@@ -1,4 +1,4 @@
-import { DataSourceService } from "../services/index.js";
+import { DataSourceService } from "../services/index.ts";
 import { Effect, pipe } from "effect";
 
 export const withQueryRunner = Effect.acquireRelease(

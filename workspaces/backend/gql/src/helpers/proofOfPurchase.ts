@@ -2,16 +2,16 @@ import {
   type Asset,
   type Document,
   DocumentEntity,
-} from "../entities/index.js";
-import { DeleteDocumentError } from "../errors/DeleteDocumentError.js";
+} from "../entities/index.ts";
+import { DeleteDocumentError } from "../errors/DeleteDocumentError.ts";
 import type {
   DeleteDocumentInput,
   MutateDocumentInput,
   UpdateDocumentInput,
-} from "../gql-server/types.generated.js";
-import { deleteDocument, saveDocument } from "./document.js";
-import { saveFile } from "./file.js";
-import { entityManagerWapper } from "./util.js";
+} from "../gql-server/types.generated.ts";
+import { deleteDocument, saveDocument } from "./document.ts";
+import { saveFile } from "./file.ts";
+import { entityManagerWapper } from "./util.ts";
 import { Effect, Option, pipe } from "effect";
 import type { FindOptionsWhere } from "typeorm";
 

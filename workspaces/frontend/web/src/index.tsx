@@ -1,7 +1,7 @@
-import { App } from "./app.js";
-import { Modal } from "./components/Modal/Modal.jsx";
-import { ModalProvider } from "./context/modal.jsx";
-import { routes } from "./routes.js";
+import { App } from "./app.tsx";
+import { Modal } from "./components/Modal/Modal.tsx";
+import { ModalProvider } from "./context/modal.tsx";
+import { routes } from "./routes.ts";
 import "./styles/index.scss";
 import { MetaProvider, Title } from "@solidjs/meta";
 import { Router } from "@solidjs/router";

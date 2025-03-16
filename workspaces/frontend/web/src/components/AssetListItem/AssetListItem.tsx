@@ -1,11 +1,11 @@
-import { generatePath } from "../../common/route.js";
-import { Paths } from "../../enums/Paths.js";
+import { generatePath } from "../../common/route.ts";
+import { Paths } from "../../enums/Paths.ts";
 import type {
   AssetListItemFragment,
   FileFragment,
-} from "../../gql-client/types/graphql.js";
-import { useObjectUrl } from "../../hooks/useObjectUrl.js";
-import { Sum } from "../Sum.jsx";
+} from "../../gql-client/types/graphql.ts";
+import { useObjectUrl } from "../../hooks/useObjectUrl.ts";
+import { Sum } from "../Sum.tsx";
 import "./styles.scss";
 import { A } from "@solidjs/router";
 import { BigDecimal } from "effect";

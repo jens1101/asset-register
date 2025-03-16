@@ -1,5 +1,5 @@
-import { numberFormatterCache } from "../common/intl.js";
-import type { SumFragment } from "../gql-client/types/graphql.js";
+import { numberFormatterCache } from "../common/intl.ts";
+import type { SumFragment } from "../gql-client/types/graphql.ts";
 import { BigDecimal } from "effect";
 import { For } from "solid-js";
 import type { Component } from "solid-js";

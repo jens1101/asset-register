@@ -1,3 +1,3 @@
-export * from "./DataSourceService.js";
-export * from "./EntityManagerService.js";
-export * from "./QueryRunnerService.js";
+export * from "./DataSourceService.ts";
+export * from "./EntityManagerService.ts";
+export * from "./QueryRunnerService.ts";

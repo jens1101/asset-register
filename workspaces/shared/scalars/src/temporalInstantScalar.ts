@@ -1,10 +1,10 @@
-import { ScalarName } from "./ScalarName.js";
-import { TaggedScalar } from "./TaggedScalar.js";
+import { ScalarName } from "./ScalarName.ts";
+import { TaggedScalar } from "./TaggedScalar.ts";
 import { Schema } from "effect";
 import { Temporal } from "temporal-polyfill";
 
 export const temporalInstantScalar = new TaggedScalar<
-  ScalarName.TemporalInstant,
+  typeof ScalarName.TemporalInstant,
   Temporal.Instant
 >({
   name: ScalarName.TemporalInstant,

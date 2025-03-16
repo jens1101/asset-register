@@ -16,7 +16,7 @@
     "lint:format": "prettier --check .",
     "start": "vite preview",
     "start:dev": "vite",
-    "test": "tsc --noEmit"
+    "test": "tsc"
   },
   "dependencies": {
     "@app/scalars": "1.0.0",

@@ -1,8 +1,8 @@
-import { type Asset, AssetEntity } from "./Asset.js";
-import { type Document, DocumentEntity } from "./Document.js";
-import { type File, FileEntity } from "./File.js";
-import { type Image, ImageEntity } from "./Image.js";
-import { type Sum, SumEntity } from "./Sum.js";
+import { type Asset, AssetEntity } from "./Asset.ts";
+import { type Document, DocumentEntity } from "./Document.ts";
+import { type File, FileEntity } from "./File.ts";
+import { type Image, ImageEntity } from "./Image.ts";
+import { type Sum, SumEntity } from "./Sum.ts";
 
 export type { Asset, Document, File, Image, Sum };
 

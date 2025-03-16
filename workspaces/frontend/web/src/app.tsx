@@ -1,4 +1,4 @@
-import { MainNav } from "./components/MainNav/MainNav.jsx";
+import { MainNav } from "./components/MainNav/MainNav.tsx";
 import type { ParentComponent } from "solid-js";
 
 export const App: ParentComponent = (props) => {

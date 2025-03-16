@@ -1,5 +1,5 @@
-import { type Document, DocumentEntity } from "../entities/index.js";
-import { entityManagerWapper } from "./util.js";
+import { type Document, DocumentEntity } from "../entities/index.ts";
+import { entityManagerWapper } from "./util.ts";
 import { Effect } from "effect";
 
 export const deleteDocument = (input: Document) =>

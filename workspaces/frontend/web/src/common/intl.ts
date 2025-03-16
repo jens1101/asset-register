@@ -1,4 +1,4 @@
-import { DEFAULT_COLLATOR, LOCALE } from "./config.js";
+import { DEFAULT_COLLATOR, LOCALE } from "./config.ts";
 import { Data, MutableHashMap, Option } from "effect";
 
 /** Generic class to cache `Intl` related instances */
