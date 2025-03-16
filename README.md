@@ -1,3 +1,30 @@
+# Asset Register
+
+## Running the Project
+
+### Development Containers
+
+The project is setup to work with [dev containers](https://containers.dev/).
+This is the recommended way of developing the app.
+
+When opening the project in a dev container it is recommended to run `npm i`
+manually. This is to ensure that ownership of the `node_modules` folder is set
+and that all post install scripts run correctly.
+
+### Docker Compose
+
+Production:
+
+```sh
+docker compose up
+```
+
+Development:
+
+```sh
+docker compose -f docker-compose.yml -f dev.docker-compose.yml up
+```
+
 ## Workspaces
 
 [Workspaces](https://docs.npmjs.com/cli/v10/using-npm/workspaces) are a way of
@@ -23,4 +50,10 @@ workspaces/
   shared/
     common/
       package.json
+```
+
+## Removing `node_modules`
+
+```sh
+sudo rm -rf node_modules **/node_modules
 ```
