@@ -1,7 +1,10 @@
-import { DATA_SOURCE_INIT_RETRIES } from "./config.ts";
+import {
+  DATA_SOURCE_INIT_DURATION,
+  DATA_SOURCE_INIT_RETRIES,
+} from "./config.ts";
 import { entities } from "./entities/index.ts";
 import { migrations } from "./migrations/index.ts";
-import retry from "retry";
+import { Effect, Schedule, pipe } from "effect";
 import { DataSource } from "typeorm";
 
 export const dataSource = new DataSource({
@@ -17,34 +20,13 @@ export const dataSource = new DataSource({
   subscribers: [],
 });
 
-/**
- * Initialise the app's data source using exponential backoff. This is the
- * recommended approach to initialise a data source since it might not always
- * be immediately available.
- * @throws {AggregateError} When the maximum number of retries has been reached.
- */
-export function initialiseDataSource(): Promise<DataSource> {
-  const operation = retry.operation({
-    retries: DATA_SOURCE_INIT_RETRIES,
-  });
-
-  return new Promise<DataSource>((resolve, reject) => {
-    operation.attempt((currentAttempt) => {
-      dataSource
-        .initialize()
-        .then(resolve)
-        .catch((error: unknown) => {
-          if (operation.retry(error instanceof Error ? error : undefined)) {
-            return;
-          }
-
-          const aggregateError = new AggregateError(
-            operation.errors(),
-            `Connection to data source failed after ${currentAttempt} attempts`,
-          );
-
-          reject(aggregateError);
-        });
-    });
-  });
-}
+/** Initialise the app's data source using exponential backoff with jitter. */
+export const initialiseDataSource = pipe(
+  Effect.tryPromise(() => dataSource.initialize()),
+  Effect.retry(
+    Schedule.intersect(
+      Schedule.jittered(Schedule.exponential(DATA_SOURCE_INIT_DURATION)),
+      Schedule.recurs(DATA_SOURCE_INIT_RETRIES),
+    ),
+  ),
+);
