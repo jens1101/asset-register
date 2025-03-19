@@ -1,5 +1,9 @@
+"Inputs required for creating a new file."
 input CreateFileInput {
+  "The actual file contents."
   buffer: Uint8Array!
+  "The name of the file."
   filename: String!
+  "The mime type of the file."
   mimeType: String!
 }

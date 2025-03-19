@@ -1,15 +1,26 @@
+"Inputs required for creating a new document."
 input CreateDocumentInput {
   file: CreateFileInput!
 }
 
+"""
+Inputs for updating a document. Only the fields that need to be updated need to
+be included.
+"""
 input UpdateDocumentInput {
   file: CreateFileInput!
 }
 
+"Inputs required for deleting a document."
 input DeleteDocumentInput {
+  "The ID of the document that needs to be deleted."
   id: ID!
 }
 
+"""
+Inputs required for mutating a document. This approach allows the use of a
+single mutation to update or delete a document.
+"""
 input MutateDocumentInput @oneOf {
   update: UpdateDocumentInput
   delete: DeleteDocumentInput

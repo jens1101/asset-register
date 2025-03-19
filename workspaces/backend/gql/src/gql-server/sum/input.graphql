@@ -1,4 +1,7 @@
+"Generic input for creating or updating a sum."
 input SumInput {
+  "An ISO 4217 currency code."
   currency: Currency!
+  "The numerical amount as a decimal number."
   amount: BigDecimal!
 }

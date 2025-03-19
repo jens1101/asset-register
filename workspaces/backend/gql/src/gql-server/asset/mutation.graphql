@@ -1,5 +1,11 @@
 extend type Mutation {
+  "Mutation to create a new asset"
   createAsset(data: CreateAssetInput!): Asset!
+  "Mutation to update an existing asset"
   updateAsset(data: UpdateAssetInput!): UpdateAssetResponse!
+  """
+  Mutation to delete an asset. Upon success the return value will be `null`. An
+  error value will be returned when an error occurs.
+  """
   deleteAsset(id: ID!): ReadAssetError
 }

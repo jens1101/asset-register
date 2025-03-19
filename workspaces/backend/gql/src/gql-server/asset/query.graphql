@@ -1,4 +1,6 @@
 extend type Query {
+  "Query a single asset by ID"
   asset(id: ID!): ReadAssetResponse!
+  "Query all assets"
   assets: [Asset!]!
 }

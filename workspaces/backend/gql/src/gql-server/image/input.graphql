@@ -1,22 +1,47 @@
+"Inputs required for creating a new image."
 input CreateImageInput {
+  "The image name. It may not contain leading or trailing whitespaces."
   name: TrimmedString
   description: String
+  "The file associated with this image."
   file: CreateFileInput!
+  """
+  The ID of the image that preceeds this one. Used for ordering images. If
+  `null` or omitted then the new image will be appended to the start of the
+  list.
+  """
   previousImageId: ID
 }
 
+"""
+Inputs for updating an image. Only the fields that need to be updated need to be
+included.
+"""
 input UpdateImageInput {
+  "The ID of the image that needs to be updated."
   id: ID!
+  "The image name. It may not contain leading or trailing whitespaces."
   name: TrimmedString
   description: String
+  "A new image file that will replace the existing one."
   file: CreateFileInput
+  """
+  The ID of the image that preceeds this one. Used for reordering images. If
+  `null` then the new image will be moved to the start of the list.
+  """
   previousImageId: ID
 }
 
+"Inputs required for deleting an image."
 input DeleteImageInput {
+  "The ID of the image that needs to be deleted."
   id: ID!
 }
 
+"""
+Inputs required for mutating an image. This approach allows the use of a single
+mutation to create, update, or delete an image.
+"""
 input MutateImageInput @oneOf {
   create: CreateImageInput
   update: UpdateImageInput

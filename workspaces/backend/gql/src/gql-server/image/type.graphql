@@ -1,14 +1,21 @@
+"The image type is used to contain a file with some image related metadata."
 type Image {
   id: ID!
+  "The image name. It may not contain leading or trailing whitespaces."
   name: TrimmedString
   description: String
   createdAt: TemporalInstant!
   updatedAt: TemporalInstant!
+  "The file contained within this image."
   file: File!
+  "The asset associated with this image."
   asset: Asset!
 }
 
-"Occurs when an image was not found in the asset's list of images"
+"""
+Occurs when an image was not found in the asset's list of images. This can
+happen, for example, when images are reordered and the mutation input is bad.
+"""
 type ImageNotFoundError implements Error {
   message: String!
 }
