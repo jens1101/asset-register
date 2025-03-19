@@ -1,13 +1,17 @@
+"The document type is used to contain a file with some associated metadata."
 type Document {
   id: ID!
   createdAt: TemporalInstant!
+  "The file contained within this document."
   file: File!
+  "The asset associated with this document."
   asset: Asset!
 }
 
 """
-Occurs when attempting to delete a document from an asset that doesn't own the
-document.
+Error that occurs when attempting to delete a document from an asset that
+doesn't own the document. In other words: the asset in question does not match
+the document's associated asset.
 """
 type DeleteDocumentError implements Error {
   message: String!

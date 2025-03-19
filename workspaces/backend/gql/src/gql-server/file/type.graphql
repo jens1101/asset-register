@@ -1,7 +1,14 @@
+"""
+The file type is a genric container for binary file data plus some essential
+metadata.
+"""
 type File {
   id: ID!
+  "The actual file contents."
   buffer: Uint8Array!
+  "The name of the file."
   filename: String!
+  "The mime type of the file. This is essential for knowing what the file is."
   mimeType: String!
   createdAt: TemporalInstant!
 }

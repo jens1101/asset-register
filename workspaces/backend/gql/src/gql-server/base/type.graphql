@@ -2,18 +2,42 @@ type Query
 
 type Mutation
 
+"""
+A tagged scalar that encodes to an ISO 8601 timestamp and decodes to a
+`Temporal.Instant` instance.
+"""
 scalar TemporalInstant
 
+"""
+A tagged scalar that encodes to a base64 string and decodes to a `Uint8Array`
+instance.
+"""
 scalar Uint8Array
 
+"""
+A tagged scalar that encodes to a decimal numerical string and decodes to a
+`BigDecimal` instance.
+"""
 scalar BigDecimal
 
+"A string scalar of ISO 4217 3-letter currency codes."
 scalar Currency
 
+"""
+A string scalar that may not be empty nor have any leading or trailing
+whitespaces.
+"""
 scalar NonEmptyTrimmedString
 
+"A string scalar that may not have any leading or trailing whitespaces."
 scalar TrimmedString
 
+"""
+The interface for expected business errors. This allows us to distinguish
+between errors and defects. For example: querying for an asset that does not
+exist is an expected error and then this interface is used to standardise the
+returned error.
+"""
 interface Error {
   message: String!
 }

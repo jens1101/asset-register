@@ -1,16 +1,26 @@
 type Asset {
   id: ID!
+  """
+  The asset name. This must be a non-empty string with no leading or trailing
+  whitespaces.
+  """
   name: NonEmptyTrimmedString!
   description: String
+  """
+  The main image is the first image in the array of images associated with the
+  asset. This can be `null` if the asset has no images.
+  """
   mainImage: Image
+  "Images associated with the asset."
   images: [Image!]!
+  "The value of the asset at the time of purchase or valuation."
   value: Sum!
   proofOfPurchase: Document
   createdAt: TemporalInstant!
   updatedAt: TemporalInstant!
 }
 
-"Occurs when the specified asset could not be found in the database"
+"Error that occurs when the specified asset could not be found in the database"
 type ReadAssetError implements Error {
   message: String!
 }

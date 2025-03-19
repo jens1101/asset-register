@@ -1,4 +1,7 @@
+"The sum type is used to associate a numerical amount with a currency."
 type Sum {
+  "An ISO 4217 currency code."
   currency: Currency!
+  "The numerical amount as a decimal number."
   amount: BigDecimal!
 }

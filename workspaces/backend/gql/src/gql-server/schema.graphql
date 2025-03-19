@@ -2,100 +2,242 @@ type Asset {
   createdAt: TemporalInstant!
   description: String
   id: ID!
+
+  """
+  Images associated with the asset.
+  """
   images: [Image!]!
+
+  """
+  The main image is the first image in the array of images associated with the
+  asset. This can be `null` if the asset has no images.
+  """
   mainImage: Image
+
+  """
+  The asset name. This must be a non-empty string with no leading or trailing
+  whitespaces.
+  """
   name: NonEmptyTrimmedString!
   proofOfPurchase: Document
   updatedAt: TemporalInstant!
+
+  """
+  The value of the asset at the time of purchase or valuation.
+  """
   value: Sum!
 }
 
+"""
+A tagged scalar that encodes to a decimal numerical string and decodes to a
+`BigDecimal` instance.
+"""
 scalar BigDecimal
 
+"""
+Inputs required for creating a new asset.
+"""
 input CreateAssetInput {
   description: String
+
+  """
+  Images associated with the asset. The array may be empty.
+  """
   images: [CreateImageInput!]
+
+  """
+  The asset name. This must be a non-empty string with no leading or trailing
+  whitespaces.
+  """
   name: NonEmptyTrimmedString!
   proofOfPurchase: CreateDocumentInput
+
+  """
+  The value of the asset at the time of purchase or valuation.
+  """
   value: SumInput!
 }
 
+"""
+Inputs required for creating a new document.
+"""
 input CreateDocumentInput {
   file: CreateFileInput!
 }
 
+"""
+Inputs required for creating a new file.
+"""
 input CreateFileInput {
+  """
+  The actual file contents.
+  """
   buffer: Uint8Array!
+
+  """
+  The name of the file.
+  """
   filename: String!
+
+  """
+  The mime type of the file.
+  """
   mimeType: String!
 }
 
+"""
+Inputs required for creating a new image.
+"""
 input CreateImageInput {
   description: String
+
+  """
+  The file associated with this image.
+  """
   file: CreateFileInput!
+
+  """
+  The image name. It may not contain leading or trailing whitespaces.
+  """
   name: TrimmedString
+
+  """
+  The ID of the image that preceeds this one. Used for ordering images. If
+  `null` or omitted then the new image will be appended to the start of the
+  list.
+  """
   previousImageId: ID
 }
 
+"""
+A string scalar of ISO 4217 3-letter currency codes.
+"""
 scalar Currency
 
 """
-Occurs when attempting to delete a document from an asset that doesn't own the
-document.
+Error that occurs when attempting to delete a document from an asset that
+doesn't own the document. In other words: the asset in question does not match
+the document's associated asset.
 """
 type DeleteDocumentError implements Error {
   message: String!
 }
 
+"""
+Inputs required for deleting a document.
+"""
 input DeleteDocumentInput {
+  """
+  The ID of the document that needs to be deleted.
+  """
   id: ID!
 }
 
+"""
+Inputs required for deleting an image.
+"""
 input DeleteImageInput {
+  """
+  The ID of the image that needs to be deleted.
+  """
   id: ID!
 }
 
+"""
+The document type is used to contain a file with some associated metadata.
+"""
 type Document {
+  """
+  The asset associated with this document.
+  """
   asset: Asset!
   createdAt: TemporalInstant!
+
+  """
+  The file contained within this document.
+  """
   file: File!
   id: ID!
 }
 
+"""
+The interface for expected business errors. This allows us to distinguish
+between errors and defects. For example: querying for an asset that does not
+exist is an expected error and then this interface is used to standardise the
+returned error.
+"""
 interface Error {
   message: String!
 }
 
+"""
+The file type is a genric container for binary file data plus some essential
+metadata.
+"""
 type File {
+  """
+  The actual file contents.
+  """
   buffer: Uint8Array!
   createdAt: TemporalInstant!
+
+  """
+  The name of the file.
+  """
   filename: String!
   id: ID!
+
+  """
+  The mime type of the file. This is essential for knowing what the file is.
+  """
   mimeType: String!
 }
 
+"""
+The image type is used to contain a file with some image related metadata.
+"""
 type Image {
+  """
+  The asset associated with this image.
+  """
   asset: Asset!
   createdAt: TemporalInstant!
   description: String
+
+  """
+  The file contained within this image.
+  """
   file: File!
   id: ID!
+
+  """
+  The image name. It may not contain leading or trailing whitespaces.
+  """
   name: TrimmedString
   updatedAt: TemporalInstant!
 }
 
 """
-Occurs when an image was not found in the asset's list of images
+Occurs when an image was not found in the asset's list of images. This can
+happen, for example, when images are reordered and the mutation input is bad.
 """
 type ImageNotFoundError implements Error {
   message: String!
 }
 
+"""
+Inputs required for mutating a document. This approach allows the use of a
+single mutation to update or delete a document.
+"""
 input MutateDocumentInput @oneOf {
   delete: DeleteDocumentInput
   update: UpdateDocumentInput
 }
 
+"""
+Inputs required for mutating an image. This approach allows the use of a single
+mutation to create, update, or delete an image.
+"""
 input MutateImageInput @oneOf {
   create: CreateImageInput
   delete: DeleteImageInput
@@ -103,20 +245,43 @@ input MutateImageInput @oneOf {
 }
 
 type Mutation {
+  """
+  Mutation to create a new asset
+  """
   createAsset(data: CreateAssetInput!): Asset!
+
+  """
+  Mutation to delete an asset. Upon success the return value will be `null`. An
+  error value will be returned when an error occurs.
+  """
   deleteAsset(id: ID!): ReadAssetError
+
+  """
+  Mutation to update an existing asset
+  """
   updateAsset(data: UpdateAssetInput!): UpdateAssetResponse!
 }
 
+"""
+A string scalar that may not be empty nor have any leading or trailing
+whitespaces.
+"""
 scalar NonEmptyTrimmedString
 
 type Query {
+  """
+  Query a single asset by ID
+  """
   asset(id: ID!): ReadAssetResponse!
+
+  """
+  Query all assets
+  """
   assets: [Asset!]!
 }
 
 """
-Occurs when the specified asset could not be found in the database
+Error that occurs when the specified asset could not be found in the database
 """
 type ReadAssetError implements Error {
   message: String!
@@ -124,28 +289,76 @@ type ReadAssetError implements Error {
 
 union ReadAssetResponse = Asset | ReadAssetError
 
+"""
+The sum type is used to associate a numerical amount with a currency.
+"""
 type Sum {
+  """
+  The numerical amount as a decimal number.
+  """
   amount: BigDecimal!
+
+  """
+  An ISO 4217 currency code.
+  """
   currency: Currency!
 }
 
+"""
+Generic input for creating or updating a sum.
+"""
 input SumInput {
+  """
+  The numerical amount as a decimal number.
+  """
   amount: BigDecimal!
+
+  """
+  An ISO 4217 currency code.
+  """
   currency: Currency!
 }
 
+"""
+A tagged scalar that encodes to an ISO 8601 timestamp and decodes to a
+`Temporal.Instant` instance.
+"""
 scalar TemporalInstant
 
+"""
+A string scalar that may not have any leading or trailing whitespaces.
+"""
 scalar TrimmedString
 
+"""
+A tagged scalar that encodes to a base64 string and decodes to a `Uint8Array`
+instance.
+"""
 scalar Uint8Array
 
+"""
+Inputs for updating an asset. Only the fields that need to be updated need to be
+included.
+"""
 input UpdateAssetInput {
   description: String
+
+  """
+  The ID of the asset that needs to be updated.
+  """
   id: ID!
   images: [MutateImageInput!]
+
+  """
+  The asset name. This must be a non-empty string with no leading or trailing
+  whitespaces.
+  """
   name: NonEmptyTrimmedString
   proofOfPurchase: MutateDocumentInput
+
+  """
+  The value of the asset at the time of purchase or valuation.
+  """
   value: SumInput
 }
 
@@ -155,14 +368,39 @@ union UpdateAssetResponse =
   | ImageNotFoundError
   | ReadAssetError
 
+"""
+Inputs for updating a document. Only the fields that need to be updated need to
+be included.
+"""
 input UpdateDocumentInput {
   file: CreateFileInput!
 }
 
+"""
+Inputs for updating an image. Only the fields that need to be updated need to be
+included.
+"""
 input UpdateImageInput {
   description: String
+
+  """
+  A new image file that will replace the existing one.
+  """
   file: CreateFileInput
+
+  """
+  The ID of the image that needs to be updated.
+  """
   id: ID!
+
+  """
+  The image name. It may not contain leading or trailing whitespaces.
+  """
   name: TrimmedString
+
+  """
+  The ID of the image that preceeds this one. Used for reordering images. If
+  `null` then the new image will be moved to the start of the list.
+  """
   previousImageId: ID
 }

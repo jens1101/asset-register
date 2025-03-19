@@ -1,15 +1,32 @@
+"Inputs required for creating a new asset."
 input CreateAssetInput {
+  """
+  The asset name. This must be a non-empty string with no leading or trailing
+  whitespaces.
+  """
   name: NonEmptyTrimmedString!
   description: String
+  "Images associated with the asset. The array may be empty."
   images: [CreateImageInput!]
+  "The value of the asset at the time of purchase or valuation."
   value: SumInput!
   proofOfPurchase: CreateDocumentInput
 }
 
+"""
+Inputs for updating an asset. Only the fields that need to be updated need to be
+included.
+"""
 input UpdateAssetInput {
+  "The ID of the asset that needs to be updated."
   id: ID!
+  """
+  The asset name. This must be a non-empty string with no leading or trailing
+  whitespaces.
+  """
   name: NonEmptyTrimmedString
   description: String
+  "The value of the asset at the time of purchase or valuation."
   value: SumInput
   proofOfPurchase: MutateDocumentInput
   images: [MutateImageInput!]
