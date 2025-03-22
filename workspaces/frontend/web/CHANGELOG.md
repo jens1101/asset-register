@@ -1,5 +1,41 @@
 # Changelog
 
+## [1.1.0](https://github.com/jens1101/asset-register/compare/web-v1.0.0...web-v1.1.0) (2025-03-22)
+
+
+### Features
+
+* **#11:** Used lint-staged as pre-commit hook ([50200d5](https://github.com/jens1101/asset-register/commit/50200d59a04228a145801baf01f8f833f87a84b1))
+* **#46:** Updated document title ([92361cd](https://github.com/jens1101/asset-register/commit/92361cd6a14fbb2b9b2b949924b3cb2cfd789c2f))
+* **#54:** Standardised paths in app ([8f1a718](https://github.com/jens1101/asset-register/commit/8f1a7189d4f122ca54ca3bacee9398ea8f748fc4))
+* **#54:** Standardised paths in app ([4a07712](https://github.com/jens1101/asset-register/commit/4a07712aa18f5e884a8ac3157fd77c1829ed8349))
+* **#60:** Migrated rendering a sum to a component ([ea9391d](https://github.com/jens1101/asset-register/commit/ea9391d6d361e689a4ac854ccd5dd7e811d2c5ba))
+* **#60:** Refactored asset form submission ([0e312ba](https://github.com/jens1101/asset-register/commit/0e312bac3f0de8d68626bcdcf42d51485181d8c6))
+* **#60:** Refactored GQL fetching and error handling ([337e6db](https://github.com/jens1101/asset-register/commit/337e6dbc59180de91455e1d34f8d2459056dfba3))
+* **#60:** Updated GQL client fragments ([e4027b2](https://github.com/jens1101/asset-register/commit/e4027b2e00fbc68ef63a076379a33326e9950285))
+* **#72:** Fixed front end errors ([e755b3d](https://github.com/jens1101/asset-register/commit/e755b3dc96e215cd5b52faa67ed5284238db3d8f))
+* **#84:** Removed `@app/common` ([0c37bdc](https://github.com/jens1101/asset-register/commit/0c37bdc112ee75ea8a3dd5add6ea3be5f9514448))
+* **#84:** Removed `@app/common` ([05106ec](https://github.com/jens1101/asset-register/commit/05106ece02a2bb1d87162f51b5cd146ee1934703))
+
+
+### Bug Fixes
+
+* **#46:** Updated dependencies ([c9fa1c8](https://github.com/jens1101/asset-register/commit/c9fa1c80ff73a49f5bfaf65230c5c1c54b844145))
+* **#60:** Made app bootsrapping more effectful ([1a10d74](https://github.com/jens1101/asset-register/commit/1a10d7464d8b3a47758a0b259fcb28dd9fe986b7))
+* **#72:** Corrected CMDs ([6d71a37](https://github.com/jens1101/asset-register/commit/6d71a37e0f145a5665626c4017f51c35c65a2789))
+* **#72:** Removed build step from Dockerfile ([6b0233e](https://github.com/jens1101/asset-register/commit/6b0233e648ffa9402a8028fd8ed37267ed6511aa))
+* Used `Intl` to format file sizes ([48991ad](https://github.com/jens1101/asset-register/commit/48991ad3572c324617a13af85c9242362fc46067))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @app/scalars bumped from 1.0.0 to 2.0.0
+    * @app/walker bumped from 1.0.0 to 2.0.0
+  * devDependencies
+    * @app/tsconfig bumped from 1.0.0 to 2.0.0
+
 ## 1.0.0 (2025-02-22)
 
 
