@@ -30,11 +30,29 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean };
   Int: { input: number; output: number };
   Float: { input: number; output: number };
+  /**
+   * A tagged scalar that encodes to a decimal numerical string and decodes to a
+   * `BigDecimal` instance.
+   */
   BigDecimal: { input: BigDecimal.BigDecimal; output: BigDecimal.BigDecimal };
+  /** A string scalar of ISO 4217 3-letter currency codes. */
   Currency: { input: string; output: string };
+  /**
+   * A string scalar that may not be empty nor have any leading or trailing
+   * whitespaces.
+   */
   NonEmptyTrimmedString: { input: string; output: string };
+  /**
+   * A tagged scalar that encodes to an ISO 8601 timestamp and decodes to a
+   * `Temporal.Instant` instance.
+   */
   TemporalInstant: { input: Temporal.Instant; output: Temporal.Instant };
+  /** A string scalar that may not have any leading or trailing whitespaces. */
   TrimmedString: { input: string; output: string };
+  /**
+   * A tagged scalar that encodes to a base64 string and decodes to a `Uint8Array`
+   * instance.
+   */
   Uint8Array: { input: Uint8Array; output: Uint8Array };
 };
 
@@ -43,98 +61,164 @@ export type Asset = {
   createdAt: Scalars["TemporalInstant"]["output"];
   description?: Maybe<Scalars["String"]["output"]>;
   id: Scalars["ID"]["output"];
+  /** Images associated with the asset. */
   images: Array<Image>;
+  /**
+   * The main image is the first image in the array of images associated with the
+   * asset. This can be `null` if the asset has no images.
+   */
   mainImage?: Maybe<Image>;
+  /**
+   * The asset name. This must be a non-empty string with no leading or trailing
+   * whitespaces.
+   */
   name: Scalars["NonEmptyTrimmedString"]["output"];
   proofOfPurchase?: Maybe<Document>;
   updatedAt: Scalars["TemporalInstant"]["output"];
+  /** The value of the asset at the time of purchase or valuation. */
   value: Sum;
 };
 
+/** Inputs required for creating a new asset. */
 export type CreateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
+  /** Images associated with the asset. The array may be empty. */
   images?: InputMaybe<Array<CreateImageInput>>;
+  /**
+   * The asset name. This must be a non-empty string with no leading or trailing
+   * whitespaces.
+   */
   name: Scalars["NonEmptyTrimmedString"]["input"];
   proofOfPurchase?: InputMaybe<CreateDocumentInput>;
+  /** The value of the asset at the time of purchase or valuation. */
   value: SumInput;
 };
 
+/** Inputs required for creating a new document. */
 export type CreateDocumentInput = {
   file: CreateFileInput;
 };
 
+/** Inputs required for creating a new file. */
 export type CreateFileInput = {
+  /** The actual file contents. */
   buffer: Scalars["Uint8Array"]["input"];
+  /** The name of the file. */
   filename: Scalars["String"]["input"];
+  /** The mime type of the file. */
   mimeType: Scalars["String"]["input"];
 };
 
+/** Inputs required for creating a new image. */
 export type CreateImageInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
+  /** The file associated with this image. */
   file: CreateFileInput;
+  /** The image name. It may not contain leading or trailing whitespaces. */
   name?: InputMaybe<Scalars["TrimmedString"]["input"]>;
+  /**
+   * The ID of the image that preceeds this one. Used for ordering images. If
+   * `null` or omitted then the new image will be appended to the start of the
+   * list.
+   */
   previousImageId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 /**
- * Occurs when attempting to delete a document from an asset that doesn't own the
- * document.
+ * Error that occurs when attempting to delete a document from an asset that
+ * doesn't own the document. In other words: the asset in question does not match
+ * the document's associated asset.
  */
 export type DeleteDocumentError = Error & {
   __typename?: "DeleteDocumentError";
   message: Scalars["String"]["output"];
 };
 
+/** Inputs required for deleting a document. */
 export type DeleteDocumentInput = {
+  /** The ID of the document that needs to be deleted. */
   id: Scalars["ID"]["input"];
 };
 
+/** Inputs required for deleting an image. */
 export type DeleteImageInput = {
+  /** The ID of the image that needs to be deleted. */
   id: Scalars["ID"]["input"];
 };
 
+/** The document type is used to contain a file with some associated metadata. */
 export type Document = {
   __typename?: "Document";
+  /** The asset associated with this document. */
   asset: Asset;
   createdAt: Scalars["TemporalInstant"]["output"];
+  /** The file contained within this document. */
   file: File;
   id: Scalars["ID"]["output"];
 };
 
+/**
+ * The interface for expected business errors. This allows us to distinguish
+ * between errors and defects. For example: querying for an asset that does not
+ * exist is an expected error and then this interface is used to standardise the
+ * returned error.
+ */
 export type Error = {
   message: Scalars["String"]["output"];
 };
 
+/**
+ * The file type is a genric container for binary file data plus some essential
+ * metadata.
+ */
 export type File = {
   __typename?: "File";
+  /** The actual file contents. */
   buffer: Scalars["Uint8Array"]["output"];
   createdAt: Scalars["TemporalInstant"]["output"];
+  /** The name of the file. */
   filename: Scalars["String"]["output"];
   id: Scalars["ID"]["output"];
+  /** The mime type of the file. This is essential for knowing what the file is. */
   mimeType: Scalars["String"]["output"];
 };
 
+/** The image type is used to contain a file with some image related metadata. */
 export type Image = {
   __typename?: "Image";
+  /** The asset associated with this image. */
   asset: Asset;
   createdAt: Scalars["TemporalInstant"]["output"];
   description?: Maybe<Scalars["String"]["output"]>;
+  /** The file contained within this image. */
   file: File;
   id: Scalars["ID"]["output"];
+  /** The image name. It may not contain leading or trailing whitespaces. */
   name?: Maybe<Scalars["TrimmedString"]["output"]>;
   updatedAt: Scalars["TemporalInstant"]["output"];
 };
 
-/** Occurs when an image was not found in the asset's list of images */
+/**
+ * Occurs when an image was not found in the asset's list of images. This can
+ * happen, for example, when images are reordered and the mutation input is bad.
+ */
 export type ImageNotFoundError = Error & {
   __typename?: "ImageNotFoundError";
   message: Scalars["String"]["output"];
 };
 
+/**
+ * Inputs required for mutating a document. This approach allows the use of a
+ * single mutation to update or delete a document.
+ */
 export type MutateDocumentInput =
   | { delete: DeleteDocumentInput; update?: never }
   | { delete?: never; update: UpdateDocumentInput };
 
+/**
+ * Inputs required for mutating an image. This approach allows the use of a single
+ * mutation to create, update, or delete an image.
+ */
 export type MutateImageInput =
   | { create: CreateImageInput; delete?: never; update?: never }
   | { create?: never; delete: DeleteImageInput; update?: never }
@@ -142,8 +226,14 @@ export type MutateImageInput =
 
 export type Mutation = {
   __typename?: "Mutation";
+  /** Mutation to create a new asset */
   createAsset: Asset;
+  /**
+   * Mutation to delete an asset. Upon success the return value will be `null`. An
+   * error value will be returned when an error occurs.
+   */
   deleteAsset?: Maybe<ReadAssetError>;
+  /** Mutation to update an existing asset */
   updateAsset: UpdateAssetResponse;
 };
 
@@ -161,7 +251,9 @@ export type MutationUpdateAssetArgs = {
 
 export type Query = {
   __typename?: "Query";
+  /** Query a single asset by ID */
   asset: ReadAssetResponse;
+  /** Query all assets */
   assets: Array<Asset>;
 };
 
@@ -169,7 +261,7 @@ export type QueryAssetArgs = {
   id: Scalars["ID"]["input"];
 };
 
-/** Occurs when the specified asset could not be found in the database */
+/** Error that occurs when the specified asset could not be found in the database */
 export type ReadAssetError = Error & {
   __typename?: "ReadAssetError";
   message: Scalars["String"]["output"];
@@ -177,23 +269,39 @@ export type ReadAssetError = Error & {
 
 export type ReadAssetResponse = Asset | ReadAssetError;
 
+/** The sum type is used to associate a numerical amount with a currency. */
 export type Sum = {
   __typename?: "Sum";
+  /** The numerical amount as a decimal number. */
   amount: Scalars["BigDecimal"]["output"];
+  /** An ISO 4217 currency code. */
   currency: Scalars["Currency"]["output"];
 };
 
+/** Generic input for creating or updating a sum. */
 export type SumInput = {
+  /** The numerical amount as a decimal number. */
   amount: Scalars["BigDecimal"]["input"];
+  /** An ISO 4217 currency code. */
   currency: Scalars["Currency"]["input"];
 };
 
+/**
+ * Inputs for updating an asset. Only the fields that need to be updated need to be
+ * included.
+ */
 export type UpdateAssetInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
+  /** The ID of the asset that needs to be updated. */
   id: Scalars["ID"]["input"];
   images?: InputMaybe<Array<MutateImageInput>>;
+  /**
+   * The asset name. This must be a non-empty string with no leading or trailing
+   * whitespaces.
+   */
   name?: InputMaybe<Scalars["NonEmptyTrimmedString"]["input"]>;
   proofOfPurchase?: InputMaybe<MutateDocumentInput>;
+  /** The value of the asset at the time of purchase or valuation. */
   value?: InputMaybe<SumInput>;
 };
 
@@ -203,15 +311,30 @@ export type UpdateAssetResponse =
   | ImageNotFoundError
   | ReadAssetError;
 
+/**
+ * Inputs for updating a document. Only the fields that need to be updated need to
+ * be included.
+ */
 export type UpdateDocumentInput = {
   file: CreateFileInput;
 };
 
+/**
+ * Inputs for updating an image. Only the fields that need to be updated need to be
+ * included.
+ */
 export type UpdateImageInput = {
   description?: InputMaybe<Scalars["String"]["input"]>;
+  /** A new image file that will replace the existing one. */
   file?: InputMaybe<CreateFileInput>;
+  /** The ID of the image that needs to be updated. */
   id: Scalars["ID"]["input"];
+  /** The image name. It may not contain leading or trailing whitespaces. */
   name?: InputMaybe<Scalars["TrimmedString"]["input"]>;
+  /**
+   * The ID of the image that preceeds this one. Used for reordering images. If
+   * `null` then the new image will be moved to the start of the list.
+   */
   previousImageId?: InputMaybe<Scalars["ID"]["input"]>;
 };
 

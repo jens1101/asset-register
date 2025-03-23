@@ -1,4 +1,5 @@
 import { taggedScalarExchange } from "./taggedScalarExchange.ts";
+import schema from "./types/introspection.ts";
 import {
   bigDecimalScalar,
   temporalInstantScalar,
@@ -11,6 +12,7 @@ import {
   subscriptionExchange,
 } from "@urql/core";
 import type { FetchBody } from "@urql/core/internal";
+import { cacheExchange } from "@urql/exchange-graphcache";
 import { Effect, Option, pipe } from "effect";
 import { type SubscribePayload, createClient } from "graphql-ws";
 
@@ -29,6 +31,12 @@ const client = new Client({
       temporalInstantScalar,
       uint8ArrayScalar,
     ),
+    cacheExchange({
+      schema,
+      keys: {
+        Sum: () => null,
+      },
+    }),
     fetchExchange,
     subscriptionExchange({
       forwardSubscription(request: FetchBody) {

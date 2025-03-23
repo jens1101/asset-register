@@ -1,10 +1,11 @@
 import type { CodegenConfig } from "@graphql-codegen/cli";
+import type { UrqlIntrospectionConfig } from "@graphql-codegen/urql-introspection";
 
 const config: CodegenConfig = {
   emitLegacyCommonJSImports: false,
+  schema: "../../backend/gql/src/gql-server/schema.graphql",
   generates: {
     "src/gql-client/types/": {
-      schema: "../../backend/gql/src/gql-server/schema.graphql",
       documents: "src/gql-client/!(types)/*.graphql",
       preset: "client",
       presetConfig: {
@@ -33,6 +34,16 @@ const config: CodegenConfig = {
           TrimmedString: "string",
         },
       },
+    },
+    "src/gql-client/types/introspection.ts": {
+      plugins: [
+        {
+          "urql-introspection": {
+            useTypeImports: true,
+            module: "es2015",
+          } satisfies UrqlIntrospectionConfig,
+        },
+      ],
     },
   },
 };
