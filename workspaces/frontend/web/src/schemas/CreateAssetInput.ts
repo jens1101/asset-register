@@ -1,4 +1,4 @@
-import type { CreateAssetInput as CreateAssetInputType } from "../gql-client/types/graphql.ts";
+import type { CreateAssetInput as CreateAssetInputType } from "../gql-client/graphql.generated.ts";
 import { AssetFormValues } from "./AssetFormValues.ts";
 import { CreateDocumentInput } from "./CreateDocumentInput.ts";
 import { CreateFileInputFromFile } from "./CreateFileInput.ts";

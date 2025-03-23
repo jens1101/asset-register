@@ -1,4 +1,3 @@
-/* eslint-disable */
 import type { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
 import type { BigDecimal } from "effect";
 import type { Temporal } from "temporal-polyfill";

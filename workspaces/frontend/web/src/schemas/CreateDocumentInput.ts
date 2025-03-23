@@ -1,4 +1,4 @@
-import type { CreateDocumentInput as CreateDocumentInputType } from "../gql-client/types/graphql.ts";
+import type { CreateDocumentInput as CreateDocumentInputType } from "../gql-client/graphql.generated.ts";
 import { CreateFileInput } from "./CreateFileInput.ts";
 import { Schema } from "effect";
 

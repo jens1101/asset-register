@@ -9,7 +9,7 @@ import { MAX_FILE_SIZE } from "../../config.ts";
 import {
   type AssetFragment,
   type ImageFragment,
-} from "../../gql-client/types/graphql.ts";
+} from "../../gql-client/graphql.generated.ts";
 import { useForm } from "../../hooks/useForm.ts";
 import { useFormField } from "../../hooks/useFormField.ts";
 import {

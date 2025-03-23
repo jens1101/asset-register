@@ -21,7 +21,7 @@ import {
   type UpdateAssetMutation,
   type UpdateAssetMutationVariables,
   type UpdateImageInput,
-} from "../gql-client/types/graphql.ts";
+} from "../gql-client/graphql.generated.ts";
 import { useAlertModal } from "../hooks/useAlertModal.tsx";
 import { usePromptModal } from "../hooks/usePromptModal.tsx";
 import type { AssetFormValues } from "../schemas/AssetFormValues.ts";

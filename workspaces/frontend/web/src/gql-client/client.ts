@@ -1,5 +1,5 @@
+import schema from "./introspection.generated.ts";
 import { taggedScalarExchange } from "./taggedScalarExchange.ts";
-import schema from "./types/introspection.ts";
 import {
   bigDecimalScalar,
   temporalInstantScalar,

@@ -4,7 +4,7 @@ import {
   AssetDocument,
   type AssetQuery,
   type AssetQueryVariables,
-} from "../gql-client/types/graphql.ts";
+} from "../gql-client/graphql.generated.ts";
 import type { RoutePreloadFuncArgs } from "@solidjs/router";
 import { pipe } from "effect";
 

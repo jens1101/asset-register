@@ -4,7 +4,7 @@ import {
   AssetListDocument,
   type AssetListQuery,
   type AssetListQueryVariables,
-} from "../gql-client/types/graphql.ts";
+} from "../gql-client/graphql.generated.ts";
 import { pipe } from "effect";
 
 /** Data loader function for a list of assets */

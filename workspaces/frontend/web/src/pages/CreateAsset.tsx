@@ -10,7 +10,7 @@ import {
   CreateAssetDocument,
   type CreateAssetMutation,
   type CreateAssetMutationVariables,
-} from "../gql-client/types/graphql.ts";
+} from "../gql-client/graphql.generated.ts";
 import { usePromptModal } from "../hooks/usePromptModal.tsx";
 import { CreateAssetInputFromAssetFormValues } from "../schemas/CreateAssetInput.ts";
 import { Title } from "@solidjs/meta";
