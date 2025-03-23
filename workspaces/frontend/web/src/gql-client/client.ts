@@ -1,4 +1,4 @@
-import schema from "./introspection.generated.ts";
+import { cache } from "./cacheExchange.ts";
 import { taggedScalarExchange } from "./taggedScalarExchange.ts";
 import {
   bigDecimalScalar,
@@ -12,7 +12,6 @@ import {
   subscriptionExchange,
 } from "@urql/core";
 import type { FetchBody } from "@urql/core/internal";
-import { cacheExchange } from "@urql/exchange-graphcache";
 import { Effect, Option, pipe } from "effect";
 import { type SubscribePayload, createClient } from "graphql-ws";
 
@@ -26,17 +25,17 @@ const webSocketClient = createClient({
 const client = new Client({
   url: UPSTREAM_GQL_URL,
   exchanges: [
+    // Note that graphcache does not accept async resolvers. It also cannot
+    // encode variables that are being sent to the server. Therefore the tagged
+    // scalar exchange is necessary.
+    cache,
+    // The tagged scalar exchange comes first to consistently transform data
+    // on the edge.
     taggedScalarExchange(
       bigDecimalScalar,
       temporalInstantScalar,
       uint8ArrayScalar,
     ),
-    cacheExchange({
-      schema,
-      keys: {
-        Sum: () => null,
-      },
-    }),
     fetchExchange,
     subscriptionExchange({
       forwardSubscription(request: FetchBody) {
