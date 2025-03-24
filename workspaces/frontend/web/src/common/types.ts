@@ -10,12 +10,23 @@ export interface ClassAttributes {
 }
 
 /**
- * Utility interface to add the HTML `id` attribute to any component. Note that
- * the `id` needs to be forwarded to an underlying HTML element, otherwise this
- * does nothing (similar in behaviour to `ref`).
+ * Utility interface to add the HTML `id` attribute to any component.
+ *
+ * _Note_ that the attribute needs to be forwarded to an underlying HTML
+ * element, otherwise this does nothing.
  */
 export interface IdAttribute {
   id?: string | undefined;
+}
+
+/**
+ * Utility interface to add the HTML `inert` attribute to any component.
+ *
+ * _Note_ that the attribute needs to be forwarded to an underlying HTML
+ * element, otherwise this does nothing.
+ */
+export interface InertAttribute {
+  inert?: boolean;
 }
 
 /** Common interface for an initial value. */
