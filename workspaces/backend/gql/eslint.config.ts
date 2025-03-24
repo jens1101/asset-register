@@ -14,8 +14,8 @@ const config = [
   },
   {
     ignores: [
-      "*.*",
-      "dist",
+      "*",
+      "!*.ts",
       "node_modules",
       "src/gql-server/*.generated.ts",
       "src/gql-server/server.ts",

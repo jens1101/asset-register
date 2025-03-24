@@ -13,7 +13,7 @@ const config = [
     },
   },
   {
-    ignores: ["node_modules"],
+    ignores: ["*", "!*.ts", "node_modules"],
   },
   {
     rules: {
