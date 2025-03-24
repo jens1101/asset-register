@@ -25,12 +25,10 @@ const webSocketClient = createClient({
 const client = new Client({
   url: UPSTREAM_GQL_URL,
   exchanges: [
-    // Note that graphcache does not accept async resolvers. It also cannot
-    // encode variables that are being sent to the server. Therefore the tagged
-    // scalar exchange is necessary.
     cache,
-    // The tagged scalar exchange comes first to consistently transform data
-    // on the edge.
+    // The tagged scalar exchange is placed here to transform data on the edge.
+    // This also minimises transformations, because a cache hit will return
+    // already transformed data.
     taggedScalarExchange(
       bigDecimalScalar,
       temporalInstantScalar,

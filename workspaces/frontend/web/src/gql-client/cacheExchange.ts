@@ -6,6 +6,7 @@ import schema from "./introspection.generated.ts";
 import { cacheExchange } from "@urql/exchange-graphcache";
 import { Option, pipe } from "effect";
 
+/** Graphcache is used as the caching layer in the app */
 export const cache = cacheExchange({
   schema,
   keys: {

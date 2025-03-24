@@ -1,4 +1,4 @@
-# Asset Register
+# Asset Register GQL
 
 ## Guides
 
