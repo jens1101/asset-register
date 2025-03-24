@@ -11,7 +11,7 @@ import {
   DeleteAssetDocument,
   type DeleteAssetMutation,
   type DeleteAssetMutationVariables,
-} from "../../gql-client/types/graphql.ts";
+} from "../../gql-client/graphql.generated.ts";
 import { useAlertModal } from "../../hooks/useAlertModal.tsx";
 import { useDropdown } from "../../hooks/useDropdown.ts";
 import { useObjectUrl } from "../../hooks/useObjectUrl.ts";

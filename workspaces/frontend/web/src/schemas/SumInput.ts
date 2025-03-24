@@ -1,4 +1,4 @@
-import type { SumInput as SumInputType } from "../gql-client/types/graphql.ts";
+import type { SumInput as SumInputType } from "../gql-client/graphql.generated.ts";
 import { Currency } from "./Currency.ts";
 import { BigDecimal, Effect, ParseResult, Schema, pipe } from "effect";
 

@@ -12,7 +12,7 @@ const config = {
     "workspaces/frontend/web": {
       entry: ["src/index.tsx"],
       project: ["src/**/*.{js,ts,jsx,tsx}"],
-      ignore: ["src/gql-client/types/*"],
+      ignore: ["src/gql-client/*.generated.ts"],
     },
     "workspaces/shared/walker": {
       entry: ["src/index.tsx"],

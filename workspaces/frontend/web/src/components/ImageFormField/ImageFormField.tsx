@@ -2,7 +2,7 @@ import { defaultByteFormatter } from "../../common/intl.ts";
 import type { ClassAttributes, InitialValue } from "../../common/types.ts";
 import { isImage } from "../../common/utils.ts";
 import { MAX_FILE_SIZE } from "../../config.ts";
-import type { ImageFragment } from "../../gql-client/types/graphql.ts";
+import type { ImageFragment } from "../../gql-client/graphql.generated.ts";
 import { useFormField } from "../../hooks/useFormField.ts";
 import { useObjectUrl } from "../../hooks/useObjectUrl.ts";
 import { CreateFileInputFromFile } from "../../schemas/CreateFileInput.ts";

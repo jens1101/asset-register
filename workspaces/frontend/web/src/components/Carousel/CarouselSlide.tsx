@@ -1,5 +1,5 @@
 import type { ClassAttributes } from "../../common/types.ts";
-import type { ImageFragment } from "../../gql-client/types/graphql.ts";
+import type { ImageFragment } from "../../gql-client/graphql.generated.ts";
 import { useObjectUrl } from "../../hooks/useObjectUrl.ts";
 import { type Component, Show } from "solid-js";
 

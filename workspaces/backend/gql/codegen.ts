@@ -34,5 +34,8 @@ const config: CodegenConfig = {
       },
     ),
   },
+  hooks: {
+    beforeDone: ["prettier --write ./src/gql-server"],
+  },
 };
 export default config;

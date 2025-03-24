@@ -1,3 +1,4 @@
+import { cache } from "./cacheExchange.ts";
 import { taggedScalarExchange } from "./taggedScalarExchange.ts";
 import {
   bigDecimalScalar,
@@ -24,6 +25,10 @@ const webSocketClient = createClient({
 const client = new Client({
   url: UPSTREAM_GQL_URL,
   exchanges: [
+    cache,
+    // The tagged scalar exchange is placed here to transform data on the edge.
+    // This also minimises transformations, because a cache hit will return
+    // already transformed data.
     taggedScalarExchange(
       bigDecimalScalar,
       temporalInstantScalar,

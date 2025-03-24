@@ -3,7 +3,7 @@ import { Paths } from "../../enums/Paths.ts";
 import type {
   AssetListItemFragment,
   FileFragment,
-} from "../../gql-client/types/graphql.ts";
+} from "../../gql-client/graphql.generated.ts";
 import { useObjectUrl } from "../../hooks/useObjectUrl.ts";
 import { Sum } from "../Sum.tsx";
 import "./styles.scss";

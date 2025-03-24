@@ -1,4 +1,7 @@
-import type { FileFragment, SumFragment } from "../gql-client/types/graphql.ts";
+import type {
+  FileFragment,
+  SumFragment,
+} from "../gql-client/graphql.generated.ts";
 import { BigDecimal, Effect, Equivalence, pipe } from "effect";
 import { createResource } from "solid-js";
 
