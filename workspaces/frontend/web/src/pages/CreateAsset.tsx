@@ -4,6 +4,7 @@ import {
   AssetForm,
   type AssetFormSubmitCallback,
 } from "../components/AssetForm/AssetForm.tsx";
+import { Spinner } from "../components/Spinner.tsx";
 import { Paths } from "../enums/Paths.ts";
 import { mutation } from "../gql-client/client.ts";
 import {
@@ -16,16 +17,18 @@ import { CreateAssetInputFromAssetFormValues } from "../schemas/CreateAssetInput
 import { Title } from "@solidjs/meta";
 import { useNavigate } from "@solidjs/router";
 import { Effect, Schema, pipe } from "effect";
-import { type Component, createUniqueId } from "solid-js";
+import { type Component, Show, createSignal, createUniqueId } from "solid-js";
 
 export const CreateAsset: Component = () => {
   const formId = createUniqueId();
   const navigate = useNavigate();
   const { showPromptModal } = usePromptModal();
+  const [submitting, setSubmitting] = createSignal<boolean>(false);
 
   const onSubmit: AssetFormSubmitCallback = (formValues) =>
     pipe(
-      formValues,
+      Effect.sync(() => setSubmitting(true)),
+      Effect.andThen(() => formValues),
       Effect.andThen(Schema.decode(CreateAssetInputFromAssetFormValues)),
       Effect.andThen((createAssetInput) =>
         mutation<CreateAssetMutation, CreateAssetMutationVariables>(
@@ -38,6 +41,7 @@ export const CreateAsset: Component = () => {
       Effect.andThen((result) => {
         navigate(generatePath(Paths.ViewAsset, { id: result.createAsset.id }));
       }),
+      Effect.tapErrorCause(() => Effect.sync(() => setSubmitting(false))),
       manualRetryWrapper("Failed to create asset", () =>
         pipe(
           showPromptModal({
@@ -46,7 +50,7 @@ export const CreateAsset: Component = () => {
             positive: "Yes",
             negative: "No",
           }),
-          Effect.map((response) => response === "positive"),
+          Effect.map((response) => response !== "positive"),
         ),
       ),
     );
@@ -58,9 +62,17 @@ export const CreateAsset: Component = () => {
       <section class="container">
         <h1>Create Asset</h1>
 
-        <AssetForm onSubmit={onSubmit} id={formId} />
+        <AssetForm onSubmit={onSubmit} id={formId} inert={submitting()} />
 
-        <button type={"submit"} class={"btn btn-primary mt-3"} form={formId}>
+        <button
+          type={"submit"}
+          class={"btn btn-primary mt-3"}
+          form={formId}
+          disabled={submitting()}
+        >
+          <Show when={submitting()}>
+            <Spinner class="me-1 spinner-border-sm" />
+          </Show>
           Create asset
         </button>
       </section>
