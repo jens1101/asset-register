@@ -79,8 +79,8 @@ export const manualRetryWrapper =
     );
 
 /**
- * Wrapper for a data loader function. It automatically handles errors and turns
- * the Effect into a SolidJS resource.
+ * Wrapper that takes an effect, handles errors, runs it asyncronously, and
+ * wraps the result in a SolidJS resource.
  * @param errorMessage Any errors that occur will be mapped to a generic `Error`
  * instance with this message.
  */
