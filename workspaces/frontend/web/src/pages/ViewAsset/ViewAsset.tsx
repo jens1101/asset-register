@@ -2,6 +2,7 @@ import { defaultDateTimeFormatter } from "../../common/intl.ts";
 import { generatePath } from "../../common/route.ts";
 import { manualRetryWrapper } from "../../common/utils.ts";
 import { Carousel } from "../../components/Carousel/Carousel.tsx";
+import { DefaultSuspenseFallback } from "../../components/DefaultSuspenseFallback.tsx";
 import { DropdownCaret } from "../../components/Dropdown/DropdownCaret.tsx";
 import { Sum } from "../../components/Sum.tsx";
 import type { AssetResource } from "../../data/asset.ts";
@@ -95,7 +96,7 @@ export const ViewAsset: Component<{ data: AssetResource }> = (props) => {
             positive: "Yes",
             negative: "No",
           }),
-          Effect.map((response) => response === "positive"),
+          Effect.map((response) => response !== "positive"),
         ),
       ),
     );
@@ -112,10 +113,10 @@ export const ViewAsset: Component<{ data: AssetResource }> = (props) => {
       </Title>
 
       <section class="container">
-        {/* TODO: implement loader component */}
-        <Suspense fallback={<span>...</span>}>
-          {/* TODO: implement error component */}
-          <ErrorBoundary fallback={<div>Implement error component</div>}>
+        <Suspense
+          fallback={<DefaultSuspenseFallback loadingText="Loading asset..." />}
+        >
+          <ErrorBoundary fallback={<div>Failed to fetch asset</div>}>
             <Show
               when={pipe(
                 assetQuery(),

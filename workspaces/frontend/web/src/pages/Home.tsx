@@ -1,8 +1,8 @@
 import { AssetListItem } from "../components/AssetListItem/AssetListItem.tsx";
-import { Spinner } from "../components/Spinner.tsx";
+import { DefaultSuspenseFallback } from "../components/DefaultSuspenseFallback.tsx";
 import type { AssetListResource } from "../data/assetList.ts";
 import { Option, pipe } from "effect";
-import { type Component, For, Show, Suspense } from "solid-js";
+import { type Component, ErrorBoundary, For, Show, Suspense } from "solid-js";
 
 export const Home: Component<{ data: AssetListResource }> = (props) => {
   const assets = () =>
@@ -15,25 +15,27 @@ export const Home: Component<{ data: AssetListResource }> = (props) => {
   return (
     <section class={"container"}>
       <Suspense
-        fallback={
-          <div class="d-flex justify-content-center">
-            <Spinner />
-          </div>
-        }
+        fallback={<DefaultSuspenseFallback loadingText="Loading assets..." />}
       >
-        <Show when={Option.getOrNull(assets())} keyed>
-          {(assets) => (
-            <div class={"row row-cols-1 row-cols-sm-2 row-cols-md-3"}>
-              <For each={assets}>
-                {(asset) => (
-                  <div class={"col py-2"}>
-                    <AssetListItem asset={asset} />
-                  </div>
-                )}
-              </For>
-            </div>
-          )}
-        </Show>
+        <ErrorBoundary fallback={<div>Failed to fetch assets</div>}>
+          <Show
+            when={Option.getOrNull(assets())}
+            fallback={<p>No assets to view</p>}
+            keyed
+          >
+            {(assets) => (
+              <div class={"row row-cols-1 row-cols-sm-2 row-cols-md-3"}>
+                <For each={assets}>
+                  {(asset) => (
+                    <div class={"col py-2"}>
+                      <AssetListItem asset={asset} />
+                    </div>
+                  )}
+                </For>
+              </div>
+            )}
+          </Show>
+        </ErrorBoundary>
       </Suspense>
     </section>
   );

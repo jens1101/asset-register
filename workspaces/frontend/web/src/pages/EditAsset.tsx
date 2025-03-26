@@ -8,6 +8,8 @@ import {
   AssetForm,
   type AssetFormSubmitCallback,
 } from "../components/AssetForm/AssetForm.tsx";
+import { DefaultSuspenseFallback } from "../components/DefaultSuspenseFallback.tsx";
+import { Spinner } from "../components/Spinner.tsx";
 import type { AssetResource } from "../data/asset.ts";
 import { Paths } from "../enums/Paths.ts";
 import { mutation } from "../gql-client/client.ts";
@@ -259,7 +261,7 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
             positive: "Yes",
             negative: "No",
           }),
-          Effect.map((response) => response === "positive"),
+          Effect.map((response) => response !== "positive"),
         ),
       ),
     );
@@ -276,7 +278,9 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
       </Title>
 
       <section class="container">
-        <Suspense fallback={<span>...</span>}>
+        <Suspense
+          fallback={<DefaultSuspenseFallback loadingText="Loading asset..." />}
+        >
           <ErrorBoundary fallback={<div>Implement error component</div>}>
             <Show
               when={pipe(
