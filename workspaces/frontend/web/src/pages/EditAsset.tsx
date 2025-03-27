@@ -37,6 +37,7 @@ import {
   ErrorBoundary,
   Show,
   Suspense,
+  createSignal,
   createUniqueId,
 } from "solid-js";
 
@@ -213,10 +214,12 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
   const navigate = useNavigate();
   const { showPromptModal } = usePromptModal();
   const { showAlertModal } = useAlertModal();
+  const [submitting, setSubmitting] = createSignal<boolean>(false);
 
   const onSubmit: AssetFormSubmitCallback = (formValues) =>
     pipe(
-      Effect.all([asset(), formValues]),
+      Effect.sync(() => setSubmitting(true)),
+      Effect.andThen(() => Effect.all([asset(), formValues])),
       Effect.andThen(([asset, formValues]) => updateAssset(asset, formValues)),
       Effect.andThen((result) =>
         pipe(
@@ -253,6 +256,7 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
           Match.exhaustive,
         ),
       ),
+      Effect.tapErrorCause(() => Effect.sync(() => setSubmitting(false))),
       manualRetryWrapper("Failed to edit asset", () =>
         pipe(
           showPromptModal({
@@ -306,6 +310,7 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
                     onSubmit={onSubmit}
                     initialValue={asset}
                     id={formId}
+                    inert={submitting()}
                   />
 
                   <button
@@ -313,6 +318,9 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
                     class={"btn btn-primary mt-3"}
                     form={formId}
                   >
+                    <Show when={submitting()}>
+                      <Spinner class="me-1 spinner-border-sm" />
+                    </Show>
                     Save changes
                   </button>
                 </>
