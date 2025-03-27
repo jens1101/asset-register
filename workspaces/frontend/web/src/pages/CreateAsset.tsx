@@ -1,5 +1,5 @@
 import { generatePath } from "../common/route.ts";
-import { manualRetryWrapper } from "../common/utils.ts";
+import { manualRetry } from "../common/utils.ts";
 import {
   AssetForm,
   type AssetFormSubmitCallback,
@@ -42,7 +42,7 @@ export const CreateAsset: Component = () => {
         navigate(generatePath(Paths.ViewAsset, { id: result.createAsset.id }));
       }),
       Effect.tapErrorCause(() => Effect.sync(() => setSubmitting(false))),
-      manualRetryWrapper("Failed to create asset", () =>
+      manualRetry("Failed to create asset", () =>
         pipe(
           showPromptModal({
             title: "Create asset failed",
@@ -53,6 +53,7 @@ export const CreateAsset: Component = () => {
           Effect.map((response) => response !== "positive"),
         ),
       ),
+      Effect.runPromise,
     );
 
   return (

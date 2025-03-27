@@ -26,9 +26,24 @@ export const useCustomModal = <Result = null>() => {
    */
   const dismissModal = (result: Result | null) =>
     pipe(
-      Option.all([modalResult(), modalInstance()]),
-      Option.andThen(([modalResult, modalInstance]) => {
-        Deferred.unsafeDone(modalResult, Effect.succeed(result));
+      Option.all([modalResult(), modalInstance(), context.element()]),
+      Option.andThen(([modalResult, modalInstance, element]) => {
+        // We need to wait for the modal to be fully dismissed before we can
+        // resolve the deferred.
+        element.addEventListener(
+          "hidden.bs.modal",
+          () => {
+            Deferred.unsafeDone(modalResult, Effect.succeed(result));
+          },
+          {
+            passive: true,
+            once: true,
+          },
+        );
+
+        // This prevents the default handler effect from resolving the modal.
+        setModalResult(Option.none());
+
         modalInstance.hide();
       }),
     );
@@ -49,8 +64,9 @@ export const useCustomModal = <Result = null>() => {
     options?: Partial<Modal.Options>,
   ) =>
     pipe(
-      startTransition(() => context.setContent(Option.some(dialog))),
-      (promise) => Effect.promise(() => promise),
+      Effect.promise(() =>
+        startTransition(() => context.setContent(Option.some(dialog))),
+      ),
       Effect.andThen(() =>
         Effect.all([context.element(), Deferred.make<Result | null>()]),
       ),
@@ -86,7 +102,7 @@ export const useCustomModal = <Result = null>() => {
           context.setContent(Option.none());
           setModalInstance(Option.none());
         }),
-        modalResult,
+        () => modalResult(),
         Option.andThen((modalResult) => {
           Deferred.unsafeDone(modalResult, Effect.succeed(null));
         }),

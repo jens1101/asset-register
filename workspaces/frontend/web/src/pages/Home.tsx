@@ -1,5 +1,5 @@
 import { AssetListItem } from "../components/AssetListItem/AssetListItem.tsx";
-import { DefaultSuspenseFallback } from "../components/DefaultSuspenseFallback.tsx";
+import { SpinnerWithText } from "../components/SpinnerWithText.tsx";
 import type { AssetListResource } from "../data/assetList.ts";
 import { Option, pipe } from "effect";
 import { type Component, ErrorBoundary, For, Show, Suspense } from "solid-js";
@@ -14,9 +14,7 @@ export const Home: Component<{ data: AssetListResource }> = (props) => {
 
   return (
     <section class={"container"}>
-      <Suspense
-        fallback={<DefaultSuspenseFallback loadingText="Loading assets..." />}
-      >
+      <Suspense fallback={<SpinnerWithText text="Loading assets..." />}>
         <ErrorBoundary fallback={<div>Failed to fetch assets</div>}>
           <Show
             when={Option.getOrNull(assets())}

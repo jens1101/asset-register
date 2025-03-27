@@ -2,14 +2,14 @@ import { generatePath } from "../common/route.ts";
 import {
   FileEquivalence,
   SumEquivalence,
-  manualRetryWrapper,
+  manualRetry,
 } from "../common/utils.ts";
 import {
   AssetForm,
   type AssetFormSubmitCallback,
 } from "../components/AssetForm/AssetForm.tsx";
-import { DefaultSuspenseFallback } from "../components/DefaultSuspenseFallback.tsx";
 import { Spinner } from "../components/Spinner.tsx";
+import { SpinnerWithText } from "../components/SpinnerWithText.tsx";
 import type { AssetResource } from "../data/asset.ts";
 import { Paths } from "../enums/Paths.ts";
 import { mutation } from "../gql-client/client.ts";
@@ -257,7 +257,7 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
         ),
       ),
       Effect.tapErrorCause(() => Effect.sync(() => setSubmitting(false))),
-      manualRetryWrapper("Failed to edit asset", () =>
+      manualRetry("Failed to edit asset", () =>
         pipe(
           showPromptModal({
             title: "Edit asset failed",
@@ -268,6 +268,7 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
           Effect.map((response) => response !== "positive"),
         ),
       ),
+      Effect.runPromise,
     );
 
   return (
@@ -282,9 +283,7 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
       </Title>
 
       <section class="container">
-        <Suspense
-          fallback={<DefaultSuspenseFallback loadingText="Loading asset..." />}
-        >
+        <Suspense fallback={<SpinnerWithText text="Loading asset..." />}>
           <ErrorBoundary fallback={<div>Implement error component</div>}>
             <Show
               when={pipe(
