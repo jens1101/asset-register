@@ -2,12 +2,14 @@ import { generatePath } from "../common/route.ts";
 import {
   FileEquivalence,
   SumEquivalence,
-  manualRetryWrapper,
+  manualRetry,
 } from "../common/utils.ts";
 import {
   AssetForm,
   type AssetFormSubmitCallback,
 } from "../components/AssetForm/AssetForm.tsx";
+import { Spinner } from "../components/Spinner.tsx";
+import { SpinnerWithText } from "../components/SpinnerWithText.tsx";
 import type { AssetResource } from "../data/asset.ts";
 import { Paths } from "../enums/Paths.ts";
 import { mutation } from "../gql-client/client.ts";
@@ -35,6 +37,7 @@ import {
   ErrorBoundary,
   Show,
   Suspense,
+  createSignal,
   createUniqueId,
 } from "solid-js";
 
@@ -211,10 +214,12 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
   const navigate = useNavigate();
   const { showPromptModal } = usePromptModal();
   const { showAlertModal } = useAlertModal();
+  const [submitting, setSubmitting] = createSignal<boolean>(false);
 
   const onSubmit: AssetFormSubmitCallback = (formValues) =>
     pipe(
-      Effect.all([asset(), formValues]),
+      Effect.sync(() => setSubmitting(true)),
+      Effect.andThen(() => Effect.all([asset(), formValues])),
       Effect.andThen(([asset, formValues]) => updateAssset(asset, formValues)),
       Effect.andThen((result) =>
         pipe(
@@ -251,7 +256,8 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
           Match.exhaustive,
         ),
       ),
-      manualRetryWrapper("Failed to edit asset", () =>
+      Effect.tapErrorCause(() => Effect.sync(() => setSubmitting(false))),
+      manualRetry("Failed to edit asset", () =>
         pipe(
           showPromptModal({
             title: "Edit asset failed",
@@ -259,9 +265,10 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
             positive: "Yes",
             negative: "No",
           }),
-          Effect.map((response) => response === "positive"),
+          Effect.map((response) => response !== "positive"),
         ),
       ),
+      Effect.runPromise,
     );
 
   return (
@@ -276,7 +283,7 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
       </Title>
 
       <section class="container">
-        <Suspense fallback={<span>...</span>}>
+        <Suspense fallback={<SpinnerWithText text="Loading asset..." />}>
           <ErrorBoundary fallback={<div>Implement error component</div>}>
             <Show
               when={pipe(
@@ -302,6 +309,7 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
                     onSubmit={onSubmit}
                     initialValue={asset}
                     id={formId}
+                    inert={submitting()}
                   />
 
                   <button
@@ -309,6 +317,9 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
                     class={"btn btn-primary mt-3"}
                     form={formId}
                   >
+                    <Show when={submitting()}>
+                      <Spinner class="me-1 spinner-border-sm" />
+                    </Show>
                     Save changes
                   </button>
                 </>

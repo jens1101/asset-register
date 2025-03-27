@@ -59,8 +59,11 @@ export function setInputValue(
 }
 
 /**
- * Wrapper for running an effect. If the effect fails then it will be retried
- * while the `until` callback remains true.
+ * Convenience function for retrying an effect. If the effect fails then it will
+ * be retried while the `until` callback remains true.
+ *
+ * This is usually used together with a modal that prompts the user if they want
+ * to retry an operation.
  * @param errorMessage The error message to log when the effect still fails
  * after retries have been exhausted.
  * @param until Callback function which dictates whether or not the effect
@@ -68,19 +71,18 @@ export function setInputValue(
  * Effect. A common pattern at this point is to prompt the user if he wants to
  * retry.
  */
-export const manualRetryWrapper =
+export const manualRetry =
   (errorMessage: string, until: () => boolean | Effect.Effect<boolean>) =>
   <A, E>(effect: Effect.Effect<A, E>) =>
     pipe(
       effect,
       Effect.retry({ until }),
       Effect.catchAllCause((cause) => Effect.logError(errorMessage, cause)),
-      Effect.runPromise,
     );
 
 /**
- * Wrapper for a data loader function. It automatically handles errors and turns
- * the Effect into a SolidJS resource.
+ * Wrapper that takes an effect, handles errors, runs it asyncronously, and
+ * wraps the result in a SolidJS resource.
  * @param errorMessage Any errors that occur will be mapped to a generic `Error`
  * instance with this message.
  */

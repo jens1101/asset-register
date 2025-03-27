@@ -4,7 +4,11 @@ import {
   defaultByteFormatter,
   numberFormatterCache,
 } from "../../common/intl.ts";
-import type { IdAttribute, InitialValue } from "../../common/types.ts";
+import type {
+  IdAttribute,
+  InertAttribute,
+  InitialValue,
+} from "../../common/types.ts";
 import { MAX_FILE_SIZE } from "../../config.ts";
 import {
   type AssetFragment,
@@ -45,7 +49,8 @@ export type AssetFormSubmitCallback = (
 
 export const AssetForm: Component<
   InitialValue<Partial<AssetFragment>> &
-    IdAttribute & { onSubmit?: AssetFormSubmitCallback }
+    IdAttribute &
+    InertAttribute & { onSubmit?: AssetFormSubmitCallback }
 > = (props) => {
   const initialValue = props.initialValue ?? {};
 
@@ -134,7 +139,7 @@ export const AssetForm: Component<
   });
 
   return (
-    <form ref={submit} id={props.id}>
+    <form ref={submit} id={props.id} inert={props.inert}>
       <Show when={initialValue.id}>
         <input type={"hidden"} name={"id"} value={initialValue.id} />
       </Show>

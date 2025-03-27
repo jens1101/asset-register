@@ -1,8 +1,9 @@
 import { defaultDateTimeFormatter } from "../../common/intl.ts";
 import { generatePath } from "../../common/route.ts";
-import { manualRetryWrapper } from "../../common/utils.ts";
+import { manualRetry } from "../../common/utils.ts";
 import { Carousel } from "../../components/Carousel/Carousel.tsx";
 import { DropdownCaret } from "../../components/Dropdown/DropdownCaret.tsx";
+import { SpinnerWithText } from "../../components/SpinnerWithText.tsx";
 import { Sum } from "../../components/Sum.tsx";
 import type { AssetResource } from "../../data/asset.ts";
 import { Paths } from "../../enums/Paths.ts";
@@ -13,6 +14,7 @@ import {
   type DeleteAssetMutationVariables,
 } from "../../gql-client/graphql.generated.ts";
 import { useAlertModal } from "../../hooks/useAlertModal.tsx";
+import { useCustomModal } from "../../hooks/useCustomModal.ts";
 import { useDropdown } from "../../hooks/useDropdown.ts";
 import { useObjectUrl } from "../../hooks/useObjectUrl.ts";
 import { usePromptModal } from "../../hooks/usePromptModal.tsx";
@@ -26,6 +28,7 @@ import { type Component, ErrorBoundary, Show, Suspense } from "solid-js";
 export const ViewAsset: Component<{ data: AssetResource }> = (props) => {
   const { dropdownToggleRef, isVisible } = useDropdown();
   const { showPromptModal } = usePromptModal();
+  const { showCustomModal, dismissModal } = useCustomModal();
   const { showAlertModal } = useAlertModal();
   const navigate = useNavigate();
 
@@ -61,11 +64,31 @@ export const ViewAsset: Component<{ data: AssetResource }> = (props) => {
       }),
       Effect.andThen((result) =>
         pipe(
-          mutation<DeleteAssetMutation, DeleteAssetMutationVariables>(
-            DeleteAssetDocument,
-            { id: assetId },
+          Effect.all(
+            [
+              pipe(
+                mutation<DeleteAssetMutation, DeleteAssetMutationVariables>(
+                  DeleteAssetDocument,
+                  { id: assetId },
+                ),
+                Effect.tap(() => dismissModal(null)),
+                Effect.tapErrorCause(() => dismissModal(null)),
+              ),
+              showCustomModal(
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-body">
+                      <SpinnerWithText text="Deleting..." />
+                    </div>
+                  </div>
+                </div>,
+              ),
+            ],
+            {
+              concurrency: "unbounded",
+            },
           ),
-          Effect.andThen((result) =>
+          Effect.andThen(([result]) =>
             Effect.if(result.deleteAsset?.__typename === "ReadAssetError", {
               onTrue: () =>
                 pipe(
@@ -84,20 +107,21 @@ export const ViewAsset: Component<{ data: AssetResource }> = (props) => {
                 }),
             }),
           ),
+          manualRetry("Failed to delete asset", () =>
+            pipe(
+              showPromptModal({
+                title: "Failed to delete asset",
+                body: "Do you want to retry?",
+                positive: "Yes",
+                negative: "No",
+              }),
+              Effect.map((response) => response !== "positive"),
+            ),
+          ),
           Effect.when(() => result === "positive"),
         ),
       ),
-      manualRetryWrapper("Failed to delete asset", () =>
-        pipe(
-          showPromptModal({
-            title: "Failed to delete asset",
-            body: "Do you want to retry?",
-            positive: "Yes",
-            negative: "No",
-          }),
-          Effect.map((response) => response === "positive"),
-        ),
-      ),
+      Effect.runPromise,
     );
 
   return (
@@ -112,10 +136,8 @@ export const ViewAsset: Component<{ data: AssetResource }> = (props) => {
       </Title>
 
       <section class="container">
-        {/* TODO: implement loader component */}
-        <Suspense fallback={<span>...</span>}>
-          {/* TODO: implement error component */}
-          <ErrorBoundary fallback={<div>Implement error component</div>}>
+        <Suspense fallback={<SpinnerWithText text="Loading asset..." />}>
+          <ErrorBoundary fallback={<div>Failed to fetch asset</div>}>
             <Show
               when={pipe(
                 assetQuery(),
