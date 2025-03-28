@@ -1,1 +1,1 @@
-{"workspaces/shared/common":"1.0.0","workspaces/backend/gql":"1.0.0","workspaces/shared/scalars":"1.0.0","workspaces/shared/tsconfig":"1.0.0","workspaces/shared/walker":"1.0.0","workspaces/frontend/web":"1.0.0"}
+{"workspaces/shared/common":"1.0.0","workspaces/backend/gql":"2.0.0","workspaces/shared/scalars":"2.0.0","workspaces/shared/tsconfig":"2.0.0","workspaces/shared/walker":"2.0.0","workspaces/frontend/web":"1.1.0"}
