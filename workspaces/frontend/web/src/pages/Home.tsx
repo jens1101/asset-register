@@ -1,4 +1,5 @@
 import { AssetListItem } from "../components/AssetListItem/AssetListItem.tsx";
+import { ErrorAlert } from "../components/ErrorAlert.tsx";
 import { SpinnerWithText } from "../components/SpinnerWithText.tsx";
 import type { AssetListResource } from "../data/assetList.ts";
 import { Option, pipe } from "effect";
@@ -14,8 +15,20 @@ export const Home: Component<{ data: AssetListResource }> = (props) => {
 
   return (
     <section class={"container"}>
-      <Suspense fallback={<SpinnerWithText text="Loading assets..." />}>
-        <ErrorBoundary fallback={<div>Failed to fetch assets</div>}>
+      <ErrorBoundary
+        fallback={(_, reset) => (
+          <ErrorAlert
+            title="Failed to fetch assets"
+            body="The assets could not be retrieved due to a techical error."
+            dismiss="Retry"
+            onDismiss={() => {
+              props.data.refetch();
+              reset();
+            }}
+          />
+        )}
+      >
+        <Suspense fallback={<SpinnerWithText text="Loading assets..." />}>
           <Show
             when={Option.getOrNull(assets())}
             fallback={<p>No assets to view</p>}
@@ -33,8 +46,8 @@ export const Home: Component<{ data: AssetListResource }> = (props) => {
               </div>
             )}
           </Show>
-        </ErrorBoundary>
-      </Suspense>
+        </Suspense>
+      </ErrorBoundary>
     </section>
   );
 };

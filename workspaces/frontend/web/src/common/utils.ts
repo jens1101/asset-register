@@ -2,7 +2,7 @@ import type {
   FileFragment,
   SumFragment,
 } from "../gql-client/graphql.generated.ts";
-import { BigDecimal, Effect, Equivalence, pipe } from "effect";
+import { BigDecimal, Effect, Equivalence, Logger, pipe } from "effect";
 import { createResource } from "solid-js";
 
 /** Tests if the specified file is an image by checking the mime type. */
@@ -78,6 +78,7 @@ export const manualRetry =
       effect,
       Effect.retry({ until }),
       Effect.catchAllCause((cause) => Effect.logError(errorMessage, cause)),
+      Effect.provide(Logger.structured),
     );
 
 /**
@@ -93,5 +94,6 @@ export const loadWrapper =
       effect,
       Effect.tapError(Effect.logError),
       Effect.mapError(() => new Error(errorMessage)),
+      Effect.provide(Logger.structured),
       (effect) => createResource(() => Effect.runPromise(effect)),
     );
