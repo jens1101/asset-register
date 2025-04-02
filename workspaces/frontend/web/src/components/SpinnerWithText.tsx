@@ -10,9 +10,9 @@ export const SpinnerWithText: Component<
     class={`d-flex flex-column align-items-center ${props.class}`}
     classList={props.classList}
   >
+    <Spinner variant={props.variant ?? "border"} />
     <Show when={props.text}>
       <p>{props.text}</p>
     </Show>
-    <Spinner variant={props.variant ?? "border"} />
   </div>
 );
