@@ -1,5 +1,45 @@
 # Changelog
 
+## [2.0.0](https://github.com/jens1101/asset-register/compare/gql-v1.0.0...gql-v2.0.0) (2025-04-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* **#72:** Removed build step from `@app/gql`
+* **#60:** Replaced the previous `AssetError` with more specialized error types.
+    - Created `handleResolverError` and `handleResolverResponse` helpers to shorten resolvers.
+    - Added documentation.
+
+### Features
+
+* **#11:** Used lint-staged as pre-commit hook ([50200d5](https://github.com/jens1101/asset-register/commit/50200d59a04228a145801baf01f8f833f87a84b1))
+* **#60:** Improved GQL typed errors ([c279bc2](https://github.com/jens1101/asset-register/commit/c279bc29825cc4e3ac9740a884972bcae8579498))
+* **#72:** Removed build step from `@app/gql` ([5d6b21c](https://github.com/jens1101/asset-register/commit/5d6b21cf9bc274943d758e4394c96d1eebbd6ccd))
+* **#84:** Removed `@app/common` ([0c37bdc](https://github.com/jens1101/asset-register/commit/0c37bdc112ee75ea8a3dd5add6ea3be5f9514448))
+* **#84:** Removed `@app/common` ([05106ec](https://github.com/jens1101/asset-register/commit/05106ece02a2bb1d87162f51b5cd146ee1934703))
+
+
+### Bug Fixes
+
+* **#15:** Added GQL documentation to the server ([15471c4](https://github.com/jens1101/asset-register/commit/15471c4fbaee36d7b217b96149d44c5e2c7c3c7b))
+* **#15:** Added GQL documentation to the server ([fbe1b38](https://github.com/jens1101/asset-register/commit/fbe1b38c4e782a2e6461c52139b3589c7ce3db63))
+* **#24:** Refined GQL server code generation ([0bc2ad2](https://github.com/jens1101/asset-register/commit/0bc2ad208ed665d75abee5f30ebd971ce7f93382))
+* **#46:** Updated dependencies ([c9fa1c8](https://github.com/jens1101/asset-register/commit/c9fa1c80ff73a49f5bfaf65230c5c1c54b844145))
+* **#60:** Refactored the resolver wrapper ([6c6305d](https://github.com/jens1101/asset-register/commit/6c6305dbf4b0807cd3dd4d27e7121376aea28ea8))
+* **#67:** Refactored data source initialization ([80150ed](https://github.com/jens1101/asset-register/commit/80150edf7407f53da25a887e84bd7ee412647174))
+* **#67:** Refactored data source initialization ([20a0e86](https://github.com/jens1101/asset-register/commit/20a0e869ce52d1fecb7b9d9a4163e8da61f1d0fb))
+* **#72:** Corrected CMDs ([6d71a37](https://github.com/jens1101/asset-register/commit/6d71a37e0f145a5665626c4017f51c35c65a2789))
+* Fixed a bug with Asset creation ([0543416](https://github.com/jens1101/asset-register/commit/0543416821e1fdc3b11be66b8088dbdb4ce2bddb))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @app/scalars bumped from 1.0.0 to 2.0.0
+  * devDependencies
+    * @app/tsconfig bumped from 1.0.0 to 2.0.0
+
 ## 1.0.0 (2025-02-22)
 
 

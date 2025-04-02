@@ -1,5 +1,56 @@
 # Changelog
 
+## [1.1.0](https://github.com/jens1101/asset-register/compare/web-v1.0.0...web-v1.1.0) (2025-04-02)
+
+
+### Features
+
+* **#103:** Added error handling on the home screen ([3396a4a](https://github.com/jens1101/asset-register/commit/3396a4a97b110b9728936ec494daf26e089febb7))
+* **#103:** Added error handling to edit asset ([6996a41](https://github.com/jens1101/asset-register/commit/6996a4175fef10c1e2c26cd19639a2560895458c))
+* **#103:** Added error handling to view asset ([5f3e2c4](https://github.com/jens1101/asset-register/commit/5f3e2c43ec9dec94d45273cb8c6d58b41d122e07))
+* **#103:** Implemented error alert component ([0d51ab0](https://github.com/jens1101/asset-register/commit/0d51ab0e46d6d562ff3b41fd47e69d29cda34e0a))
+* **#11:** Used lint-staged as pre-commit hook ([50200d5](https://github.com/jens1101/asset-register/commit/50200d59a04228a145801baf01f8f833f87a84b1))
+* **#24:** Added basic graphcache setup ([0ecbfcf](https://github.com/jens1101/asset-register/commit/0ecbfcfdee115f4aa89b551a82358b164c646dbd))
+* **#24:** Updated cache on asset deletion ([f32a5c4](https://github.com/jens1101/asset-register/commit/f32a5c4f57b5526f18f048043efd562d0eced1fc))
+* **#46:** Updated document title ([92361cd](https://github.com/jens1101/asset-register/commit/92361cd6a14fbb2b9b2b949924b3cb2cfd789c2f))
+* **#54:** Standardised paths in app ([8f1a718](https://github.com/jens1101/asset-register/commit/8f1a7189d4f122ca54ca3bacee9398ea8f748fc4))
+* **#54:** Standardised paths in app ([4a07712](https://github.com/jens1101/asset-register/commit/4a07712aa18f5e884a8ac3157fd77c1829ed8349))
+* **#55:** Added `InertAttribute` interface ([287c62a](https://github.com/jens1101/asset-register/commit/287c62af83f3cf668f856e2f44dafb2079138730))
+* **#55:** Added `Spinner` component ([4775432](https://github.com/jens1101/asset-register/commit/47754325b249f5f84f29af419d99cd30c9a3a44d))
+* **#55:** Added a loading spinner when editing ([a9ecd3a](https://github.com/jens1101/asset-register/commit/a9ecd3a0dfcb81e562943966c4cdfe906e8106bc))
+* **#55:** Added basic spinner to home page ([02e6d96](https://github.com/jens1101/asset-register/commit/02e6d9673caa15287d02f6d56207991bdfb0bb1f))
+* **#55:** Added default suspense component ([01c2190](https://github.com/jens1101/asset-register/commit/01c2190a54a6f2f96f20635762a267395df48ef0))
+* **#55:** Added loading spinner to asset delete ([1ab232a](https://github.com/jens1101/asset-register/commit/1ab232a2fe32bea417e5ccdbef2b1cf9f9f8b2aa))
+* **#55:** Added spinner on create asset submit ([b0d34d9](https://github.com/jens1101/asset-register/commit/b0d34d9d2867985b879c85bcd313786f9be6cccb))
+* **#60:** Migrated rendering a sum to a component ([ea9391d](https://github.com/jens1101/asset-register/commit/ea9391d6d361e689a4ac854ccd5dd7e811d2c5ba))
+* **#60:** Refactored asset form submission ([0e312ba](https://github.com/jens1101/asset-register/commit/0e312bac3f0de8d68626bcdcf42d51485181d8c6))
+* **#60:** Refactored GQL fetching and error handling ([337e6db](https://github.com/jens1101/asset-register/commit/337e6dbc59180de91455e1d34f8d2459056dfba3))
+* **#60:** Updated GQL client fragments ([e4027b2](https://github.com/jens1101/asset-register/commit/e4027b2e00fbc68ef63a076379a33326e9950285))
+* **#72:** Fixed front end errors ([e755b3d](https://github.com/jens1101/asset-register/commit/e755b3dc96e215cd5b52faa67ed5284238db3d8f))
+* **#84:** Removed `@app/common` ([0c37bdc](https://github.com/jens1101/asset-register/commit/0c37bdc112ee75ea8a3dd5add6ea3be5f9514448))
+* **#84:** Removed `@app/common` ([05106ec](https://github.com/jens1101/asset-register/commit/05106ece02a2bb1d87162f51b5cd146ee1934703))
+
+
+### Bug Fixes
+
+* **#103:** Used structured logger ([93a0638](https://github.com/jens1101/asset-register/commit/93a06385f4188ed851ee8c89846730e605b50a25))
+* **#24:** Refined GQL client code generation ([186d22e](https://github.com/jens1101/asset-register/commit/186d22e55758d3148653911897a5fb30397360ef))
+* **#46:** Updated dependencies ([c9fa1c8](https://github.com/jens1101/asset-register/commit/c9fa1c80ff73a49f5bfaf65230c5c1c54b844145))
+* **#60:** Made app bootsrapping more effectful ([1a10d74](https://github.com/jens1101/asset-register/commit/1a10d7464d8b3a47758a0b259fcb28dd9fe986b7))
+* **#72:** Corrected CMDs ([6d71a37](https://github.com/jens1101/asset-register/commit/6d71a37e0f145a5665626c4017f51c35c65a2789))
+* **#72:** Removed build step from Dockerfile ([6b0233e](https://github.com/jens1101/asset-register/commit/6b0233e648ffa9402a8028fd8ed37267ed6511aa))
+* Used `Intl` to format file sizes ([48991ad](https://github.com/jens1101/asset-register/commit/48991ad3572c324617a13af85c9242362fc46067))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @app/scalars bumped from 1.0.0 to 2.0.0
+    * @app/walker bumped from 1.0.0 to 2.0.0
+  * devDependencies
+    * @app/tsconfig bumped from 1.0.0 to 2.0.0
+
 ## 1.0.0 (2025-02-22)
 
 
