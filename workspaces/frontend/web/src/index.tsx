@@ -5,7 +5,7 @@ import { routes } from "./routes.ts";
 import "./styles/index.scss";
 import { MetaProvider, Title } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
-import { Effect, Option, pipe } from "effect";
+import { Effect, Logger, Option, pipe } from "effect";
 import { render } from "solid-js/web";
 
 await pipe(
@@ -29,5 +29,6 @@ await pipe(
   Effect.catchAllCause((cause) =>
     Effect.logError("Failed to bootstrap app", cause),
   ),
+  Effect.provide(Logger.structured),
   Effect.runPromise,
 );
