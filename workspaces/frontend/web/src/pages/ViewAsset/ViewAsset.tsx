@@ -3,6 +3,7 @@ import { generatePath } from "../../common/route.ts";
 import { manualRetry } from "../../common/utils.ts";
 import { Carousel } from "../../components/Carousel/Carousel.tsx";
 import { DropdownCaret } from "../../components/Dropdown/DropdownCaret.tsx";
+import { ErrorAlert } from "../../components/ErrorAlert.tsx";
 import { SpinnerWithText } from "../../components/SpinnerWithText.tsx";
 import { Sum } from "../../components/Sum.tsx";
 import type { AssetResource } from "../../data/asset.ts";
@@ -126,18 +127,23 @@ export const ViewAsset: Component<{ data: AssetResource }> = (props) => {
 
   return (
     <>
-      <Title>
-        View Asset
-        {pipe(
-          asset(),
-          Option.map((asset) => ` - ${asset.name}`),
-          Option.getOrElse(() => ""),
-        )}
-      </Title>
+      <Title>View Asset</Title>
 
       <section class="container">
-        <Suspense fallback={<SpinnerWithText text="Loading asset..." />}>
-          <ErrorBoundary fallback={<div>Failed to fetch asset</div>}>
+        <ErrorBoundary
+          fallback={(_, reset) => (
+            <ErrorAlert
+              title="Failed to fetch asset"
+              body="The asset could not be retrieved due to a techical error."
+              dismiss="Retry"
+              onDismiss={() => {
+                props.data.refetch();
+                reset();
+              }}
+            />
+          )}
+        >
+          <Suspense fallback={<SpinnerWithText text="Loading asset..." />}>
             <Show
               when={pipe(
                 assetQuery(),
@@ -156,6 +162,8 @@ export const ViewAsset: Component<{ data: AssetResource }> = (props) => {
             <Show when={pipe(asset(), Option.getOrNull)} keyed>
               {(asset) => (
                 <>
+                  <Title>View Asset - {asset.name}</Title>
+
                   <div class={"d-flex"}>
                     <h1 class={"flex-grow-1"}>{asset.name}</h1>
                     <div class={"dropdown"}>
@@ -252,8 +260,8 @@ export const ViewAsset: Component<{ data: AssetResource }> = (props) => {
                 </>
               )}
             </Show>
-          </ErrorBoundary>
-        </Suspense>
+          </Suspense>
+        </ErrorBoundary>
       </section>
     </>
   );
