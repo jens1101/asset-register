@@ -8,6 +8,7 @@ import {
   AssetForm,
   type AssetFormSubmitCallback,
 } from "../components/AssetForm/AssetForm.tsx";
+import { ErrorAlert } from "../components/ErrorAlert.tsx";
 import { Spinner } from "../components/Spinner.tsx";
 import { SpinnerWithText } from "../components/SpinnerWithText.tsx";
 import type { AssetResource } from "../data/asset.ts";
@@ -273,18 +274,23 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
 
   return (
     <>
-      <Title>
-        Edit Asset
-        {pipe(
-          asset(),
-          Option.map((asset) => ` - ${asset.name}`),
-          Option.getOrElse(() => ""),
-        )}
-      </Title>
+      <Title>Edit Asset</Title>
 
       <section class="container">
-        <Suspense fallback={<SpinnerWithText text="Loading asset..." />}>
-          <ErrorBoundary fallback={<div>Implement error component</div>}>
+        <ErrorBoundary
+          fallback={(_, reset) => (
+            <ErrorAlert
+              title="Failed to fetch asset"
+              body="The asset could not be retrieved due to a techical error."
+              dismiss="Retry"
+              onDismiss={() => {
+                props.data.refetch();
+                reset();
+              }}
+            />
+          )}
+        >
+          <Suspense fallback={<SpinnerWithText text="Loading asset..." />}>
             <Show
               when={pipe(
                 assetQuery(),
@@ -303,6 +309,8 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
             <Show when={pipe(asset(), Option.getOrNull)} keyed>
               {(asset) => (
                 <>
+                  <Title>Edit Asset - {asset.name}</Title>
+
                   <h1>Edit Asset</h1>
 
                   <AssetForm
@@ -325,8 +333,8 @@ export const EditAsset: Component<{ data: AssetResource }> = (props) => {
                 </>
               )}
             </Show>
-          </ErrorBoundary>
-        </Suspense>
+          </Suspense>
+        </ErrorBoundary>
       </section>
     </>
   );
