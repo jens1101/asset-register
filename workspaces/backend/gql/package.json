@@ -1,6 +1,6 @@
 {
   "name": "@app/gql",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "description": "",
   "type": "module",
@@ -24,7 +24,7 @@
     "test": "tsc"
   },
   "dependencies": {
-    "@app/scalars": "1.0.0",
+    "@app/scalars": "2.0.0",
     "effect": "3.13.10",
     "graphql": "^16.9.0",
     "graphql-ws": "5.16.2",
@@ -35,7 +35,7 @@
     "ws": "8.18.1"
   },
   "devDependencies": {
-    "@app/tsconfig": "1.0.0",
+    "@app/tsconfig": "2.0.0",
     "@eddeee888/gcg-typescript-resolver-files": "0.12.0",
     "@eslint/js": "9.22.0",
     "@graphql-codegen/cli": "5.0.5",
